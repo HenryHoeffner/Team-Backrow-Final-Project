@@ -1,0 +1,11 @@
+# config.yaml
+firms:
+  - {ticker: INTC, cik: "0000050863", name: "Intel Corp",          sector: "Information Technology"}
+  - {ticker: PFE,  cik: "0000078003", name: "Pfizer Inc",          sector: "Health Care"}
+  - {ticker: JPM,  cik: "0000019617", name: "JPMorgan Chase & Co", sector: "Financials"}
+  - {ticker: MCD,  cik: "0000063908", name: "McDonald's Corp",     sector: "Consumer Discretionary"}
+  - {ticker: CAT,  cik: "0000018230", name: "Caterpillar Inc",     sector: "Industrials"}
+fiscal_years: [2020, 2021, 2022, 2023, 2024, 2025]
+bin_measure: cosine
+return_window_months: 12
+benchmark_ticker: SPY
