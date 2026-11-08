@@ -8,7 +8,7 @@ import pandas as pd
 
 from pilot.config import Config, write_report
 
-log = logging.getLogger("pilot.bins")
+log = logging.getLogger("pilot.t4_bins")
 N_BINS = 5
 
 

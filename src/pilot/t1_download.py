@@ -18,9 +18,8 @@ import pandas as pd
 
 from pilot.config import Config, write_report
 
-log = logging.getLogger("pilot.download")
+log = logging.getLogger("pilot.t1_download")
 
-FILED_AFTER = "2021-01-01"
 MIN_SECONDS_BETWEEN_REQUESTS = 0.25  # about 4 requests/second, well under the SEC's 10
 MAX_RETRIES = 5
 HEADER_BYTES = 64_000
@@ -134,25 +133,31 @@ def discover_submissions(raw_dir: Path) -> list[tuple[Path, dict]]:
     return found
 
 
+def filed_after(cfg: Config) -> str:
+    """10-Ks for FY N are filed in early N+1 (all pilot firms have December year ends)."""
+    return f"{cfg.fiscal_years[0] + 1}-01-01"
+
+
 def _audit_forms(cfg: Config, user_agent: str) -> list[dict]:
     """List every 10-K-family filing in the submissions index so amendments and
     transition reports are flagged, not silently skipped."""
     from sec_edgar_downloader import _sec_gateway as gw
 
     base = "https://data.sec.gov/submissions/"
+    after = filed_after(cfg)
     rows = []
     for firm in cfg.firms:
         first = gw.get_list_of_available_filings(f"{base}CIK{firm.cik.zfill(10)}.json", user_agent)
         pages = [first["filings"]["recent"]]
         # Prolific filers (JPM issues thousands of notes) spill older filings into extra pages.
         for extra in first["filings"].get("files", []):
-            if extra.get("filingTo", "9999") >= FILED_AFTER:
+            if extra.get("filingTo", "9999") >= after:
                 pages.append(gw.get_list_of_available_filings(base + extra["name"], user_agent))
         for page in pages:
             for acc, form, fdate, rdate in zip(
                 page["accessionNumber"], page["form"], page["filingDate"], page["reportDate"]
             ):
-                if form.startswith("10-K") and fdate >= FILED_AFTER:
+                if form.startswith("10-K") and fdate >= after:
                     rows.append({"ticker": firm.ticker, "accession": acc, "form": form,
                                  "filing_date": fdate, "report_date": rdate})
     return sorted(rows, key=lambda r: (r["ticker"], r["filing_date"]))
@@ -174,7 +179,7 @@ def run_download(cfg: Config, fetch: bool = True) -> pd.DataFrame:
         dl = Downloader(name, email, p.raw)
         on_disk = {h["accession"] for _, h in discover_submissions(p.raw) if h["accession"]}
         for firm in cfg.firms:
-            n = dl.get("10-K", firm.cik, after=FILED_AFTER, download_details=True,
+            n = dl.get("10-K", firm.cik, after=filed_after(cfg), download_details=True,
                        accession_numbers_to_skip=on_disk)
             log.info("%s: %d new 10-K submission(s) downloaded", firm.ticker, n)
         audit = _audit_forms(cfg, dl.user_agent)

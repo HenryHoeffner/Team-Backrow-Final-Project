@@ -11,8 +11,9 @@ import pandas as pd
 from bs4 import BeautifulSoup, Comment, XMLParsedAsHTMLWarning
 
 from pilot.config import Config, write_report
+from pilot.t2_sections import SECTION_NAMES, extract_sections, section_path
 
-log = logging.getLogger("pilot.clean")
+log = logging.getLogger("pilot.t2_clean")
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 NUMERIC_TABLE_SHARE = 0.15  # Loughran-McDonald / Lazy Prices rule
@@ -109,21 +110,35 @@ def tokenize(text: str) -> list[str]:
     return _WORD_RE.findall(text)
 
 
-def clean_submission(raw: str) -> tuple[str, dict]:
-    doc = extract_main_document(raw, "10-K")
+def _clean_document(doc: str) -> tuple[str, dict]:
     if re.search(r"<html|<body|<div|<p[ >]", doc[:5000], re.I):
         return html_to_text(doc)
     return plain_text_to_text(doc), {"tables_total": 0, "tables_removed": 0, "hidden_removed": 0}
 
 
+def clean_submission(raw: str) -> tuple[str, dict]:
+    return _clean_document(extract_main_document(raw, "10-K"))
+
+
+def clean_exhibit13(raw: str) -> str | None:
+    """Clean text of the EX-13 annual report, if the submission has one. Some filers
+    incorporate MD&A into the 10-K by reference from it."""
+    try:
+        doc = extract_main_document(raw, "EX-13")
+    except NoMainDocument:
+        return None
+    return _clean_document(doc)[0]
+
+
 def run_clean(cfg: Config) -> pd.DataFrame:
     from pilot.cli import CheckFailed
-    from pilot.download import load_manifest
+    from pilot.t1_download import load_manifest
 
     p = cfg.paths
     p.clean.mkdir(parents=True, exist_ok=True)
+    p.sections.mkdir(parents=True, exist_ok=True)
     manifest = load_manifest(cfg)
-    rows, gaps = [], []
+    rows, gaps, sec_rows = [], [], []
     for r in manifest.itertuples():
         out = p.clean / f"{r.cik}_{r.fy}.txt"
         raw = (p.root / r.path).read_text(encoding="utf-8", errors="replace")
@@ -133,6 +148,18 @@ def run_clean(cfg: Config) -> pd.DataFrame:
             gaps.append(f"{r.ticker} FY{r.fy}: {e}")
             continue
         out.write_text(text, encoding="utf-8")
+        found = extract_sections(text, clean_exhibit13(raw), cfg.sections)
+        for sec, (sec_text, info) in found.items():
+            sp = section_path(cfg, r.cik, r.fy, sec)
+            if sec_text:
+                sp.write_text(sec_text, encoding="utf-8")
+            else:
+                sp.unlink(missing_ok=True)
+                gaps.append(f"{r.ticker} FY{r.fy}: {SECTION_NAMES[sec]} not found "
+                            f"(longest candidate {info['n_words']} words); filing not scored")
+            sec_rows.append({"ticker": r.ticker, "fy": r.fy, "section": sec,
+                             "n_words": len(tokenize(sec_text)), "source": info["source"],
+                             "heading": info["heading"], "lines": f"{info['start_line']}-{info['end_line']}"})
         n = len(tokenize(text))
         rows.append({"ticker": r.ticker, "cik": r.cik, "fy": r.fy, "n_words": n,
                      "path": str(out.relative_to(p.root)), **stats})
@@ -141,6 +168,11 @@ def run_clean(cfg: Config) -> pd.DataFrame:
 
     wc = pd.DataFrame(rows)
     wc.to_csv(p.clean / "word_counts.csv", index=False)
+    secs = pd.DataFrame(sec_rows)
+    secs.to_csv(p.sections / "section_word_counts.csv", index=False)
+    smed = secs.groupby(["ticker", "section"])["n_words"].transform("median")
+    secs["ratio_to_median"] = (secs["n_words"] / smed).round(3)
+    sec_outliers = secs[(secs["n_words"] > 0) & ((secs["ratio_to_median"] > 3) | (secs["ratio_to_median"] < 1 / 3))]
 
     # ---- check
     med = wc.groupby("ticker")["n_words"].transform("median")
@@ -159,6 +191,10 @@ def run_clean(cfg: Config) -> pd.DataFrame:
         "word_counts": wc[["ticker", "fy", "n_words", "ratio_to_median"]].to_dict("records"),
         "size_outliers": flagged[["ticker", "fy", "n_words", "ratio_to_median"]].to_dict("records"),
         "markup_leftovers": leftovers, "spot_check": [s.path for s in sample],
+        "sections": cfg.sections,
+        "section_word_counts": secs[["ticker", "fy", "section", "n_words", "source"]].to_dict("records"),
+        "section_outliers": sec_outliers[["ticker", "fy", "section", "n_words", "ratio_to_median"]].to_dict("records"),
+        "sections_from_exhibit": secs[secs["source"] == "EX-13"][["ticker", "fy", "section"]].to_dict("records"),
     }
     write_report(cfg, "clean", report)
     print(f"\n[T2 check] clean files: {len(wc)} / {len(manifest)} manifest rows")
@@ -166,6 +202,15 @@ def run_clean(cfg: Config) -> pd.DataFrame:
     print(f"[T2 check] size outliers (>3x or <1/3 of firm median): "
           f"{report['size_outliers'] or 'none'}")
     print(f"[T2 check] files with leftover markup: {leftovers or 'none'}")
+    for sec in cfg.sections:
+        print(f"\n[T2 check] {SECTION_NAMES[sec]} words (0 = not found):")
+        print(secs[secs.section == sec].pivot(index="ticker", columns="fy", values="n_words").to_string())
+    ex = report["sections_from_exhibit"]
+    print(f"[T2 check] sections taken from an EX-13 exhibit: "
+          f"{[(x['ticker'], x['fy'], x['section']) for x in ex] or 'none'}")
+    print(f"[T2 check] section size outliers (>3x or <1/3 of firm median): "
+          f"{report['section_outliers'] or 'none'}")
+    print(f"[T2 check] gaps: {gaps or 'none'}")
     for s in sample:
         body = (p.root / s.path).read_text(encoding="utf-8")
         mid = len(body) // 2

@@ -1,4 +1,4 @@
-from pilot.diff import sentence_diff
+from pilot.t8_diff import sentence_diff
 
 OLD = ("we operate in many countries around the world.\n"
        "revenue in 2023 was driven by strong demand for our products.\n"

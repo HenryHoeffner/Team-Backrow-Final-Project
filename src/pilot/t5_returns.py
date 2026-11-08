@@ -8,7 +8,7 @@ import pandas as pd
 
 from pilot.config import Config, write_report
 
-log = logging.getLogger("pilot.returns")
+log = logging.getLogger("pilot.t5_returns")
 
 RETURN_COLUMNS = ["ticker", "fy", "filing_date", "window_start", "window_end",
                   "firm_return_pct", "spy_return_pct", "partial"]
@@ -58,10 +58,19 @@ def download_prices(tickers: list[str], start: date, end: date) -> pd.DataFrame:
 def load_prices(cfg: Config, start: date, refresh: bool = False) -> tuple[pd.DataFrame, str]:
     p = cfg.paths
     tickers = cfg.tickers + [cfg.benchmark_ticker]
+    monthly = None
     if p.prices.exists() and not refresh:
-        source = f"cached {p.prices.relative_to(p.root)}"
-        monthly = pd.read_csv(p.prices, parse_dates=["date"])
-    else:
+        cached = pd.read_csv(p.prices, parse_dates=["date"])
+        # The cache must reach back to the month before the earliest window and hold every
+        # ticker; otherwise (for example after fiscal_years is extended) download again.
+        need_from = pd.Timestamp(start) + pd.offsets.MonthEnd(0)
+        first = cached.groupby("ticker")["date"].min()
+        if set(tickers) <= set(first.index) and (first[tickers] <= need_from).all():
+            monthly, source = cached, f"cached {p.prices.relative_to(p.root)}"
+        else:
+            log.info("price cache starts %s, need %s; downloading again",
+                     first.max().date(), need_from.date())
+    if monthly is None:
         try:
             monthly = download_prices(tickers, start, date.today())
             monthly = drop_incomplete_month(monthly, date.today())

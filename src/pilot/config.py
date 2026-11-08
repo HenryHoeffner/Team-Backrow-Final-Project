@@ -9,6 +9,7 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+KNOWN_SECTIONS = ("risk_factors", "mdna")  # Item 1A, Item 7
 
 
 @dataclass(frozen=True)
@@ -48,6 +49,10 @@ class Paths:
         return self.data / "filings_manifest.csv"
 
     @property
+    def sections(self) -> Path:
+        return self.data / "sections"
+
+    @property
     def similarity(self) -> Path:
         return self.data / "similarity.parquet"
 
@@ -83,6 +88,7 @@ class Config:
     bin_measure: str
     return_window_months: int
     benchmark_ticker: str
+    sections: list[str] = field(default_factory=lambda: ["risk_factors", "mdna"])
     paths: Paths = field(default_factory=lambda: Paths(PROJECT_ROOT))
 
     @property
@@ -104,12 +110,17 @@ def load_config(path: Path | None = None, root: Path | None = None) -> Config:
     measure = raw.get("bin_measure", "cosine")
     if measure not in {"cosine", "jaccard"}:
         raise ValueError(f"bin_measure must be cosine or jaccard, got {measure!r}")
+    sections = [str(x) for x in raw.get("sections", ["risk_factors", "mdna"])]
+    unknown = set(sections) - set(KNOWN_SECTIONS)
+    if not sections or unknown:
+        raise ValueError(f"sections must be a non-empty list from {KNOWN_SECTIONS}, got {sections!r}")
     return Config(
         firms=[Firm(**{k: str(v) for k, v in f.items()}) for f in raw["firms"]],
         fiscal_years=sorted(int(y) for y in raw["fiscal_years"]),
         bin_measure=measure,
         return_window_months=int(raw.get("return_window_months", 12)),
         benchmark_ticker=str(raw.get("benchmark_ticker", "SPY")),
+        sections=sections,
         paths=Paths(root),
     )
 

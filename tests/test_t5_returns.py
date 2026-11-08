@@ -3,7 +3,7 @@ from datetime import date
 import pandas as pd
 import pytest
 
-from pilot.returns import compute_window, drop_incomplete_month, month_end_prices
+from pilot.t5_returns import compute_window, drop_incomplete_month, month_end_prices
 
 
 def _monthly(start="2021-01", periods=30, step=1.0):

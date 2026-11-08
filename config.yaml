@@ -5,7 +5,8 @@ firms:
   - {ticker: JPM,  cik: "0000019617", name: "JPMorgan Chase & Co", sector: "Financials"}
   - {ticker: MCD,  cik: "0000063908", name: "McDonald's Corp",     sector: "Consumer Discretionary"}
   - {ticker: CAT,  cik: "0000018230", name: "Caterpillar Inc",     sector: "Industrials"}
-fiscal_years: [2020, 2021, 2022, 2023, 2024, 2025]
+fiscal_years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+sections: [risk_factors, mdna]   # Item 1A Risk Factors, Item 7 MD&A; scored together
 bin_measure: cosine
 return_window_months: 12
 benchmark_ticker: SPY

@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import date
 
 from pilot.config import Config, read_report
+from pilot.t2_sections import SECTION_NAMES
 
 
 def _lines(title: str, items) -> list[str]:
@@ -41,7 +42,13 @@ def run_coverage(cfg: Config) -> str:
         *_lines("Word-count outliers (>3x or <1/3 of firm median)",
                 [f"{o['ticker']} FY{o['fy']}: {o['n_words']:,} words ({o['ratio_to_median']}x median)"
                  for o in c.get("size_outliers", [])]),
-        *_lines("Clean gaps", c.get("gaps")),
+        f"Sections scored: {' + '.join(SECTION_NAMES[x] for x in cfg.sections)}",
+        *_lines("Sections taken from an EX-13 annual-report exhibit (incorporated by reference)",
+                [f"{x['ticker']} FY{x['fy']}: {SECTION_NAMES[x['section']]}" for x in c.get("sections_from_exhibit", [])]),
+        *_lines("Section word-count outliers (>3x or <1/3 of firm median)",
+                [f"{o['ticker']} FY{o['fy']} {SECTION_NAMES[o['section']]}: {o['n_words']:,} words "
+                 f"({o['ratio_to_median']}x median)" for o in c.get("section_outliers", [])]),
+        *_lines("Clean and section gaps", c.get("gaps")),
         "",
         "SIMILARITY (T3) AND BINS (T4)",
         f"Scored filings: {s.get('rows', '?')} / {n_firms * (n_years - 1)}",
@@ -71,8 +78,8 @@ def run_coverage(cfg: Config) -> str:
         *_lines("Figures", pl.get("figures")),
         f"Points per firm: {pl.get('points')}",
         "",
-        "Reminder: 25 filings from 5 hand-picked firms illustrate the pipeline; they are not",
-        "evidence for or against the Lazy Prices effect.",
+        f"Reminder: {s.get('rows', '?')} scored filings from {n_firms} hand-picked firms illustrate the",
+        "pipeline; they are not evidence for or against the Lazy Prices effect.",
     ]
     text = "\n".join(out) + "\n"
     cfg.paths.outputs.mkdir(parents=True, exist_ok=True)

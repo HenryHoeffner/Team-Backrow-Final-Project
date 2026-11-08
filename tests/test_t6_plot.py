@@ -1,6 +1,6 @@
 import pandas as pd
 
-from pilot.plot import BIN_COLORS, bin_color, plot_firm
+from pilot.t6_plot import BIN_COLORS, bin_color, plot_firm
 
 
 def test_bin_color_mapping():

@@ -3,8 +3,8 @@ from collections import Counter
 import pandas as pd
 import pytest
 
-from pilot.bins import assign_bins
-from pilot.score import cosine_similarity, jaccard_similarity, text_similarity
+from pilot.t4_bins import assign_bins
+from pilot.t3_score import cosine_similarity, jaccard_similarity, text_similarity
 
 DOC = "the company faces risks related to competition and supply chain disruption.\nrevenue grew."
 

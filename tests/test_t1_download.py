@@ -1,6 +1,6 @@
 from datetime import date
 
-from pilot.download import names_match, parse_sec_header
+from pilot.t1_download import names_match, parse_sec_header
 
 SAMPLE = """<SEC-DOCUMENT>0000063908-24-000010.txt : 20240222
 <SEC-HEADER>0000063908-24-000010.hdr.sgml : 20240222

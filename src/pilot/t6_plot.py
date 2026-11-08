@@ -13,15 +13,17 @@ from matplotlib.ticker import FuncFormatter, MaxNLocator  # noqa: E402
 
 from pilot.config import Config, write_report  # noqa: E402
 
-log = logging.getLogger("pilot.plot")
+log = logging.getLogger("pilot.t6_plot")
 
 BIN_COLORS = {1: "#e41a1c", 2: "#ff9900", 3: "#f2d600", 4: "#a6e22e", 5: "#1a9e1a"}
 SPY_COLOR = "#b0b0b0"
 OUTLINE = "#333333"
 INK = "#222222"
 MUTED = "#666666"
-FOOTNOTE = ("Bins rank the 5 pilot firms within each year on cosine similarity to the prior-year 10-K. "
+FOOTNOTE_TEMPLATE = ("Bins rank the 5 pilot firms within each year on cosine similarity of {sections} to the prior-year 10-K. "
             "The first filing (FY2020) is the comparison base and is not plotted.")
+SECTION_SHORT = {"risk_factors": "Risk Factors (Item 1A)", "mdna": "MD&A (Item 7)"}
+FOOTNOTE = FOOTNOTE_TEMPLATE.format(sections=" + ".join(SECTION_SHORT.values()))
 FIGSIZE = (8, 4.5)
 DPI = 200
 
@@ -109,7 +111,8 @@ def run_plot(cfg: Config) -> list:
     ret = pd.read_parquet(p.returns)
     df = ret.merge(sim, on=["ticker", "fy"], how="inner", validate="one_to_one")
     first_fy = min(cfg.fiscal_years)
-    footnote = FOOTNOTE.replace("FY2020", f"FY{first_fy}")
+    footnote = FOOTNOTE_TEMPLATE.replace("FY2020", f"FY{first_fy}").format(
+        sections=" + ".join(SECTION_SHORT[s] for s in cfg.sections))
     paths, points = [], {}
     for t in cfg.tickers:
         g = df[df["ticker"] == t]

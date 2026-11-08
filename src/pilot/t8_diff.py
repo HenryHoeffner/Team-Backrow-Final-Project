@@ -1,4 +1,4 @@
-"""T8 (stretch): HTML listing sentences added and removed between two cleaned 10-Ks."""
+"""T8 (stretch): HTML listing sentences added and removed between two years' scored 10-K sections."""
 from __future__ import annotations
 
 import difflib
@@ -8,6 +8,7 @@ import re
 import pandas as pd
 
 from pilot.config import Config
+from pilot.t2_sections import SECTION_NAMES, load_scored_text
 
 _SENT_SPLIT = re.compile(r"(?<=[.!?;])\s+|\n+")
 
@@ -42,7 +43,8 @@ def sentence_diff(old: str, new: str) -> tuple[list[str], list[str]]:
             [a[i] for i in removed if ka[i] not in kb_set])
 
 
-def render_html(ticker: str, fy: int, cos: float, added: list[str], removed: list[str]) -> str:
+def render_html(ticker: str, fy: int, cos: float, added: list[str], removed: list[str],
+                sections: str = "the 10-K") -> str:
     def items(xs):
         return "\n".join(f"<li>{html.escape(x)}</li>" for x in xs)
     return f"""<!doctype html><html><head><meta charset="utf-8">
@@ -63,7 +65,7 @@ ul {{ padding:0; }}
 </style></head><body>
 <h1>{ticker}: FY{fy} 10-K vs FY{fy - 1}</h1>
 <p class="meta">Cosine similarity {cos:.4f}. Sentences with fewer than 4 words are skipped; sentences that
-only moved, or only changed numbers or years, are not listed. Text is the cleaned, lowercased 10-K used for scoring.</p>
+only moved, or only changed numbers or years, are not listed. Text is the cleaned, lowercased {html.escape(sections)} used for scoring.</p>
 <details open class="add"><summary>Added in FY{fy} ({len(added):,})</summary><ul>{items(added)}</ul></details>
 <details open class="rem"><summary>Removed from FY{fy - 1} ({len(removed):,})</summary><ul>{items(removed)}</ul></details>
 </body></html>
@@ -85,9 +87,12 @@ def run_diff(cfg: Config, ticker: str | None = None, fy: int | None = None, lowe
         if row.empty:
             raise SystemExit(f"no similarity row for {t} FY{y}")
         cik = row.iloc[0]["cik"]
-        new = (p.clean / f"{cik}_{y}.txt").read_text(encoding="utf-8")
-        old = (p.clean / f"{cik}_{y - 1}.txt").read_text(encoding="utf-8")
+        new_secs, old_secs = load_scored_text(cfg, cik, y), load_scored_text(cfg, cik, y - 1)
+        if new_secs is None or old_secs is None:
+            raise SystemExit(f"section text missing for {t} FY{y} or FY{y - 1}; run `make clean`")
+        new, old = "\n".join(new_secs.values()), "\n".join(old_secs.values())
         added, removed = sentence_diff(old, new)
         out = p.diffs / f"{t}_{y}.html"
-        out.write_text(render_html(t, int(y), float(row.iloc[0]["cosine_sim"]), added, removed), encoding="utf-8")
+        out.write_text(render_html(t, int(y), float(row.iloc[0]["cosine_sim"]), added, removed,
+                                    " + ".join(SECTION_NAMES[s] for s in cfg.sections)), encoding="utf-8")
         print(f"{out.relative_to(p.root)}: {len(added)} added, {len(removed)} removed sentences")

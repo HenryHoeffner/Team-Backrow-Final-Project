@@ -1,4 +1,4 @@
-from pilot.clean import clean_submission, extract_main_document
+from pilot.t2_clean import clean_submission, extract_main_document
 
 SUBMISSION = """<SEC-DOCUMENT>x
 <SEC-HEADER>...</SEC-HEADER>

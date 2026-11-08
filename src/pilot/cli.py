@@ -13,42 +13,42 @@ class CheckFailed(RuntimeError):
 
 
 def _download(cfg, args):
-    from pilot.download import run_download
+    from pilot.t1_download import run_download
     run_download(cfg)
 
 
 def _clean(cfg, args):
-    from pilot.clean import run_clean
+    from pilot.t2_clean import run_clean
     run_clean(cfg)
 
 
 def _score(cfg, args):
-    from pilot.score import run_score
+    from pilot.t3_score import run_score
     run_score(cfg)
 
 
 def _bins(cfg, args):
-    from pilot.bins import run_bins
+    from pilot.t4_bins import run_bins
     run_bins(cfg)
 
 
 def _returns(cfg, args):
-    from pilot.returns import run_returns
+    from pilot.t5_returns import run_returns
     run_returns(cfg, refresh=args.refresh)
 
 
 def _plot(cfg, args):
-    from pilot.plot import run_plot
+    from pilot.t6_plot import run_plot
     run_plot(cfg)
 
 
 def _coverage(cfg, args):
-    from pilot.coverage import run_coverage
+    from pilot.t7_coverage import run_coverage
     run_coverage(cfg)
 
 
 def _diff(cfg, args):
-    from pilot.diff import run_diff
+    from pilot.t8_diff import run_diff
     run_diff(cfg, ticker=args.ticker, fy=args.fy, lowest=args.lowest)
 
 
