@@ -11,7 +11,9 @@ from pilot.config import Config, write_report
 log = logging.getLogger("pilot.t5_returns")
 
 RETURN_COLUMNS = ["ticker", "fy", "filing_date", "window_start", "window_end",
-                  "firm_return_pct", "spy_return_pct", "partial"]
+                  "firm_return_pct", "spy_return_pct", "excess_return_pct", "partial"]
+# excess_return_pct = firm minus SPY over the same window, in percentage points (market-adjusted;
+# no beta adjustment).
 
 
 class MissingPrice(KeyError):
@@ -149,6 +151,7 @@ def run_returns(cfg: Config, refresh: bool = False) -> pd.DataFrame:
         rows.append({"ticker": r.ticker, "fy": r.fy, "filing_date": r.filing_date,
                      "window_start": fw["window_start"], "window_end": fw["window_end"],
                      "firm_return_pct": fw["return_pct"], "spy_return_pct": bw["return_pct"],
+                     "excess_return_pct": fw["return_pct"] - bw["return_pct"],
                      "partial": fw["partial"]})
     ret = pd.DataFrame(rows, columns=RETURN_COLUMNS)
     for c in ("filing_date", "window_start", "window_end"):
@@ -175,7 +178,8 @@ def run_returns(cfg: Config, refresh: bool = False) -> pd.DataFrame:
     })
     print(f"\n[T5 check] prices from {source}; latest month-end {latest.date()}")
     print(ret.assign(firm_return_pct=ret.firm_return_pct.round(1),
-                     spy_return_pct=ret.spy_return_pct.round(1)).to_string(index=False))
+                     spy_return_pct=ret.spy_return_pct.round(1),
+                     excess_return_pct=ret.excess_return_pct.round(1)).to_string(index=False))
     print(f"[T5 check] window start on/after filing date in every row: {start_ok}")
     print(f"[T5 check] partial flag true only where end month is past latest price: {partial_ok}")
     if gaps:
