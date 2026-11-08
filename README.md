@@ -1,6 +1,6 @@
-# Lazy Prices Pilot: One Graph per Firm
+# Lazy Prices Pilot: 20 Firms
 
-**Status:** built. T0–T8 are implemented and every check passes. Run `make setup` once, set `SEC_USER_NAME` / `SEC_USER_EMAIL`, then `make all` (about 4 minutes, about 2.7 GB of filings). Prices are cached in `data/prices_monthly.csv`; use `python -m pilot returns --refresh` to pull new ones. `make diffs` writes the T8 sentence diffs for the three lowest-similarity filings.
+**Status:** built. T0–T8 are implemented and every check passes. Run `make setup` once, set `SEC_USER_NAME` / `SEC_USER_EMAIL`, then `make all` (about 15 minutes the first time, about 10 GB of filings). Prices are cached in `data/prices_monthly.csv`; use `python -m pilot returns --refresh` to pull new ones. `make diffs` writes the T8 sentence diffs for the three lowest-similarity filings.
 
 ## How to run (in order)
 
@@ -14,46 +14,55 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 | 3 | `make score` (part 1) | `t3_score.py` | section text | `data/similarity.parquet` |
 | 4 | `make score` (part 2) | `t4_bins.py` | similarity table | adds `rel_change`, `bin_relative`, `bin_raw` and `bin` to `data/similarity.parquet` |
 | 5 | `make returns` | `t5_returns.py` | similarity table, prices (Yahoo or cache) | `data/prices_monthly.csv`, `data/returns.parquet` |
-| 6 | `make plot` | `t6_plot.py` | similarity + returns | `outputs/figures/*.png` (5 firms + `pooled_by_bin.png`), `data/pooled_by_bin.csv` |
+| 6 | `make plot` | `t6_plot.py` | similarity + returns | `outputs/figures/*.png` (one per firm, `pooled_by_bin.png`, `all_firms_heatmap.png`, `all_firms_combined.png`), `data/pooled_by_bin.csv`, `data/bin_baskets.csv` |
 | 7 | `make coverage` | `t7_coverage.py` | step reports in `data/reports/` | `outputs/coverage.txt` |
 | 8 | `make diffs` (optional) | `t8_diff.py` | section text, similarity table | `outputs/diffs/*.html` |
 
-`make test` runs the unit tests (`tests/test_t*_*.py`, named after the step they test) at any point. Shared code: `cli.py` (the `python -m pilot <step>` entry point) and `config.py` (paths and `config.yaml` loading).
+`make test` runs the unit tests (`tests/test_t*_*.py`, named after the step they test) at any point. Shared code: `cli.py` (the `python -m pilot <step>` entry point), `config.py` (paths and `config.yaml` loading) and `style.py` (palette, fonts and the header, badge and key used by every graphic).
 
 ## Goal
 
-Produce one graph for each of five firms. Each graph shows how the firm's stock returned in the year after each 10-K filing, and colors each year by **how much the firm's 10-K changed compared with the year before**. The graph is a visual check of the Lazy Prices idea (Cohen, Malloy & Nguyen, *Journal of Finance*, 2020): companies that rewrite their annual report heavily tend to earn lower returns afterward than companies that barely change it.
+Produce one graph for each of 20 firms, plus three graphs that pool all of them. Each graph shows how the firm's stock returned in the year after each 10-K filing, and colors each year by **how much the firm's 10-K changed compared with the year before**. The graph is a visual check of the Lazy Prices idea (Cohen, Malloy & Nguyen, *Journal of Finance*, 2020): companies that rewrite their annual report heavily tend to earn lower returns afterward than companies that barely change it.
 
-The pilot exists to prove the pipeline end to end: download filings, clean them, score the change, rank, attach returns, plot. It cannot show whether the effect is real. Five firms are far too few for that.
+The pilot exists to prove the pipeline end to end: download filings, clean them, score the change, rank, attach returns, plot. It cannot show whether the effect is real. Twenty hand-picked large firms are far too few for that.
 
-### The graph (deliverable)
+### The graphics (deliverable)
 
-One PNG per firm: `outputs/figures/{TICKER}_yearly_returns.png`, plus one pooled PNG, `outputs/figures/pooled_by_bin.png` (see **The pooled graph** below).
+All PNGs are written to `outputs/figures/` at 200 dpi and share one look (`src/pilot/style.py`): an off-white surface, Avenir Next (falling back to Helvetica Neue, then DejaVu Sans), a header with a title, a one-line description and a headline stat, and a bin key.
 
-The table describes the default `plot_return: excess`. With `plot_return: raw` the graph keeps the original look: title `{TICKER}: Yearly Return After 10-K Filing`, y axis in percent, and the S&P 500 return drawn as its own gray line.
+**Bin colors** are diverging, from warm (most changed) through neutral gray (typical) to blue (least changed). This avoids the red/green pair of the reference app, which red-green colorblind readers cannot separate. Every graphic also prints the `Q1`–`Q5` label, so the bin never depends on color alone. Adjacent bins were checked in OKLab under simulated protan, deutan and tritan vision; the closest pair is Q2/Q3 (delta E 7.3), which is why the labels are mandatory.
+
+| Bin | Meaning | Color |
+| --- | --- | --- |
+| Q1 | most changed | `#b8352a` vermillion |
+| Q2 | | `#e8875a` light coral |
+| Q3 | typical | `#9e9a91` warm gray |
+| Q4 | | `#6aa3df` light blue |
+| Q5 | least changed | `#1c5cab` deep blue |
+
+Every return in every graphic is the **excess return**: the firm's 12-month return minus the S&P 500's over the same window, in percentage points. So the S&P 500 is always the dark line at 0, and that tick is labeled `S&P 500`.
+
+**1. One graph per firm**: `{TICKER}_yearly_returns.png`, 8 x 4.5 in.
 
 | Element | Specification |
 | --- | --- |
-| Title | `{TICKER}: Return vs S&P 500 in the Year After 10-K Filing` |
-| X axis | Filing year (integer ticks, one per year) |
-| Y axis | Excess return: the firm's 12-month return minus the S&P 500's over the same window, in percentage points (`+20 pp`) |
-| Gray line | The S&P 500 (SPY adjusted close) as a flat line at 0, since every point is already measured against it |
-| Firm line | The firm's 12-month excess return after each filing. Only filings with a bin are plotted. Each line segment takes the color of the bin at its later end point. Each point has a round marker in its own bin color, with a thin dark outline and a small text label (`Q1` to `Q5`) so the bin does not depend on color alone |
-| Colors | Q1 red `#e41a1c` (largest change), Q2 orange `#ff9900`, Q3 yellow `#f2d600`, Q4 lime `#a6e22e`, Q5 dark green `#1a9e1a` (smallest change), S&P gray `#b0b0b0` |
-| Legend | Below the plot: the five bins with "Q1 = largest change in 10-K" and "Q5 = smallest change", plus the gray `S&P 500 (= 0)` entry |
-| Partial window | If a 12-month window runs past the latest available price month, plot it with a hollow marker and annotate `through <Mon YYYY>` |
-| Footnote | Small text, two lines: `Bins rank the 5 pilot firms within each year on how much Risk Factors (Item 1A) + MD&A (Item 7) changed vs the prior-year 10-K, relative to the firm's own median change in earlier years. FY2015 is the comparison base and FY2016-FY2017 build each firm's history, so they are not plotted.` |
-| Size | 8 x 4.5 inches at 200 dpi |
+| Header | Ticker as the title; company, sector and what is plotted as the subtitle; headline stat `Beat the S&P 500 in N of M full years`; a detail line with the average, best and worst year (full windows only) |
+| Bars | One bar per binned filing, from the S&P 500 line to the excess return, filled with the bin color, value printed at the bar end (`+35`, `−81`). Bars, not a connecting line, because each filing is a separate 12-month holding |
+| X axis | Filing year, with a rounded bin badge (`Q1`…`Q5`) under each year |
+| Partial window | Hatched, lighter bar, and `thru <Mon 'YY>` under its badge |
+| Footnote | How change is measured and binned, and which years build the firm's history |
 
-Each firm has eleven 10-Ks (FY2015–FY2025): FY2015 is the comparison base, FY2016–FY2017 build the firm's history for the firm-relative score, so each graph has eight points (FY2018–FY2025). The target look is a gray market line with the firm's line on top, colored by bin.
+**2. Pooled graph**: `pooled_by_bin.png`, 8 x 4.5 in. Every firm-year with a bin and a full 12-month window. Per bin: one dot per filing (spread sideways deterministically so they do not stack), a black bar at the mean, a shaded band for the 95% t confidence interval, and under the bin badge `n` and the share that beat the S&P 500. Headline: `Q5 − Q1 spread` with its Welch 95% CI and p-value. The Lazy Prices prediction is Q5 − Q1 > 0. Bin means for the bins used and for raw-similarity bins (comparison only) go to `data/pooled_by_bin.csv`.
 
-### The pooled graph
+**3. All firms heatmap**: `all_firms_heatmap.png`, 8 in wide, height grows with the number of firms. Rows are firms grouped by sector, columns are filing years; each cell is filled with its bin color and shows the excess return. The last column is each firm's average over full windows. Partial-window cells are hatched and their column is starred.
 
-`outputs/figures/pooled_by_bin.png`, 8 x 4.5 inches at 200 dpi. Two panels with a shared y axis. Both use the same firm-years: every filing with a firm-relative bin and a full 12-month window (FY2018–FY2024, n = 35). Left panel: bins on the firm-relative change score. Right panel: bins on raw cosine similarity, for comparison. Within each panel, one dot per firm-year in its bin color; each bin's mean as a dark bar with a 95% t confidence interval; the S&P 500 as a gray line at 0; and in the corner `Q5 − Q1` (mean difference, Welch 95% CI, p-value). The Lazy Prices prediction is Q5 − Q1 > 0. The footnote says that filings are treated as independent and that the sample is far too small to test the effect. Bin means are written to `data/pooled_by_bin.csv`.
+**4. All firms combined**: `all_firms_combined.png`, 8 x 4.5 in. Each filing year, the firms are split into five equal-weighted baskets by bin. Each firm is held for its own 12-month window, and the S&P 500 is measured over the same windows. Basket and S&P 500 are compounded separately year by year, and the line shows how far the basket is ahead of (or behind) the S&P 500. Q1 and Q5 are drawn bold, Q2–Q4 thin; every line has a direct label at its end. Full windows only. Yearly basket returns go to `data/bin_baskets.csv`.
+
+Each firm has eleven 10-Ks (FY2015–FY2025): FY2015 is the comparison base, and FY2016–FY2017 build the firm's history for the firm-relative score, so each firm graph has eight bars (FY2018–FY2025).
 
 ## Scope and decisions
 
-Five hand-picked firms, one per sector. CIKs were checked against SEC filing pages. All have December fiscal year ends, so the fiscal-year label is simply the calendar year of the period end.
+Twenty hand-picked large firms covering 10 of the 11 GICS sectors. CIKs, December fiscal year ends and an original 10-K for every year FY2015–FY2025 were checked against EDGAR's submissions index. The fiscal-year label is the calendar year of the period end (INTC and PEP end on the last Saturday of December). Utilities are left out: large utilities file one combined 10-K with their operating subsidiaries, so one filing is not one firm.
 
 | Ticker | Company | CIK | Sector |
 | --- | --- | --- | --- |
@@ -62,10 +71,27 @@ Five hand-picked firms, one per sector. CIKs were checked against SEC filing pag
 | JPM | JPMorgan Chase & Co | 0000019617 | Financials |
 | MCD | McDonald's Corp | 0000063908 | Consumer Discretionary |
 | CAT | Caterpillar Inc | 0000018230 | Industrials |
+| TXN | Texas Instruments Inc | 0000097476 | Information Technology |
+| MRK | Merck & Co Inc | 0000310158 | Health Care |
+| UNH | UnitedHealth Group Inc | 0000731766 | Health Care |
+| GS | Goldman Sachs Group Inc | 0000886982 | Financials |
+| BAC | Bank of America Corp | 0000070858 | Financials |
+| AMZN | Amazon.com Inc | 0001018724 | Consumer Discretionary |
+| BA | Boeing Co | 0000012927 | Industrials |
+| HON | Honeywell International Inc | 0000773840 | Industrials |
+| GOOGL | Alphabet Inc | 0001652044 | Communication Services |
+| META | Meta Platforms Inc (Facebook Inc before 2021) | 0001326801 | Communication Services |
+| KO | Coca-Cola Co | 0000021344 | Consumer Staples |
+| PEP | PepsiCo Inc | 0000077476 | Consumer Staples |
+| COP | ConocoPhillips | 0001163165 | Energy |
+| NEM | Newmont Corp (Newmont Mining, Newmont Goldcorp earlier) | 0001164727 | Materials |
+| AMT | American Tower Corp | 0001053507 | Real Estate |
+
+A firm's `aliases` in `config.yaml` lists former names, since older filing headers carry the name at the time; header names also match without EDGAR's state tag (`/DE/`).
 
 - **Filings:** original 10-Ks for fiscal years 2015–2025 (FY2015 is only the comparison base). Drop 10-K/A amendments. Flag 10-KT transition reports and exclude them from pairing.
 - **Signal:** cosine similarity between a 10-K and the same firm's previous 10-K, on **Item 1A (Risk Factors) and Item 7 (MD&A) only**, scored together. Each section's own cosine is saved as well (`cosine_risk_factors`, `cosine_mdna`). Jaccard similarity is computed too, as a robustness column, but the graph uses cosine.
-- **Returns:** free monthly adjusted prices (try `yfinance`) for the five tickers and SPY.
+- **Returns:** free monthly adjusted prices (try `yfinance`) for the 20 tickers and SPY.
 - **Why these firms:** self-contained 10-Ks and December year ends. IBM was dropped because its 10-K puts the MD&A and financials in a separate exhibit. Not a random sample, so results say nothing about the typical company.
 
 ```yaml
@@ -98,7 +124,7 @@ Keep `fiscal_years` configurable. Extending the window backward later should be 
 
 **Change and firm-relative change.** `change = 1 − cosine similarity`. A firm's `prior_median_change` for year FY is the median `change` over its scored years before FY; only earlier years are used, so the score never uses future data. `rel_change = change / prior_median_change`: 2.0 means the firm changed its 10-K twice as much as usual. It is blank until the firm has `relative_min_history` (default 2) earlier scored years. Why: with raw similarity, a firm whose 10-K always moves more (INTC) sits in Q1 almost every year, so the bins rank companies, not events. On the pilot data INTC is Q1 in 6 of 10 years on raw similarity and 1 of 8 on firm-relative change.
 
-**Bin.** For each fiscal year, rank the firms by `rel_change` from highest to lowest (`bin_basis: firm_relative`, the default), or by cosine similarity from lowest to highest (`bin_basis: raw`); either way rank 1 is the most changed. Both are saved, as `bin_relative` and `bin_raw`; `bin` is the one `bin_basis` picks. Years where no firm has a firm-relative score get no bin. With `n` firms scored that year, `bin = ceil(5 * rank / n)`. With all five firms present, the bin equals the rank. Ties break alphabetically by ticker and are logged. **Bin 1 is always the most changed and Bin 5 the least changed.** Never flip this.
+**Bin.** For each fiscal year, rank the firms by `rel_change` from highest to lowest (`bin_basis: firm_relative`, the default), or by cosine similarity from lowest to highest (`bin_basis: raw`); either way rank 1 is the most changed. Both are saved, as `bin_relative` and `bin_raw`; `bin` is the one `bin_basis` picks. Years where no firm has a firm-relative score get no bin. With `n` firms scored that year, `bin = ceil(5 * rank / n)`. With 20 firms present, each bin holds four firms a year. Ties break alphabetically by ticker and are logged. **Bin 1 is always the most changed and Bin 5 the least changed.** Never flip this.
 
 **Return window.** Let `m0` be the last trading day of the month in which the 10-K was filed (the filing date comes from the header). Start price is the adjusted close at `m0`. End price is the adjusted close 12 month-ends later. Return = end / start - 1, in percent. This starts the clock after the filing is public, so there is no lookahead. If the end month is later than the latest available price, use the latest available month and set `partial = True`.
 
@@ -116,27 +142,27 @@ Do the tasks in order. After each task, run its check. Do not start the next tas
 *Check:* `make test` runs; `python -m pilot --help` works.
 
 **T1. Download.** Use `sec-edgar-downloader`. Read the installed version's `get()` signature before calling it, since argument names changed across versions. Use the CIK as the identifier, fetch `10-K` filings filed after `2021-01-01` with `download_details=True`, and throttle to well under 10 requests per second with retries. Skip anything already on disk. Do not assume the folder layout; discover it. Parse the SEC header in each `full-submission.txt` for company name, submission type, period of report and filing date. Write `data/filings_manifest.csv` with columns `ticker, cik, accession, form, period_of_report, filing_date, fy, path`. Keep periods ending 2020–2025 only.
-*Check:* up to 55 rows, 11 per firm, all `form = 10-K`; each header company name matches `config.yaml`. Missing FY2025 filings (filed in early 2026) are reported. If any firm lacks FY2025, drop FY2025 for every firm and say so.
+*Check:* up to 220 rows, 11 per firm, all `form = 10-K`; each header company name matches `config.yaml`. Missing FY2025 filings (filed in early 2026) are reported. If any firm lacks FY2025, drop FY2025 for every firm and say so.
 
 **T2. Clean.** From each filing, take only the document of type `10-K`, not the exhibits or graphics that sit in the same file. For inline-XBRL HTML, remove the hidden `ix:header` block and other hidden elements before extracting text. Remove tables that are more than 15% numeric (the original paper's rule), strip tags, lowercase, normalize whitespace. Write `data/clean/{cik}_{fy}.txt` and log word counts. Then cut out Item 1A and Item 7 (see **Sections**) to `data/sections/{cik}_{fy}_{risk_factors|mdna}.txt`.
 *Check:* every filing has a clean file; flag any word count above 3 times or below one third of that firm's median; open three random clean files and confirm they read as normal prose with no leftover markup.
 
 **T3. Score.** For each firm and FY from 2016, compare the Item 1A + Item 7 text to FY-1. Write `data/similarity.parquet` with columns `ticker, cik, fy, prev_fy, filing_date, cosine_sim, jaccard_sim, n_words, n_words_prev`, plus `cosine_<section>` and `n_words_<section>` for each section.
-*Check:* 50 rows; scores between 0 and 1; a filing compared with itself scores 1 (unit test). Print the three lowest-similarity rows for manual review.
+*Check:* 200 rows; scores between 0 and 1; a filing compared with itself scores 1 (unit test). Print the three lowest-similarity rows for manual review.
 
 **T4. Bin.** Add `change`, `prior_median_change`, `rel_change`, `bin_relative`, `bin_raw` and `bin` to the table using the definitions above. Print each firm's Q1 count under both bases.
-*Check:* each fiscal year has bins 1 to 5 exactly once.
+*Check:* each binned fiscal year's bins are exactly `ceil(5 * rank / n)` for its `n` firms (four firms per bin with 20), so Q1–Q5 are all used.
 
-**T5. Returns.** Download monthly adjusted prices for the five tickers and SPY. If the download fails, accept a CSV at `data/external/prices_monthly.csv` with columns `date, ticker, adj_close` and say so. Compute the return window for every scored filing. Write `data/returns.parquet` with `ticker, fy, filing_date, window_start, window_end, firm_return_pct, spy_return_pct, excess_return_pct, partial`.
+**T5. Returns.** Download monthly adjusted prices for the 20 tickers and SPY. If the download fails, accept a CSV at `data/external/prices_monthly.csv` with columns `date, ticker, adj_close` and say so. Compute the return window for every scored filing. Write `data/returns.parquet` with `ticker, fy, filing_date, window_start, window_end, firm_return_pct, spy_return_pct, excess_return_pct, partial`.
 *Check:* the window start is on or after the filing date in every row; the partial flag is true only where the end month is past the latest price.
 
-**T6. Plot.** Draw the graphs exactly as specified above with `matplotlib`. Save one PNG per firm and the pooled PNG in `outputs/figures/`, and print the pooled bin means and Q5 − Q1.
-*Check:* six files exist; a unit test confirms the bin-to-color mapping; open each image and confirm the legend, labels, partial-window marker and footnote are present and nothing overlaps.
+**T6. Plot.** Draw the graphs exactly as specified above with `matplotlib`. Save one PNG per firm plus `pooled_by_bin.png`, `all_firms_heatmap.png` and `all_firms_combined.png` in `outputs/figures/`, and print the pooled bin means and Q5 − Q1.
+*Check:* one file per firm plus the pooled, heatmap and combined files exist; a unit test confirms the bin-to-color mapping; open each image and confirm the legend, labels, partial-window marker and footnote are present and nothing overlaps.
 
-**T7. Wrap up.** Write `outputs/coverage.txt`: filings found out of 55, scores out of 50, sections taken from exhibits, price coverage, partial windows, and any ties. Make `make all` run T1 to T6 from scratch.
+**T7. Wrap up.** Write `outputs/coverage.txt`: filings found out of 220, scores out of 200, sections taken from exhibits, price coverage, partial windows, and any ties. Make `make all` run T1 to T6 from scratch.
 *Check:* `make all` completes on a clean clone and `make test` passes.
 
-**Definition of done:** six PNGs (five firms + pooled) match the specification, every check above passes, and `outputs/coverage.txt` lists every gap.
+**Definition of done:** 23 PNGs (20 firms, pooled, heatmap, combined) match the specification, every check above passes, and `outputs/coverage.txt` lists every gap.
 
 ### Tests to write
 
@@ -194,11 +220,11 @@ Not part of the pilot deliverable. This is the paper's main test, kept here for 
 - Each month the long-short return is Q5 minus Q1. That produces one time series of monthly returns, which they regress on risk factors: the market, size, value, momentum, liquidity, and later a five-factor set.
 - The intercept of that regression is the alpha. A positive, significant alpha means the non-changers beat the changers by more than those known risk exposures explain. They report this both equal-weighted and value-weighted.
 
-With five firms this would be one long-short trade a year and is for testing code only. Use Ken French monthly factors (market, size, value, momentum, profitability, investment; the liquidity factor is not in that library), Newey–West standard errors, and run 3- and 12-month holds.
+With 20 firms this would be one long-short trade of four stocks a side a year and is for testing code only. Use Ken French monthly factors (market, size, value, momentum, profitability, investment; the liquidity factor is not in that library), Newey–West standard errors, and run 3- and 12-month holds.
 
 ## Reference project and proposed changes
 
-The main idea matches a public replication, a Streamlit app at `lazypricesreplication.streamlit.app`. We reuse none of its code or text; the graph above follows its general look (market line in gray, firm line colored by bin), and we credit it. That project covers S&P 500 firms from 1993 to 2024, uses Loughran–McDonald 10-K word-count files instead of downloading filings, and compares annual returns across five similarity bins. It labels bins in opposite directions in its method text and its chart legend, shows no significance test on the pages we have, and does not say whether its S&P 500 list is as of each date.
+The main idea matches a public replication, a Streamlit app at `lazypricesreplication.streamlit.app`. We reuse none of its code or text; the first version of our per-firm graph followed its general look (market line in gray, firm line colored by bin), and we credit it. The current graphics differ on purpose: bars of return over the S&P 500 instead of a line next to a market line, a colorblind-safe warm-to-blue diverging palette instead of red-to-green, bin badges and headline stats, and three pooled views (bin dot plot, firm-by-year heatmap, bin baskets over time). That project covers S&P 500 firms from 1993 to 2024, uses Loughran–McDonald 10-K word-count files instead of downloading filings, and compares annual returns across five similarity bins. It labels bins in opposite directions in its method text and its chart legend, shows no significance test on the pages we have, and does not say whether its S&P 500 list is as of each date.
 
 This project differs by using raw filings from EDGAR (so word order and sections are available), a recent window, and, in the full project, a comparison with other published predictors (Open Asset Pricing).
 
@@ -221,17 +247,18 @@ This project differs by using raw filings from EDGAR (so word order and sections
 
 ## Known limitations
 
-- **Tiny sample.** 50 scored filings. The graphs illustrate the method and prove the pipeline; they are not evidence about the effect.
+- **Small sample.** 200 scored filings (160 binned) from 20 firms. The graphs illustrate the method and prove the pipeline; they are not evidence about the effect.
 - **Eight points per graph.** One annual return per binned filing; FY2016–FY2017 only build each firm's history.
 - **Format breaks persist in the firm-relative score.** PFE's FY2020 move of its MD&A into the 10-K makes FY2020–FY2022 look large next to its calm pre-2020 baseline, so PFE is Q1 in 4 of 8 years. A shorter rolling baseline would adapt faster but is noisier with this little history.
+- **Format breaks in the new firms.** HON redesigned its 10-K for FY2020: MD&A moved ahead of Risk Factors, section names became running page headers, and MD&A shrank from about 8,000 to about 2,500 words, so HON FY2020 scores as a very large change. PEP condensed Item 1A from about 14,600 to about 7,000 words in FY2020. These are real changes in the filings but are formatting decisions, not news.
 - **Excess return is market-adjusted only.** No beta or factor adjustment; that is the calendar-time portfolio test in the later phase.
 - **Last window may be partial.** FY2025 filings are entered around March 2026, so their 12-month window runs past the latest prices.
 - **Hand-picked firms.** Large, stable companies chosen for clean data.
 - **10-K only.** The original paper also used 10-Qs.
-- **Free data.** Survivorship bias and missing delisting returns matter less for five large, still-listed firms.
+- **Free data.** Survivorship bias and missing delisting returns matter less for 20 large, still-listed firms.
 - **Text coverage.** Only Item 1A and Item 7 are scored. Business, legal proceedings, financial-statement notes and everything in the proxy statement are not in the signal.
 - **Format breaks.** PFE moved its MD&A from the EX-13 "Financial Review" (about 45,000 words, including a glossary) into Item 7 (about 15,000 words) in FY2020, so PFE FY2020 vs FY2019 partly measures that move. The coverage report lists these years.
-- **Heading rules are per layout.** Section boundaries were checked by hand for these five firms. A new firm may need a new heading pattern in `t2_sections.py`; a missing section shows up as a gap, not a silent fallback.
+- **Heading rules are per layout.** Section boundaries were checked against these 20 firms' layouts. A new firm may need a new heading pattern in `t2_sections.py`; a missing section shows up as a gap, not a silent fallback.
 - **Quintile cutoffs.** The paper sets them from an earlier distribution of scores; sources I read disagree on whether that is the prior month or the prior year. The pilot ranks firms within each year. Confirm against the paper's PDF before the full project.
 
 ## References
