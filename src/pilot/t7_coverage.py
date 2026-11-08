@@ -52,7 +52,12 @@ def run_coverage(cfg: Config) -> str:
         "",
         "SIMILARITY (T3) AND BINS (T4)",
         f"Scored filings: {s.get('rows', '?')} / {n_firms * (n_years - 1)}",
-        f"Bin measure: {b.get('measure')}; Q1 = most changed, Q5 = least changed",
+        f"Bin measure: {b.get('measure')}; basis: {b.get('basis')}"
+        + (f" (change / firm's median change in earlier years, needs {b.get('min_history')} earlier years)"
+           if b.get("basis") == "firm_relative" else "")
+        + "; Q1 = most changed, Q5 = least changed",
+        *_lines("Years without bins (firm history still building)", [f"FY{y}" for y in b.get("years_without_bins", [])]),
+        f"Q1 count by firm: {b.get('q1_counts')} (raw-similarity bins: {b.get('q1_counts_raw')})",
         *_lines("Years without exactly one of each bin 1-5", [f"FY{k}: {v}" for k, v in
                                                             (b.get("years_without_full_bins") or {}).items()]),
         *_lines("Ties (broken alphabetically by ticker)",
@@ -77,6 +82,19 @@ def run_coverage(cfg: Config) -> str:
         "FIGURES (T6)",
         *_lines("Figures", pl.get("figures")),
         f"Points per firm: {pl.get('points')}",
+        f"Per-firm y axis: {pl.get('plot_return')} return"
+        + (" (firm minus S&P 500 over the same window)" if pl.get("plot_return") == "excess" else ""),
+        "",
+        "POOLED: NEXT-YEAR RETURN MINUS S&P 500 BY BIN (T6)",
+        f"Firm-years: {pl.get('pooled_n')} (FY{min(pl.get('pooled_years') or [0])}-FY{max(pl.get('pooled_years') or [0])}"
+        "; full 12-month windows only)",
+        *[line for col, res in (pl.get("pooled") or {}).items() for line in [
+            f"{'Firm-relative bins' if col == 'bin_relative' else 'Raw-similarity bins'}: "
+            + ", ".join(f"Q{x['bin']} {x['mean']:+.1f} pp (n={x['n']})" for x in res["by_bin"]),
+            f"  Q5 - Q1 = {res['spread_q5_minus_q1']['diff']:+.1f} pp, 95% CI "
+            f"{res['spread_q5_minus_q1']['ci_low']:+.1f} to {res['spread_q5_minus_q1']['ci_high']:+.1f}, "
+            f"p = {res['spread_q5_minus_q1']['p']:.2f} (Welch; filings treated as independent)",
+        ]],
         "",
         f"Reminder: {s.get('rows', '?')} scored filings from {n_firms} hand-picked firms illustrate the",
         "pipeline; they are not evidence for or against the Lazy Prices effect.",
