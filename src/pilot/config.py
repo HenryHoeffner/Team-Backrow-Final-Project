@@ -89,6 +89,9 @@ class Config:
     return_window_months: int
     benchmark_ticker: str
     sections: list[str] = field(default_factory=lambda: ["risk_factors", "mdna"])
+    bin_basis: str = "firm_relative"   # or "raw"
+    relative_min_history: int = 2      # earlier scored years needed before a firm-relative score
+    plot_return: str = "excess"        # or "raw"
     paths: Paths = field(default_factory=lambda: Paths(PROJECT_ROOT))
 
     @property
@@ -114,7 +117,19 @@ def load_config(path: Path | None = None, root: Path | None = None) -> Config:
     unknown = set(sections) - set(KNOWN_SECTIONS)
     if not sections or unknown:
         raise ValueError(f"sections must be a non-empty list from {KNOWN_SECTIONS}, got {sections!r}")
+    basis = str(raw.get("bin_basis", "firm_relative"))
+    if basis not in {"firm_relative", "raw"}:
+        raise ValueError(f"bin_basis must be firm_relative or raw, got {basis!r}")
+    plot_return = str(raw.get("plot_return", "excess"))
+    if plot_return not in {"excess", "raw"}:
+        raise ValueError(f"plot_return must be excess or raw, got {plot_return!r}")
+    min_hist = int(raw.get("relative_min_history", 2))
+    if min_hist < 1:
+        raise ValueError("relative_min_history must be at least 1")
     return Config(
+        bin_basis=basis,
+        relative_min_history=min_hist,
+        plot_return=plot_return,
         firms=[Firm(**{k: str(v) for k, v in f.items()}) for f in raw["firms"]],
         fiscal_years=sorted(int(y) for y in raw["fiscal_years"]),
         bin_measure=measure,

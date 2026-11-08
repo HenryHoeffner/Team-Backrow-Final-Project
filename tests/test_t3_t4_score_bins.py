@@ -3,7 +3,7 @@ from collections import Counter
 import pandas as pd
 import pytest
 
-from pilot.t4_bins import assign_bins
+from pilot.t4_bins import assign_bins, firm_relative_change
 from pilot.t3_score import cosine_similarity, jaccard_similarity, text_similarity
 
 DOC = "the company faces risks related to competition and supply chain disruption.\nrevenue grew."
@@ -58,3 +58,34 @@ def test_bins_ranked_within_each_year():
     got = {(r.ticker, r.fy): r.bin for r in out.itertuples()}
     assert got[("A", 2022)] < got[("B", 2022)]
     assert got[("A", 2023)] > got[("B", 2023)]
+
+
+def test_firm_relative_change_uses_only_earlier_years():
+    # change = 1 - cosine: A = 0.02, 0.04, 0.09, 0.01
+    df = _sim([("A", 2016, 0.98), ("A", 2017, 0.96), ("A", 2018, 0.91), ("A", 2019, 0.99)])
+    out = firm_relative_change(df, min_history=2).set_index("fy")
+    assert out["rel_change"].loc[[2016, 2017]].isna().all()  # not enough history yet
+    assert out.loc[2018, "prior_median_change"] == pytest.approx(0.03)  # median(0.02, 0.04)
+    assert out.loc[2018, "rel_change"] == pytest.approx(3.0)
+    assert out.loc[2019, "prior_median_change"] == pytest.approx(0.04)  # median(0.02, 0.04, 0.09)
+    # Changing a later year must not change an earlier score (no lookahead).
+    df2 = df.copy()
+    df2.loc[df2.fy == 2019, "cosine_sim"] = 0.5
+    out2 = firm_relative_change(df2, min_history=2).set_index("fy")
+    assert out2.loc[2018, "rel_change"] == pytest.approx(3.0)
+
+
+def test_relative_change_removes_a_firm_that_is_always_wordier():
+    # B always changes 5x as much as A, so raw similarity puts B in the most-changed bin
+    # every year; relative to its own history B is only "most changed" when it spikes.
+    rows = []
+    for fy, a, b in [(2016, .01, .05), (2017, .01, .05), (2018, .02, .05), (2019, .01, .10)]:
+        rows += [("A", fy, 1 - a), ("B", fy, 1 - b)]
+    df = _sim(rows)
+    raw, _ = assign_bins(df)
+    assert all(raw.loc[raw.ticker == "B", "bin"] < raw.loc[raw.ticker == "A", "bin"].to_numpy())
+    rel, _ = assign_bins(firm_relative_change(df, min_history=2), "rel_change", descending=True)
+    got = {(r.ticker, r.fy): r.bin for r in rel.itertuples()}
+    assert got[("A", 2018)] < got[("B", 2018)]  # A doubled its usual change; B did not
+    assert got[("B", 2019)] < got[("A", 2019)]  # B doubled its usual change
+    assert pd.isna(got[("A", 2016)]) and pd.isna(got[("B", 2017)])  # no bin without history
