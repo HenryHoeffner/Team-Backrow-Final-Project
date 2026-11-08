@@ -39,3 +39,10 @@ def test_company_name_matching():
     assert names_match("MCDONALDS CORP", "McDonald's Corp")
     assert names_match("JPMORGAN CHASE & CO", "JPMorgan Chase & Co")
     assert not names_match("INTEL CORP", "Pfizer Inc")
+
+
+def test_name_matching_handles_state_tags_and_former_names():
+    assert names_match("BANK OF AMERICA CORP /DE/", "Bank of America Corp")
+    assert names_match("AMERICAN TOWER CORP /MA/", "American Tower Corp")
+    assert names_match("Facebook Inc", "Meta Platforms Inc", ("Facebook Inc",))
+    assert not names_match("Facebook Inc", "Meta Platforms Inc")

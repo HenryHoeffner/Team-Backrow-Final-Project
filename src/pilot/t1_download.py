@@ -60,11 +60,12 @@ def parse_sec_header(text: str) -> dict:
 
 def normalize_name(name: str) -> str:
     """Uppercase and drop punctuation/spaces so "McDonald's Corp" == "MCDONALDS CORP"."""
-    return re.sub(r"[^A-Z0-9]", "", name.upper().replace("&", ""))
+    name = re.sub(r"\s*/[A-Z]{2}/?\s*$", "", name.upper().strip())  # EDGAR state tag: "BANK OF AMERICA CORP /DE/"
+    return re.sub(r"[^A-Z0-9]", "", name.replace("&", ""))
 
 
-def names_match(header_name: str, config_name: str) -> bool:
-    return normalize_name(header_name) == normalize_name(config_name)
+def names_match(header_name: str, config_name: str, aliases: tuple[str, ...] = ()) -> bool:
+    return any(normalize_name(header_name) == normalize_name(n) for n in (config_name, *aliases))
 
 
 # --------------------------------------------------------------------------- SEC access
@@ -193,7 +194,7 @@ def run_download(cfg: Config, fetch: bool = True) -> pd.DataFrame:
         if firm is None:
             log.warning("ignoring %s: CIK %s not in config", path, h["cik"])
             continue
-        if not names_match(h["company_name"] or "", firm.name):
+        if not names_match(h["company_name"] or "", firm.name, firm.aliases):
             name_mismatch.append({"ticker": firm.ticker, "header": h["company_name"], "config": firm.name})
         if h["form"] == "10-KT":
             report.setdefault("transition_reports_flagged", []).append(

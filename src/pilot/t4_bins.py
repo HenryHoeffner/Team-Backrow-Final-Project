@@ -83,7 +83,10 @@ def run_bins(cfg: Config) -> pd.DataFrame:
     # ---- check
     with_bins = binned[binned["bin"].notna()]
     per_year = with_bins.groupby("fy")["bin"].apply(lambda b: sorted(int(x) for x in b)).to_dict()
-    bad = {fy: b for fy, b in per_year.items() if b != list(range(1, N_BINS + 1))}
+    # With n firms in a year the bins must be exactly ceil(5 * rank / n) for rank 1..n
+    # (one firm per bin when n = 5, four per bin when n = 20).
+    bad = {fy: b for fy, b in per_year.items()
+           if b != [math.ceil(N_BINS * r / len(b)) for r in range(1, len(b) + 1)]}
     no_bin_years = sorted(set(binned["fy"]) - set(per_year))
     ties = ties_rel if cfg.bin_basis == "firm_relative" else ties_raw
     q1_counts = with_bins[with_bins["bin"] == 1]["ticker"].value_counts().to_dict()
@@ -102,9 +105,11 @@ def run_bins(cfg: Config) -> pd.DataFrame:
         print(binned.pivot(index="ticker", columns="fy", values="rel_change").round(2).to_string())
         print(f"\nYears without bins (firms still building {cfg.relative_min_history} years of history): "
               f"{no_bin_years or 'none'}")
-    print(f"[T4 check] every binned year has bins 1..5 exactly once: {not bad} {bad or ''}")
+    sizes = {fy: len(b) for fy, b in per_year.items()}
+    print(f"[T4 check] firms binned per year: {sizes}")
+    print(f"[T4 check] every binned year has bins ceil(5*rank/n), Q1-Q5 all used: {not bad} {bad or ''}")
     print(f"[T4 check] Q1 count by firm: {q1_counts} (raw similarity bins: {q1_counts_raw})")
     print(f"[T4 check] ties: {ties or 'none'}")
-    if bad and all(len(b) == N_BINS for b in bad.values()):
+    if bad:
         raise CheckFailed(f"bins not 1..5 in years {sorted(bad)}")
     return binned

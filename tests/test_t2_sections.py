@@ -78,3 +78,25 @@ def test_pointer_section_is_not_found_and_exhibit_is_used():
 def test_missing_section_returns_empty():
     text, info = find_section("nothing relevant here\n" + body("x"), "risk_factors")
     assert text == "" and info["candidates"] == 0
+
+
+def test_market_risks_plural_ends_plain_risk_factors():
+    # HON FY2020+: plain-name headings repeated as page headers, MD&A before risk factors,
+    # and "market risks" (plural) after risk factors.
+    text = "\n".join([
+        "management's discussion and analysis of financial condition and results of operations", body("mdna"),
+        "risk factors", body("rf1"), "risk factors", body("rf2"),
+        "quantitative and qualitative disclosures about market risks", body("market"),
+    ])
+    rf, _ = find_section(text, "risk_factors")
+    assert "rf1 the company" in rf and "rf2 the company" in rf and "market the company" not in rf
+
+
+def test_wrapped_item_7_titles():
+    # HON FY2016: title cut after "and results"; COP FY2019: title wraps after "and".
+    for title in ["item 7. management's discussion and analysis of financial condition and results",
+                  "item 7.\nmanagement's discussion and"]:
+        text = "\n".join([title, "analysis of financial condition and results of operations", body("mdna"),
+                          "item 7a. quantitative and qualitative disclosures about market risk", "x"])
+        md, info = find_section(text, "mdna")
+        assert "mdna the company" in md and info["n_words"] >= MIN_SECTION_WORDS, title

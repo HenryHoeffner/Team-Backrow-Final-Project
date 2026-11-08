@@ -5,11 +5,25 @@ firms:
   - {ticker: JPM,  cik: "0000019617", name: "JPMorgan Chase & Co", sector: "Financials"}
   - {ticker: MCD,  cik: "0000063908", name: "McDonald's Corp",     sector: "Consumer Discretionary"}
   - {ticker: CAT,  cik: "0000018230", name: "Caterpillar Inc",     sector: "Industrials"}
+  - {ticker: TXN,  cik: "0000097476", name: "Texas Instruments Inc",       sector: "Information Technology"}
+  - {ticker: MRK,  cik: "0000310158", name: "Merck & Co Inc",              sector: "Health Care"}
+  - {ticker: UNH,  cik: "0000731766", name: "UnitedHealth Group Inc",      sector: "Health Care"}
+  - {ticker: GS,   cik: "0000886982", name: "Goldman Sachs Group Inc",     sector: "Financials"}
+  - {ticker: BAC,  cik: "0000070858", name: "Bank of America Corp",        sector: "Financials"}
+  - {ticker: AMZN, cik: "0001018724", name: "Amazon.com Inc",              sector: "Consumer Discretionary"}
+  - {ticker: BA,   cik: "0000012927", name: "Boeing Co",                   sector: "Industrials"}
+  - {ticker: HON,  cik: "0000773840", name: "Honeywell International Inc", sector: "Industrials"}
+  - {ticker: GOOGL, cik: "0001652044", name: "Alphabet Inc",               sector: "Communication Services"}
+  - {ticker: META, cik: "0001326801", name: "Meta Platforms Inc",          sector: "Communication Services", aliases: ["Facebook Inc"]}
+  - {ticker: KO,   cik: "0000021344", name: "Coca-Cola Co",                sector: "Consumer Staples"}
+  - {ticker: PEP,  cik: "0000077476", name: "PepsiCo Inc",                 sector: "Consumer Staples"}
+  - {ticker: COP,  cik: "0001163165", name: "ConocoPhillips",              sector: "Energy"}
+  - {ticker: NEM,  cik: "0001164727", name: "Newmont Corp",                sector: "Materials", aliases: ["Newmont Goldcorp Corp", "Newmont Mining Corp"]}
+  - {ticker: AMT,  cik: "0001053507", name: "American Tower Corp",         sector: "Real Estate"}
 fiscal_years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
 sections: [risk_factors, mdna]   # Item 1A Risk Factors, Item 7 MD&A; scored together
 bin_measure: cosine
 bin_basis: firm_relative     # firm_relative: change vs the firm's own earlier years; raw: plain similarity
 relative_min_history: 2      # earlier scored years a firm needs before it gets a firm-relative bin
-plot_return: excess          # excess: firm minus S&P 500; raw: firm and S&P 500 as separate lines
 return_window_months: 12
 benchmark_ticker: SPY

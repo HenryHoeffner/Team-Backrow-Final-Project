@@ -26,6 +26,8 @@ MAX_HEADING_WORDS = 15
 MIN_SECTION_WORDS = 1000  # shorter than this is a pointer ("see page 40"), not the section
 
 _ITEM_ALONE = re.compile(r"^item \d+[a-d]?[.:]?$")
+# NEM appends its units note to every heading: "item 1a. risk factors (dollars in millions, except ...)"
+_UNITS_NOTE = re.compile(r"\s*\((?:dollars|amounts|in millions)[^)]*\)\s*$")
 _PAGE = r"(?:\s+\d{1,3})?"  # trailing page number in an index line
 
 _START = {
@@ -37,7 +39,9 @@ _START = {
     ],
     "mdna": [
         rf"^(?:item 7\b[.:]?\s*[-:]?\s*)?management'?s discussion and analysis"
-        rf"(?: of (?:the )?financial condition and results of operations?)?\.?{_PAGE}$",
+        rf"(?: of (?:the )?(?:consolidated )?financial condition(?: and results(?: of operations?)?)?)?\.?{_PAGE}$",
+        # COP FY2019-2020: the Item 7 title wraps after "and" onto the next line.
+        r"^item 7\b[.:]?\s*management'?s discussion and$",
         # INTC FY2017-2018: "management's discussion and analysis (md&a) - results of operations"
         r"^management'?s discussion and analysis \(md&a\)(?: -.*)?$",
     ],
@@ -58,7 +62,7 @@ _END = {
         r"^properties\.?$",
         r"^legal proceedings\b",
         r"^sales and marketing$",                       # INTC: "other key information" part
-        r"^quantitative and qualitative disclosures? about market risk\b",
+        r"^quantitative and qualitative disclosures? about market risks?\b",  # HON writes "risks"
         r"^financial statements\b",
         r"^management'?s discussion and analysis\b",    # where MD&A follows risk factors
         r"^information about our executive officers\b",
@@ -66,7 +70,7 @@ _END = {
     ],
     "mdna": [
         r"^item (?:7a|8|9|9a|1[0-6])\b",
-        r"^quantitative and qualitative disclosures? about market risk\b",
+        r"^quantitative and qualitative disclosures? about market risks?\b",  # HON writes "risks"
         r"^financial statements and (?:supplementary data|supplemental details)\b",
         r"^management'?s report on internal control\b",
         r"^report of independent registered public accounting firm\b",
@@ -87,9 +91,9 @@ def _heading_lines(lines: list[str]) -> list[tuple[int, str]]:
     next line, since some filings put the item number and title in separate cells."""
     out = []
     for i, ln in enumerate(lines):
-        if len(ln.split()) > MAX_HEADING_WORDS:
+        text = _UNITS_NOTE.sub("", ln.strip())
+        if len(text.split()) > MAX_HEADING_WORDS:
             continue
-        text = ln.strip()
         if _ITEM_ALONE.match(text) and i + 1 < len(lines):
             text = f"{text} {lines[i + 1].strip()}"
         out.append((i, text))
