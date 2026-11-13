@@ -1,10 +1,10 @@
 """Shared look for every graphic: palette, fonts, header/footer and the bin legend.
 
-Bins use a diverging palette: warm vermillion = most changed (Q1), neutral gray = middle
-(Q3), deep blue = least changed (Q5). It avoids the red/green pairing (hard for red-green
+Bins use a diverging palette: warm vermillion = most changed (B1), neutral gray = middle
+(B3), deep blue = least changed (B5). It avoids the red/green pairing (hard for red-green
 colorblind readers), and every chart also prints the Q label so the bin never depends on
 color alone. Adjacent-pair separation was checked in OKLab, including simulated protan,
-deutan and tritan vision (worst pair Q2-Q3, delta E 7.3, which is why the labels are always shown).
+deutan and tritan vision (worst pair B2-B3, delta E 7.3, which is why the labels are always shown).
 """
 from __future__ import annotations
 
@@ -87,7 +87,7 @@ def footnote(fig, text: str, x: float = 0.06, y_in: float = 0.11) -> None:
 
 
 def bin_scale(fig, x: float, y_in: float, partial: bool = False) -> None:
-    """A small diverging key, 'Bins: most changed [Q1]..[Q5] least changed', with its
+    """A small diverging key, 'Bins: most changed [B1]..[B5] least changed', with its
     bottom edge y_in inches above the figure bottom. Sizes are in inches."""
     w, h = fig.get_figwidth(), fig.get_figheight()
     cw, ch = 0.27 / w, 0.19 / h
@@ -97,7 +97,7 @@ def bin_scale(fig, x: float, y_in: float, partial: bool = False) -> None:
     for b in range(1, 6):
         fig.patches.append(Rectangle((x0 + (b - 1) * cw, y), cw * 0.92, ch,
                                      transform=fig.transFigure, color=BIN_COLORS[b], lw=0))
-        fig.text(x0 + (b - 1) * cw + cw * 0.46, y + ch / 2, f"Q{b}", ha="center", va="center",
+        fig.text(x0 + (b - 1) * cw + cw * 0.46, y + ch / 2, f"B{b}", ha="center", va="center",
                  fontsize=6.5, color=BIN_TEXT[b], fontweight="bold")
     end = x0 + 5 * cw + 0.06 / w
     fig.text(end, y + ch / 2, "least changed", ha="left", va="center", fontsize=7, color=INK_2)
@@ -110,8 +110,8 @@ def bin_scale(fig, x: float, y_in: float, partial: bool = False) -> None:
 
 
 def chip(ax, x: float, y: float, b: int, transform, fontsize: float = 6.8) -> None:
-    """A rounded bin badge ('Q2') centred at (x, y) in the given transform."""
-    ax.annotate(f"Q{int(b)}", (x, y), xycoords=transform, ha="center", va="center", fontsize=fontsize,
+    """A rounded bin badge ('B2') centred at (x, y) in the given transform."""
+    ax.annotate(f"B{int(b)}", (x, y), xycoords=transform, ha="center", va="center", fontsize=fontsize,
                 fontweight="bold", color=BIN_TEXT[int(b)], annotation_clip=False,
                 bbox=dict(boxstyle="round,pad=0.28,rounding_size=0.5", fc=BIN_COLORS[int(b)], ec="none"))
 
