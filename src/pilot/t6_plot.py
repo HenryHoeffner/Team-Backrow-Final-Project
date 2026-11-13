@@ -4,7 +4,7 @@
    the 12 months after the filing, filled with the filing's change-bin color, a Q badge
    under each year, and a header with the firm's record against the market.
 2. pooled_by_bin.png: every firm-year with a full window, grouped by bin, with each bin's
-   mean and 95% confidence interval and the Q5 - Q1 spread.
+   mean and 95% confidence interval and the B5 - B1 spread.
 3. all_firms_heatmap.png: every firm x filing year in one grid; cell color = bin,
    cell text = return vs the S&P 500.
 4. all_firms_combined.png: all firms combined into five equal-weighted bin baskets, each
@@ -37,7 +37,6 @@ from pilot.style import (  # noqa: E402
 
 log = logging.getLogger("pilot.t6_plot")
 
-SECTION_SHORT = {"risk_factors": "Risk Factors (Item 1A)", "mdna": "MD&A (Item 7)"}
 FIGSIZE = (8, 4.5)
 BIN_WORDS = {1: "most\nchanged", 2: "", 3: "typical", 4: "", 5: "least\nchanged"}
 
@@ -51,16 +50,6 @@ _pp = zero_is_sp500(lambda v: f"{v:+.0f} pp")
 def _signed(v: float) -> str:
     r = int(round(v))
     return f"{r:+d}".replace("-", "−") if r else "0"
-
-
-def basis_note(cfg: Config) -> str:
-    sections = " + ".join(SECTION_SHORT[s] for s in cfg.sections)
-    first = min(cfg.fiscal_years)
-    hist = [first + 1 + i for i in range(cfg.relative_min_history)]
-    span = f"FY{hist[0]}" + (f"–FY{hist[-1]}" if len(hist) > 1 else "")
-    return (f"Change = 1 − cosine similarity of {sections} to the prior-year 10-K, divided by the firm's own "
-            f"median change in earlier years. Bins rank all {len(cfg.firms)} firms within each year.\n"
-            f"FY{first} is the comparison base and {span} build each firm's history, so the first bin is FY{hist[-1] + 1}.")
 
 
 # --------------------------------------------------------------------------- 1. per firm
@@ -202,11 +191,12 @@ def plot_pooled(df: pd.DataFrame, out_path, bin_col: str = "bin", note: str = ""
 
     years = sorted(df["fy"].unique())
     firms = n_firms or df["ticker"].nunique()
-    headline, detail = "", ""
+    headline = ""
+    detail = ("Each dot = one firm's 10-K: how far its stock beat or trailed the S&P 500 in the next 12 months  ·  "
+              "black bar = bin average  ·  band = 95% CI")
     if not math.isnan(spread["diff"]):
-        headline = f"Q5 − Q1 spread: {_signed(spread['diff'])} pp"
-        detail = (f"Dots = filings  ·  black bar = bin mean  ·  shaded band = 95% CI  ·  "
-                  f"Q5 − Q1 95% CI {_signed(spread['ci_low'])} to {_signed(spread['ci_high'])} pp, p = {spread['p']:.2f}")
+        headline = f"B5 − B1: {_signed(spread['diff'])} pp, p = {spread['p']:.2f}"
+        note = (f"B5 − B1 95% CI {_signed(spread['ci_low'])} to {_signed(spread['ci_high'])} pp.  " + note).strip()
     header(fig, "Do bigger rewrites lead to a weaker year?",
            f"All {firms} firms, FY{years[0]}–FY{years[-1]} 10-Ks: return minus the S&P 500 in the 12 months "
            "after each filing, by change bin", headline=headline, detail=detail)
@@ -285,11 +275,17 @@ def plot_heatmap(df: pd.DataFrame, firms: list[dict], out_path, note: str = ""):
 def bin_baskets(df: pd.DataFrame, bin_col: str = "bin") -> pd.DataFrame:
     """For each filing year and bin: an equal-weighted basket of that bin's firms, held for
     each firm's 12-month window, and the S&P 500 over the same windows. Full windows only.
-    `relative` compounds basket and S&P separately and divides, so 1.10 = 10% ahead."""
+    `relative` compounds basket and S&P separately and divides, so 1.10 = 10% ahead.
+    When the window dates are present, `window_start` / `window_end` are the earliest start and
+    latest end of the basket's holds, so each point can be labelled by when it is measured."""
     d = df[df[bin_col].notna() & ~df["partial"]].copy()
     d["year"] = pd.to_datetime(d["filing_date"]).dt.year
-    g = (d.groupby(["year", bin_col])
-          .agg(n=("ticker", "size"), basket=("firm_return_pct", "mean"), spy=("spy_return_pct", "mean"))
+    aggs = dict(n=("ticker", "size"), basket=("firm_return_pct", "mean"), spy=("spy_return_pct", "mean"))
+    if "window_start" in d:
+        aggs["window_start"] = ("window_start", "min")
+    if "window_end" in d:
+        aggs["window_end"] = ("window_end", "max")
+    g = (d.groupby(["year", bin_col]).agg(**aggs)
           .reset_index().rename(columns={bin_col: "bin"}).sort_values(["bin", "year"]))
     g["_b"], g["_s"] = 1 + g["basket"] / 100, 1 + g["spy"] / 100
     g["relative"] = g.groupby("bin")["_b"].cumprod() / g.groupby("bin")["_s"].cumprod()
@@ -316,8 +312,19 @@ def plot_combined(baskets: pd.DataFrame, out_path, note: str = "", n_firms: int 
         ends[b] = ys[-1]
     ax.axhline(0, color=BASELINE, lw=1.3, zorder=2)
     ax.yaxis.set_major_formatter(FuncFormatter(zero_is_sp500(lambda v: f"{v:+.0f}%")))
+    # Label each point by when it is measured: the start is when the first holds begin, and each
+    # later point is when that filing year's 12-month holds end (about a year after the filings).
+    def _mon(ts) -> str:
+        return f"{pd.Timestamp(ts):%b '%y}"
+    if {"window_start", "window_end"} <= set(baskets.columns):
+        ends_at = baskets.groupby("year")["window_end"].max()
+        start_label = _mon(baskets["window_start"].min())
+        year_labels = [_mon(ends_at[y]) for y in years]
+        last_label = year_labels[-1]
+    else:  # no window dates: fall back to filing years
+        start_label, year_labels, last_label = "start", [str(y) for y in years], str(years[-1])
     ax.set_xticks([start] + years)
-    ax.set_xticklabels(["start"] + [str(y) for y in years], fontsize=8)
+    ax.set_xticklabels([start_label] + year_labels, fontsize=8)
     ax.set_xlim(start - 0.2, years[-1] + 0.2)
 
     # Direct labels at the line ends, pushed apart so they never overlap.
@@ -332,18 +339,20 @@ def plot_combined(baskets: pd.DataFrame, out_path, note: str = "", n_firms: int 
     shift = max(0.0, max(placed.values()) - (hi - gap * 0.3))
     for b, y in placed.items():
         words = {1: " most changed", 5: " least changed"}.get(b, "")
-        ax.annotate(f"Q{b}{words}  {ends[b]:+.0f}%".replace("-", "−"), (years[-1], ends[b]),
+        ax.annotate(f"B{b}{words}  {ends[b]:+.0f}%".replace("-", "−"), (years[-1], ends[b]),
                     xytext=(years[-1] + 0.25, y - shift), textcoords="data", ha="left", va="center",
                     fontsize=7.6, color=INK if b in (1, 5) else INK_2, fontweight="bold" if b in (1, 5) else "normal",
                     annotation_clip=False,
                     arrowprops=dict(arrowstyle="-", color=BIN_COLORS[b], lw=0.8, shrinkA=0, shrinkB=3))
     spread = ends.get(5, math.nan) - ends.get(1, math.nan)
-    header(fig, "All firms combined: one basket per bin",
+    header(fig, "Did the most-changed firms lag the least-changed?",
            f"Each year the {n_firms} firms' 10-Ks are split into 5 equal-weighted baskets by change bin. "
            "Line = cumulative return ahead of the S&P 500.",
-           headline=(f"Q5 ahead of Q1 by {years[-1]}: {spread:+.0f} points".replace("-", "−")
+           headline=(f"B5 − B1: {spread:+.0f} points".replace("-", "−")
                      if not math.isnan(spread) else ""),
-           detail="Each point is after holding that filing year's baskets for 12 months. Start = level with the S&P 500.")
+           detail=f"Each point is the value when that year's 12-month holds end, through {last_label}. "
+                  "Start = level with the S&P 500.")
+    bin_scale(fig, 0.06, 0.38)
     footnote(fig, note)
     fig.savefig(out_path, dpi=DPI)
     plt.close(fig)
@@ -366,8 +375,8 @@ def run_plot(cfg: Config) -> list:
     df = ret.merge(sim[[c for c in cols if c in sim.columns]], on=["ticker", "fy"], how="inner",
                    validate="one_to_one")
     firms = [{"ticker": f.ticker, "name": f.name, "sector": f.sector} for f in cfg.firms]
-    note = basis_note(cfg)
-
+    # The method (how change is scored and binned) is explained in the README, not on each chart.
+    # Footnotes keep only the caveats a reader needs to read the chart correctly.
     paths, points = [], {}
     for f in firms:
         g = df[(df["ticker"] == f["ticker"]) & df["bin"].notna()]
@@ -375,28 +384,24 @@ def run_plot(cfg: Config) -> list:
             log.warning("no binned rows for %s; no figure", f["ticker"])
             continue
         out = p.figures / f"{f['ticker']}_yearly_returns.png"
-        plot_firm(f, g, out, note)
+        plot_firm(f, g, out)
         paths.append(out)
         points[f["ticker"]] = len(g)
 
     pool = df[~df["partial"] & df["bin"].notna()].copy()
     years = sorted(pool["fy"].unique())
-    pooled_note = (f"n = {len(pool)} firm-years ({len(cfg.firms)} firms × {len(years)} years); partial windows "
-                   f"(FY{max(cfg.fiscal_years)}) are left out. The 95% intervals treat filings as independent, which "
-                   "overstates precision\nwhen firms move together in the same year. "
-                   f"{len(cfg.firms)} hand-picked large firms illustrate the method; this is not a test of the Lazy Prices effect.")
+    pooled_note = (f"{len(cfg.firms)} hand-picked firms; 95% CIs treat filings as independent, so they look more "
+                   "precise than they are. Illustrates the method, not a test of the Lazy Prices effect.")
     summ, spread = plot_pooled(pool, p.figures / "pooled_by_bin.png", "bin", pooled_note, len(cfg.firms))
     raw_summ, raw_spread = bin_summary(pool, "bin_raw"), q5_minus_q1(pool, "bin_raw")
     paths.append(p.figures / "pooled_by_bin.png")
 
-    paths.append(plot_heatmap(df, firms, p.figures / "all_firms_heatmap.png", note))
+    paths.append(plot_heatmap(df, firms, p.figures / "all_firms_heatmap.png"))
 
     baskets = bin_baskets(df)
     baskets.to_csv(p.data / "bin_baskets.csv", index=False)
-    combined_note = ("Each firm is held from the month-end after its 10-K for 12 months; the S&P 500 is measured over "
-                     "the same windows. Baskets are rebuilt every filing year;\nwindows overlap by a few weeks "
-                     f"because filing dates differ. Full windows only (filing years {int(baskets['year'].min())}–"
-                     f"{int(baskets['year'].max())}). Illustrative, not a trading strategy test.")
+    combined_note = (f"{len(cfg.firms)} hand-picked firms; full 12-month windows only. "
+                     "Illustrates the method, not a test of a trading strategy.")
     paths.append(plot_combined(baskets, p.figures / "all_firms_combined.png", combined_note, len(cfg.firms)))
 
     pd.concat([summ.assign(basis="bin"), raw_summ.assign(basis="bin_raw")]).to_csv(
@@ -415,10 +420,10 @@ def run_plot(cfg: Config) -> list:
           f"points per firm: {points}")
     print(f"\n[T6] pooled return vs S&P 500 by bin (n = {len(pool)}):")
     print(summ.round(2).to_string(index=False))
-    print(f"Q5 - Q1 = {spread['diff']:+.1f} pp, 95% CI {spread['ci_low']:+.1f} to {spread['ci_high']:+.1f}, "
+    print(f"B5 - B1 = {spread['diff']:+.1f} pp, 95% CI {spread['ci_low']:+.1f} to {spread['ci_high']:+.1f}, "
           f"p = {spread['p']:.2f}  (raw-similarity bins: {raw_spread['diff']:+.1f} pp, p = {raw_spread['p']:.2f})")
     print(f"[T6] baskets, cumulative vs S&P 500 by {int(baskets['year'].max())}: "
-          + ", ".join(f"Q{b} {(v - 1) * 100:+.0f}%" for b, v in final.items()))
+          + ", ".join(f"B{b} {(v - 1) * 100:+.0f}%" for b, v in final.items()))
     if len(paths) != n_expected:
         raise CheckFailed(f"expected {n_expected} figures, wrote {len(paths)}")
     return paths

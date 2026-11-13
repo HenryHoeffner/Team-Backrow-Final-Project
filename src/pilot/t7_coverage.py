@@ -55,9 +55,9 @@ def run_coverage(cfg: Config) -> str:
         f"Bin measure: {b.get('measure')}; basis: {b.get('basis')}"
         + (f" (change / firm's median change in earlier years, needs {b.get('min_history')} earlier years)"
            if b.get("basis") == "firm_relative" else "")
-        + "; Q1 = most changed, Q5 = least changed",
+        + "; B1 = most changed, B5 = least changed",
         *_lines("Years without bins (firm history still building)", [f"FY{y}" for y in b.get("years_without_bins", [])]),
-        f"Q1 count by firm: {b.get('q1_counts')} (raw-similarity bins: {b.get('q1_counts_raw')})",
+        f"B1 count by firm: {b.get('q1_counts')} (raw-similarity bins: {b.get('q1_counts_raw')})",
         *_lines("Years whose bins do not match ceil(5 * rank / n)", [f"FY{k}: {v}" for k, v in
                                                             (b.get("years_without_full_bins") or {}).items()]),
         *_lines("Ties (broken alphabetically by ticker)",
@@ -89,8 +89,8 @@ def run_coverage(cfg: Config) -> str:
         "; full 12-month windows only)",
         *[line for col, res in (pl.get("pooled") or {}).items() for line in [
             f"{'Bins used (firm-relative)' if col == 'bin' else 'Raw-similarity bins, for comparison'}: "
-            + ", ".join(f"Q{x['bin']} {x['mean']:+.1f} pp (n={x['n']})" for x in res["by_bin"]),
-            f"  Q5 - Q1 = {res['spread_q5_minus_q1']['diff']:+.1f} pp, 95% CI "
+            + ", ".join(f"B{x['bin']} {x['mean']:+.1f} pp (n={x['n']})" for x in res["by_bin"]),
+            f"  B5 - B1 = {res['spread_q5_minus_q1']['diff']:+.1f} pp, 95% CI "
             f"{res['spread_q5_minus_q1']['ci_low']:+.1f} to {res['spread_q5_minus_q1']['ci_high']:+.1f}, "
             f"p = {res['spread_q5_minus_q1']['p']:.2f} (Welch; filings treated as independent)",
         ]],
@@ -98,7 +98,7 @@ def run_coverage(cfg: Config) -> str:
         "ALL FIRMS COMBINED: EQUAL-WEIGHTED BIN BASKETS (T6)",
         f"Filing years: {(pl.get('baskets_years') or ['?', '?'])[0]}-{(pl.get('baskets_years') or ['?', '?'])[1]}; "
         "cumulative return ahead of the S&P 500 over the same windows:",
-        "  " + ", ".join(f"Q{b} {(v - 1) * 100:+.0f}%" for b, v in (pl.get("baskets_final_relative") or {}).items()),
+        "  " + ", ".join(f"B{b} {(v - 1) * 100:+.0f}%" for b, v in (pl.get("baskets_final_relative") or {}).items()),
         "",
         f"Reminder: {s.get('rows', '?')} scored filings from {n_firms} hand-picked firms illustrate the",
         "pipeline; they are not evidence for or against the Lazy Prices effect.",

@@ -3,7 +3,7 @@
 Two bases are computed and saved; `bin_basis` in config.yaml picks which one is `bin`:
 
 - raw: rank on similarity to the prior-year 10-K. A firm whose 10-K is always wordier
-  in its changes (INTC) lands in Q1 almost every year, so this mostly ranks firms.
+  in its changes (INTC) lands in B1 almost every year, so this mostly ranks firms.
 - firm_relative: rank on this year's change (1 - similarity) divided by the firm's median
   change in its *earlier* scored years. "PFE changed 5.6x its usual amount" beats
   "INTC changed its usual amount". Only earlier years are used, so there is no lookahead.
@@ -98,7 +98,7 @@ def run_bins(cfg: Config) -> pd.DataFrame:
     })
     label = ("change vs the firm's own earlier years" if cfg.bin_basis == "firm_relative"
              else measure)
-    print(f"\n[T4 check] bins on {label}; Q1 = most changed")
+    print(f"\n[T4 check] bins on {label}; B1 = most changed")
     print(binned.pivot(index="ticker", columns="fy", values="bin").to_string())
     if cfg.bin_basis == "firm_relative":
         print("\nchange relative to the firm's earlier median (x times usual):")
@@ -107,8 +107,8 @@ def run_bins(cfg: Config) -> pd.DataFrame:
               f"{no_bin_years or 'none'}")
     sizes = {fy: len(b) for fy, b in per_year.items()}
     print(f"[T4 check] firms binned per year: {sizes}")
-    print(f"[T4 check] every binned year has bins ceil(5*rank/n), Q1-Q5 all used: {not bad} {bad or ''}")
-    print(f"[T4 check] Q1 count by firm: {q1_counts} (raw similarity bins: {q1_counts_raw})")
+    print(f"[T4 check] every binned year has bins ceil(5*rank/n), B1-B5 all used: {not bad} {bad or ''}")
+    print(f"[T4 check] B1 count by firm: {q1_counts} (raw similarity bins: {q1_counts_raw})")
     print(f"[T4 check] ties: {ties or 'none'}")
     if bad:
         raise CheckFailed(f"bins not 1..5 in years {sorted(bad)}")
