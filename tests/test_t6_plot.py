@@ -81,6 +81,20 @@ def test_bin_baskets_compound_against_sp500():
     assert b.loc[2021, "relative"] == pytest.approx((1.2 * 1.0) / (1.1 * 1.1))
 
 
+def test_bin_baskets_keep_window_dates():
+    # Each basket records its earliest hold start and latest hold end, used to label the x-axis.
+    df = pd.DataFrame({
+        "ticker": ["A", "B"], "bin": [1, 1],
+        "filing_date": pd.to_datetime(["2020-01-15", "2020-02-10"]),
+        "window_start": pd.to_datetime(["2020-01-31", "2020-02-28"]),
+        "window_end": pd.to_datetime(["2021-01-29", "2021-02-26"]),
+        "firm_return_pct": [10.0, 30.0], "spy_return_pct": [10.0, 10.0], "partial": [False, False],
+    })
+    b = bin_baskets(df).set_index("year")
+    assert b.loc[2020, "window_start"] == pd.Timestamp("2020-01-31")
+    assert b.loc[2020, "window_end"] == pd.Timestamp("2021-02-26")
+
+
 def test_heatmap_and_combined_write_png(tmp_path):
     rows = pd.concat([_firm_rows("AAA"), _firm_rows("BBB")])
     firms = [{"ticker": "AAA", "name": "A", "sector": "X"}, {"ticker": "BBB", "name": "B", "sector": "Y"}]

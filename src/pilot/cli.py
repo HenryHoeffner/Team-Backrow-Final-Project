@@ -68,7 +68,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("download", help="T1: download 10-Ks and write data/filings_manifest.csv").set_defaults(fn=_download)
     sub.add_parser("clean", help="T2: extract and clean the 10-K document text").set_defaults(fn=_clean)
     sub.add_parser("score", help="T3: cosine and Jaccard similarity vs. prior-year 10-K").set_defaults(fn=_score)
-    sub.add_parser("bins", help="T4: rank firms within each year into bins Q1..Q5").set_defaults(fn=_bins)
+    sub.add_parser("bins", help="T4: rank firms within each year into bins B1..B5").set_defaults(fn=_bins)
     r = sub.add_parser("returns", help="T5: 12-month firm and SPY returns after each filing")
     r.add_argument("--refresh", action="store_true", help="re-download prices even if cached")
     r.set_defaults(fn=_returns)
