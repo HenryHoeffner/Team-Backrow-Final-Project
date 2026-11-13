@@ -139,6 +139,7 @@ def run_clean(cfg: Config) -> pd.DataFrame:
     p.sections.mkdir(parents=True, exist_ok=True)
     manifest = load_manifest(cfg)
     rows, gaps, sec_rows = [], [], []
+    missing_sections = []
     for r in manifest.itertuples():
         out = p.clean / f"{r.cik}_{r.fy}.txt"
         raw = (p.root / r.path).read_text(encoding="utf-8", errors="replace")
@@ -155,6 +156,7 @@ def run_clean(cfg: Config) -> pd.DataFrame:
                 sp.write_text(sec_text, encoding="utf-8")
             else:
                 sp.unlink(missing_ok=True)
+                missing_sections.append(f"{r.ticker} FY{r.fy}: {SECTION_NAMES[sec]}")
                 gaps.append(f"{r.ticker} FY{r.fy}: {SECTION_NAMES[sec]} not found "
                             f"(longest candidate {info['n_words']} words); filing not scored")
             sec_rows.append({"ticker": r.ticker, "fy": r.fy, "section": sec,
@@ -217,6 +219,9 @@ def run_clean(cfg: Config) -> pd.DataFrame:
         print(f"\n--- spot check {s.ticker} FY{s.fy} ({s.path}) ---\n{body[mid:mid + 600]}")
     if len(wc) < len(manifest) - len(gaps):
         raise CheckFailed("some filings have no clean file")
+    if missing_sections:
+        raise CheckFailed(f"{len(missing_sections)} section(s) not found, so those filings cannot be scored; "
+                          f"check the headings and add a pattern in t2_sections.py: {missing_sections}")
     if leftovers:
         raise CheckFailed(f"markup left in clean text: {leftovers}")
     return wc

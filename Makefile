@@ -4,7 +4,7 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 export PYTHONPATH := src
 PILOT := $(PYTHON) -m pilot
 
-.PHONY: setup download clean score returns plot coverage diffs all test reset
+.PHONY: setup download clean score returns plot export coverage diffs all test reset
 
 setup:            ## create .venv and install dependencies
 	python3 -m venv .venv
@@ -27,13 +27,16 @@ returns:          ## T5: 12-month firm and SPY returns after each filing
 plot:             ## T6: one PNG per firm in outputs/figures/
 	$(PILOT) plot
 
+export:           ## T9: outputs/lazy_prices.xlsx (Firm-years, summary, pooled, baskets, filings)
+	$(PILOT) export
+
 coverage:         ## T7: outputs/coverage.txt
 	$(PILOT) coverage
 
 diffs:            ## T8 (stretch): sentence diffs for the three lowest-similarity filings
 	$(PILOT) diff --lowest 3
 
-all: download clean score returns plot coverage
+all: download clean score returns plot export coverage
 
 test:
 	$(PYTHON) -m pytest -q

@@ -100,3 +100,11 @@ def test_wrapped_item_7_titles():
                           "item 7a. quantitative and qualitative disclosures about market risk", "x"])
         md, info = find_section(text, "mdna")
         assert "mdna the company" in md and info["n_words"] >= MIN_SECTION_WORDS, title
+
+
+def test_unrecognised_headings_return_no_section():
+    # A filing that words its headings differently yields "" so the T2 check can flag it.
+    text = "\n".join(["business overview", body("x"), "operating and financial review", body("y")])
+    for sec in ("risk_factors", "mdna"):
+        out, info = find_section(text, sec)
+        assert out == "" and info["start_line"] is None

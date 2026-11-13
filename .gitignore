@@ -4,3 +4,6 @@ outputs/
 __pycache__/
 *.pyc
 *.egg-info/
+.env
+.DS_Store
+.vscode/
