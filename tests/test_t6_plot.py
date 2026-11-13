@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from pilot.style import BIN_COLORS, bin_color, zero_is_sp500
-from pilot.t6_plot import (bin_baskets, bin_summary, plot_combined, plot_firm, plot_heatmap, plot_pooled,
+from pilot.t6_plot import (bin_baskets, bin_summary, plot_combined, plot_firm, plot_pooled,
                            q5_minus_q1)
 
 
@@ -81,6 +81,7 @@ def test_bin_baskets_compound_against_sp500():
     assert b.loc[2021, "relative"] == pytest.approx((1.2 * 1.0) / (1.1 * 1.1))
 
 
+def test_combined_write_png(tmp_path):
 def test_bin_baskets_keep_window_dates():
     # Each basket records its earliest hold start and latest hold end, used to label the x-axis.
     df = pd.DataFrame({
@@ -97,6 +98,4 @@ def test_bin_baskets_keep_window_dates():
 
 def test_heatmap_and_combined_write_png(tmp_path):
     rows = pd.concat([_firm_rows("AAA"), _firm_rows("BBB")])
-    firms = [{"ticker": "AAA", "name": "A", "sector": "X"}, {"ticker": "BBB", "name": "B", "sector": "Y"}]
-    assert plot_heatmap(rows, firms, tmp_path / "h.png", "note").stat().st_size > 10_000
     assert plot_combined(bin_baskets(rows), tmp_path / "c.png", "note", 2).stat().st_size > 10_000
