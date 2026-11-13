@@ -1,10 +1,21 @@
 # Lazy Prices Pilot: 20 Firms
 
-**Status:** built. T0–T8 are implemented and every check passes. Run `make setup` once, set `SEC_USER_NAME` / `SEC_USER_EMAIL`, then `make all` (about 15 minutes the first time, about 10 GB of filings). Prices are cached in `data/prices_monthly.csv`; use `python -m pilot returns --refresh` to pull new ones. `make diffs` writes the T8 sentence diffs for the three lowest-similarity filings.
+**Status:** built. T0–T8 are implemented and every check passes.
+
+## Quick start
+
+```
+python3 run.py
+```
+
+That is the whole thing. On the first run it creates `.venv`, installs the dependencies and asks once for your name and email (the SEC requires them on downloads; they are saved in `.env`, which git ignores). Then it runs every step below in order: about 15 minutes the first time and about 10 GB of filings. Reruns skip filings already downloaded and reuse cached prices.
+
+- `python3 run.py --refresh` re-downloads prices. `python3 run.py clean` runs one step (`download`, `clean`, `score`, `returns`, `plot`, `coverage`, `diff`). Run it from a terminal opened in the project folder (VS Code's Run button mishandles folder names with spaces).
+- `make` targets still work for each step and `make test` runs the unit tests. `make diffs` writes the T8 sentence diffs for the three lowest-similarity filings.
 
 ## How to run (in order)
 
-Each step reads the files the step before it wrote, so run them top to bottom. `make all` runs steps 1–7 in this order for you. Code lives in `src/pilot/`, and the file prefix (`t1_`, `t2_`, …) is the run order.
+Each step reads the files the step before it wrote, so run them top to bottom. `make all` runs steps 1–8 in this order for you. Code lives in `src/pilot/`, and the file prefix (`t1_`, `t2_`, …) is the run order.
 
 | Step | Command | Code | Reads | Writes |
 | --- | --- | --- | --- | --- |
@@ -15,8 +26,9 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 | 4 | `make score` (part 2) | `t4_bins.py` | similarity table | adds `rel_change`, `bin_relative`, `bin_raw` and `bin` to `data/similarity.parquet` |
 | 5 | `make returns` | `t5_returns.py` | similarity table, prices (Yahoo or cache) | `data/prices_monthly.csv`, `data/returns.parquet` |
 | 6 | `make plot` | `t6_plot.py` | similarity + returns | `outputs/figures/*.png` (one per firm, `pooled_by_bin.png`, `all_firms_combined.png`), `data/pooled_by_bin.csv`, `data/bin_baskets.csv` |
-| 7 | `make coverage` | `t7_coverage.py` | step reports in `data/reports/` | `outputs/coverage.txt` |
-| 8 | `make diffs` (optional) | `t8_diff.py` | section text, similarity table | `outputs/diffs/*.html` |
+| 7 | `make export` | `t9_export.py` | similarity + returns, pooled and basket tables | `outputs/lazy_prices.xlsx` (sheets: Firm-years, Firm summary, Pooled by bin, Bin baskets, Filings) |
+| 8 | `make coverage` | `t7_coverage.py` | step reports in `data/reports/` | `outputs/coverage.txt` |
+| 9 | `make diffs` (optional) | `t8_diff.py` | section text, similarity table | `outputs/diffs/*.html` |
 
 `make test` runs the unit tests (`tests/test_t*_*.py`, named after the step they test) at any point. Shared code: `cli.py` (the `python -m pilot <step>` entry point), `config.py` (paths and `config.yaml` loading) and `style.py` (palette, fonts and the header, badge and key used by every graphic).
 

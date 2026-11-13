@@ -47,13 +47,18 @@ def _coverage(cfg, args):
     run_coverage(cfg)
 
 
+def _export(cfg, args):
+    from pilot.t9_export import run_export
+    run_export(cfg)
+
+
 def _diff(cfg, args):
     from pilot.t8_diff import run_diff
     run_diff(cfg, ticker=args.ticker, fy=args.fy, lowest=args.lowest)
 
 
 def _all(cfg, args):
-    for step in (_download, _clean, _score, _bins, _returns, _plot, _coverage):
+    for step in (_download, _clean, _score, _bins, _returns, _plot, _export, _coverage):
         step(cfg, args)
 
 
@@ -73,13 +78,14 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument("--refresh", action="store_true", help="re-download prices even if cached")
     r.set_defaults(fn=_returns)
     sub.add_parser("plot", help="T6: one PNG per firm in outputs/figures/").set_defaults(fn=_plot)
+    sub.add_parser("export", help="T9: write outputs/lazy_prices.xlsx").set_defaults(fn=_export)
     sub.add_parser("coverage", help="T7: write outputs/coverage.txt").set_defaults(fn=_coverage)
     d = sub.add_parser("diff", help="T8: HTML of sentences added/removed between two 10-Ks")
     d.add_argument("--ticker")
     d.add_argument("--fy", type=int)
     d.add_argument("--lowest", type=int, help="do the N lowest-similarity filings instead")
     d.set_defaults(fn=_diff)
-    a = sub.add_parser("all", help="run T1..T7 in order")
+    a = sub.add_parser("all", help="run T1..T7 and T9 in order")
     a.add_argument("--refresh", action="store_true", help="re-download prices even if cached")
     a.set_defaults(fn=_all)
     return p
