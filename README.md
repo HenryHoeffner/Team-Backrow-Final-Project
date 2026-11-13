@@ -14,7 +14,7 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 | 3 | `make score` (part 1) | `t3_score.py` | section text | `data/similarity.parquet` |
 | 4 | `make score` (part 2) | `t4_bins.py` | similarity table | adds `rel_change`, `bin_relative`, `bin_raw` and `bin` to `data/similarity.parquet` |
 | 5 | `make returns` | `t5_returns.py` | similarity table, prices (Yahoo or cache) | `data/prices_monthly.csv`, `data/returns.parquet` |
-| 6 | `make plot` | `t6_plot.py` | similarity + returns | `outputs/figures/*.png` (one per firm, `pooled_by_bin.png`, `all_firms_heatmap.png`, `all_firms_combined.png`), `data/pooled_by_bin.csv`, `data/bin_baskets.csv` |
+| 6 | `make plot` | `t6_plot.py` | similarity + returns | `outputs/figures/*.png` (one per firm, `pooled_by_bin.png`, `all_firms_combined.png`), `data/pooled_by_bin.csv`, `data/bin_baskets.csv` |
 | 7 | `make coverage` | `t7_coverage.py` | step reports in `data/reports/` | `outputs/coverage.txt` |
 | 8 | `make diffs` (optional) | `t8_diff.py` | section text, similarity table | `outputs/diffs/*.html` |
 
@@ -54,9 +54,7 @@ Every return in every graphic is the **excess return**: the firm's 12-month retu
 
 **2. Pooled graph**: `pooled_by_bin.png`, 8 x 4.5 in. Every firm-year with a bin and a full 12-month window. Per bin: one dot per filing (spread sideways deterministically so they do not stack), a black bar at the mean, a shaded band for the 95% t confidence interval, and under the bin badge `n` and the share that beat the S&P 500. Headline: `Q5 − Q1 spread` with its Welch 95% CI and p-value. The Lazy Prices prediction is Q5 − Q1 > 0. Bin means for the bins used and for raw-similarity bins (comparison only) go to `data/pooled_by_bin.csv`.
 
-**3. All firms heatmap**: `all_firms_heatmap.png`, 8 in wide, height grows with the number of firms. Rows are firms grouped by sector, columns are filing years; each cell is filled with its bin color and shows the excess return. The last column is each firm's average over full windows. Partial-window cells are hatched and their column is starred.
-
-**4. All firms combined**: `all_firms_combined.png`, 8 x 4.5 in. Each filing year, the firms are split into five equal-weighted baskets by bin. Each firm is held for its own 12-month window, and the S&P 500 is measured over the same windows. Basket and S&P 500 are compounded separately year by year, and the line shows how far the basket is ahead of (or behind) the S&P 500. Q1 and Q5 are drawn bold, Q2–Q4 thin; every line has a direct label at its end. Full windows only. Yearly basket returns go to `data/bin_baskets.csv`.
+**3. All firms combined**: `all_firms_combined.png`, 8 x 4.5 in. Each filing year, the firms are split into five equal-weighted baskets by bin. Each firm is held for its own 12-month window, and the S&P 500 is measured over the same windows. Basket and S&P 500 are compounded separately year by year, and the line shows how far the basket is ahead of (or behind) the S&P 500. Q1 and Q5 are drawn bold, Q2–Q4 thin; every line has a direct label at its end. Full windows only. Yearly basket returns go to `data/bin_baskets.csv`.
 
 Each firm has eleven 10-Ks (FY2015–FY2025): FY2015 is the comparison base, and FY2016–FY2017 build the firm's history for the firm-relative score, so each firm graph has eight bars (FY2018–FY2025).
 
@@ -156,13 +154,13 @@ Do the tasks in order. After each task, run its check. Do not start the next tas
 **T5. Returns.** Download monthly adjusted prices for the 20 tickers and SPY. If the download fails, accept a CSV at `data/external/prices_monthly.csv` with columns `date, ticker, adj_close` and say so. Compute the return window for every scored filing. Write `data/returns.parquet` with `ticker, fy, filing_date, window_start, window_end, firm_return_pct, spy_return_pct, excess_return_pct, partial`.
 *Check:* the window start is on or after the filing date in every row; the partial flag is true only where the end month is past the latest price.
 
-**T6. Plot.** Draw the graphs exactly as specified above with `matplotlib`. Save one PNG per firm plus `pooled_by_bin.png`, `all_firms_heatmap.png` and `all_firms_combined.png` in `outputs/figures/`, and print the pooled bin means and Q5 − Q1.
-*Check:* one file per firm plus the pooled, heatmap and combined files exist; a unit test confirms the bin-to-color mapping; open each image and confirm the legend, labels, partial-window marker and footnote are present and nothing overlaps.
+**T6. Plot.** Draw the graphs exactly as specified above with `matplotlib`. Save one PNG per firm plus `pooled_by_bin.png` and `all_firms_combined.png` in `outputs/figures/`, and print the pooled bin means and Q5 − Q1.
+*Check:* one file per firm plus the pooled and combined files exist; a unit test confirms the bin-to-color mapping; open each image and confirm the legend, labels, partial-window marker and footnote are present and nothing overlaps.
 
 **T7. Wrap up.** Write `outputs/coverage.txt`: filings found out of 220, scores out of 200, sections taken from exhibits, price coverage, partial windows, and any ties. Make `make all` run T1 to T6 from scratch.
 *Check:* `make all` completes on a clean clone and `make test` passes.
 
-**Definition of done:** 23 PNGs (20 firms, pooled, heatmap, combined) match the specification, every check above passes, and `outputs/coverage.txt` lists every gap.
+**Definition of done:** 22 PNGs (20 firms, pooled, combined) match the specification, every check above passes, and `outputs/coverage.txt` lists every gap.
 
 ### Tests to write
 
@@ -224,7 +222,7 @@ With 20 firms this would be one long-short trade of four stocks a side a year an
 
 ## Reference project and proposed changes
 
-The main idea matches a public replication, a Streamlit app at `lazypricesreplication.streamlit.app`. We reuse none of its code or text; the first version of our per-firm graph followed its general look (market line in gray, firm line colored by bin), and we credit it. The current graphics differ on purpose: bars of return over the S&P 500 instead of a line next to a market line, a colorblind-safe warm-to-blue diverging palette instead of red-to-green, bin badges and headline stats, and three pooled views (bin dot plot, firm-by-year heatmap, bin baskets over time). That project covers S&P 500 firms from 1993 to 2024, uses Loughran–McDonald 10-K word-count files instead of downloading filings, and compares annual returns across five similarity bins. It labels bins in opposite directions in its method text and its chart legend, shows no significance test on the pages we have, and does not say whether its S&P 500 list is as of each date.
+The main idea matches a public replication, a Streamlit app at `lazypricesreplication.streamlit.app`. We reuse none of its code or text; the first version of our per-firm graph followed its general look (market line in gray, firm line colored by bin), and we credit it. The current graphics differ on purpose: bars of return over the S&P 500 instead of a line next to a market line, a colorblind-safe warm-to-blue diverging palette instead of red-to-green, bin badges and headline stats, and two pooled views (bin dot plot, bin baskets over time). That project covers S&P 500 firms from 1993 to 2024, uses Loughran–McDonald 10-K word-count files instead of downloading filings, and compares annual returns across five similarity bins. It labels bins in opposite directions in its method text and its chart legend, shows no significance test on the pages we have, and does not say whether its S&P 500 list is as of each date.
 
 This project differs by using raw filings from EDGAR (so word order and sections are available), a recent window, and, in the full project, a comparison with other published predictors (Open Asset Pricing).
 

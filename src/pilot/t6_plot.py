@@ -5,9 +5,7 @@
    under each year, and a header with the firm's record against the market.
 2. pooled_by_bin.png: every firm-year with a full window, grouped by bin, with each bin's
    mean and 95% confidence interval and the Q5 - Q1 spread.
-3. all_firms_heatmap.png: every firm x filing year in one grid; cell color = bin,
-   cell text = return vs the S&P 500.
-4. all_firms_combined.png: all firms combined into five equal-weighted bin baskets, each
+3. all_firms_combined.png: all firms combined into five equal-weighted bin baskets, each
    compounded year by year against the S&P 500 over the same windows.
 
 Bars start at 0 = the S&P 500, since every number is already measured against it. Each
@@ -31,7 +29,7 @@ from scipy import stats  # noqa: E402
 
 from pilot.config import Config, write_report  # noqa: E402
 from pilot.style import (  # noqa: E402
-    BASELINE, BIN_COLORS, BIN_TEXT, DPI, GRID, INK, INK_2, MUTED, SURFACE,
+    BASELINE, BIN_COLORS, DPI, INK, INK_2, MUTED, SURFACE,
     apply_theme, bin_color, bin_scale, chip, footnote, header, style_axes, zero_is_sp500,
 )
 
@@ -42,7 +40,7 @@ FIGSIZE = (8, 4.5)
 BIN_WORDS = {1: "most\nchanged", 2: "", 3: "typical", 4: "", 5: "least\nchanged"}
 
 __all__ = ["BIN_COLORS", "bin_color", "plot_firm", "bin_summary", "q5_minus_q1", "plot_pooled",
-           "plot_heatmap", "bin_baskets", "plot_combined", "run_plot"]
+           "bin_baskets", "plot_combined", "run_plot"]
 
 
 _pp = zero_is_sp500(lambda v: f"{v:+.0f} pp")
@@ -216,70 +214,7 @@ def plot_pooled(df: pd.DataFrame, out_path, bin_col: str = "bin", note: str = ""
     return summ, spread
 
 
-# --------------------------------------------------------------------------- 3. heatmap
-
-
-def plot_heatmap(df: pd.DataFrame, firms: list[dict], out_path, note: str = ""):
-    """Rows = firms grouped by sector, columns = filing years. Cell = bin color + return vs S&P."""
-    apply_theme()
-    df = df[df["bin"].notna()].copy()
-    df["year"] = pd.to_datetime(df["filing_date"]).dt.year
-    years = sorted(df["year"].unique())
-    order = sorted(firms, key=lambda f: (f["sector"], f["ticker"]))
-    n_rows = len(order)
-    height = 1.75 + 0.3 * n_rows
-    fig = plt.figure(figsize=(8, height), dpi=DPI)
-    top_in, bottom_in = 1.3, 0.85
-    ax = fig.add_axes([0.27, bottom_in / height, 0.6, 1 - (top_in + bottom_in) / height])
-    ax.set_xlim(-0.5, len(years) - 0.5)
-    ax.set_ylim(n_rows - 0.5, -0.5)
-    ax.axis("off")
-    cells = df.set_index(["ticker", "year"])
-    prev_sector = None
-    for r, f in enumerate(order):
-        if f["sector"] != prev_sector:
-            ax.annotate(f["sector"], (-0.5, r), xytext=(-62, 0), textcoords="offset points", ha="right",
-                        va="center", fontsize=6.6, color=MUTED, annotation_clip=False)
-            if prev_sector is not None:
-                ax.plot([-3.2, len(years) + 0.9], [r - 0.5, r - 0.5], color=GRID, lw=0.8, clip_on=False)
-            prev_sector = f["sector"]
-        ax.annotate(f["ticker"], (-0.5, r), xytext=(-8, 0), textcoords="offset points", ha="right",
-                    va="center", fontsize=8, fontweight="bold", color=INK, annotation_clip=False)
-        full_vals = []
-        for c, yr in enumerate(years):
-            if (f["ticker"], yr) not in cells.index:
-                continue
-            row = cells.loc[(f["ticker"], yr)]
-            b = int(row["bin"])
-            ax.add_patch(Rectangle((c - 0.46, r - 0.42), 0.92, 0.84, color=BIN_COLORS[b], lw=0,
-                                   hatch="////" if row["partial"] else None, alpha=0.78 if row["partial"] else 1))
-            ax.text(c, r, _signed(row["excess_return_pct"]), ha="center", va="center", fontsize=7,
-                    color=BIN_TEXT[b], fontweight="bold")
-            if not row["partial"]:
-                full_vals.append(row["excess_return_pct"])
-        if full_vals:
-            m = float(np.mean(full_vals))
-            ax.text(len(years) - 0.5 + 0.55, r, _signed(m), ha="center", va="center", fontsize=7.5,
-                    color=INK if m >= 0 else INK_2, fontweight="bold")
-    for c, yr in enumerate(years):
-        part = df[(df["year"] == yr)]["partial"].any()
-        ax.text(c, -0.85, f"{yr}" + ("*" if part else ""), ha="center", va="bottom", fontsize=7.5, color=INK_2)
-    ax.text(len(years) - 0.5 + 0.55, -0.85, "avg", ha="center", va="bottom", fontsize=7.5, color=INK_2,
-            fontweight="bold")
-    partial_end = df.loc[df["partial"], "window_end"]
-    star = (f"  * window still open, measured through {pd.Timestamp(partial_end.max()):%b %Y}; left out of the average."
-            if len(partial_end) else "")
-    header(fig, "Every firm, every year",
-           "Return minus the S&P 500 in the 12 months after each 10-K (pp), colored by change bin. Columns are filing years.",
-           top_in=0.2)
-    bin_scale(fig, 0.06, 0.55, partial=bool(len(partial_end)))
-    footnote(fig, (note + star).strip(), y_in=0.1)
-    fig.savefig(out_path, dpi=DPI)
-    plt.close(fig)
-    return out_path
-
-
-# --------------------------------------------------------------------------- 4. combined
+# --------------------------------------------------------------------------- 3. combined
 
 
 def bin_baskets(df: pd.DataFrame, bin_col: str = "bin") -> pd.DataFrame:
@@ -389,8 +324,6 @@ def run_plot(cfg: Config) -> list:
     raw_summ, raw_spread = bin_summary(pool, "bin_raw"), q5_minus_q1(pool, "bin_raw")
     paths.append(p.figures / "pooled_by_bin.png")
 
-    paths.append(plot_heatmap(df, firms, p.figures / "all_firms_heatmap.png", note))
-
     baskets = bin_baskets(df)
     baskets.to_csv(p.data / "bin_baskets.csv", index=False)
     combined_note = ("Each firm is held from the month-end after its 10-K for 12 months; the S&P 500 is measured over "
@@ -410,8 +343,8 @@ def run_plot(cfg: Config) -> list:
         "baskets_final_relative": {int(b): round(float(v), 4) for b, v in final.items()},
         "baskets_years": [int(baskets["year"].min()), int(baskets["year"].max())],
     })
-    n_expected = len(cfg.tickers) + 3
-    print(f"\n[T6 check] figures written: {len(paths)} ({len(points)} firms + pooled + heatmap + combined); "
+    n_expected = len(cfg.tickers) + 2
+    print(f"\n[T6 check] figures written: {len(paths)} ({len(points)} firms + pooled + combined); "
           f"points per firm: {points}")
     print(f"\n[T6] pooled return vs S&P 500 by bin (n = {len(pool)}):")
     print(summ.round(2).to_string(index=False))
