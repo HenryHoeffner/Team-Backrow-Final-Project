@@ -1,5 +1,8 @@
 # Lazy Prices Pilot: 20 Firms
 
+**Dashboard:** https://team-backrow-final-project-ghs5gtuwudvjks7fkjquxn.streamlit.app/  
+**Dashboard code:** [`app.py`](app.py) in this repo (Streamlit; reads the committed results in [`app_data/`](app_data/)). Run it locally with `make app`.
+
 **Status:** built. T0–T8 are implemented and every check passes. Run `make setup` once, set `SEC_USER_NAME` / `SEC_USER_EMAIL`, then `make all` (about 15 minutes the first time, about 10 GB of filings). Prices are cached in `data/prices_monthly.csv`; use `python -m pilot returns --refresh` to pull new ones. `make diffs` writes the T8 sentence diffs for the three lowest-similarity filings.
 
 ## How to run (in order)
