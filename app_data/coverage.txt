@@ -1,0 +1,140 @@
+Lazy Prices pilot - coverage report
+Generated 2026-11-13 from data/reports/*.json
+
+FILINGS (T1)
+10-K filings found: 220 / 220 (fiscal years 2015-2025)
+Per firm: {'AMT': 11, 'AMZN': 11, 'BA': 11, 'BAC': 11, 'CAT': 11, 'COP': 11, 'GOOGL': 11, 'GS': 11, 'HON': 11, 'INTC': 11, 'JPM': 11, 'KO': 11, 'MCD': 11, 'META': 11, 'MRK': 11, 'NEM': 11, 'PEP': 11, 'PFE': 11, 'TXN': 11, 'UNH': 11}
+Fiscal years used: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+Header company names match config: True
+10-K/A amendments dropped:
+  - BA 0000012927-17-000012 filed 2017-02-10
+  - GOOGL 0001193125-16-520367 filed 2016-03-29
+  - GOOGL 0001193125-19-028757 filed 2019-02-06
+  - GS 0001193125-16-488753 filed 2016-03-02
+  - GS 0000886982-24-000012 filed 2024-02-28
+  - META 0001326801-16-000063 filed 2016-04-27
+  - MRK 0001193125-24-093194 filed 2024-04-11
+  - NEM 0001164727-22-000028 filed 2022-07-28
+10-KT transition reports flagged (excluded): none
+Download gaps: none
+
+CLEAN TEXT (T2)
+Clean files: 220 / 220
+Word-count outliers (>3x or <1/3 of firm median): none
+Sections scored: Item 1A: Risk Factors + Item 7: MD&A
+Sections taken from an EX-13 annual-report exhibit (incorporated by reference):
+  - PFE FY2015: Item 7: MD&A
+  - PFE FY2016: Item 7: MD&A
+  - PFE FY2017: Item 7: MD&A
+  - PFE FY2018: Item 7: MD&A
+  - PFE FY2019: Item 7: MD&A
+Section word-count outliers (>3x or <1/3 of firm median):
+  - PFE FY2016 Item 7: MD&A: 47,250 words (3.045x median)
+  - PFE FY2017 Item 7: MD&A: 48,213 words (3.108x median)
+Clean and section gaps: none
+
+SIMILARITY (T3) AND BINS (T4)
+Scored filings: 200 / 200
+Bin measure: cosine_sim; basis: firm_relative (change / firm's median change in earlier years, needs 2 earlier years); B1 = most changed, B5 = least changed
+Years without bins (firm history still building):
+  - FY2016
+  - FY2017
+B1 count by firm: {'AMT': 3, 'BA': 2, 'COP': 4, 'GOOGL': 1, 'HON': 4, 'INTC': 1, 'JPM': 1, 'KO': 3, 'MRK': 2, 'NEM': 2, 'PEP': 1, 'PFE': 3, 'TXN': 1, 'UNH': 4} (raw-similarity bins: {'AMT': 3, 'AMZN': 1, 'BA': 2, 'CAT': 1, 'COP': 3, 'GOOGL': 2, 'HON': 9, 'INTC': 8, 'JPM': 2, 'MCD': 1, 'NEM': 2, 'PEP': 1, 'PFE': 3, 'TXN': 1, 'UNH': 1})
+Years whose bins do not match ceil(5 * rank / n): none
+Ties (broken alphabetically by ticker): none
+Lowest-similarity filings:
+  - HON FY2020: cosine 0.9775, jaccard 0.5959
+  - INTC FY2016: cosine 0.9851, jaccard 0.7329
+  - PFE FY2020: cosine 0.9885, jaccard 0.6204
+Scoring gaps: none
+
+RETURNS (T5)
+Price source: yfinance (downloaded 2026-11-11)
+Latest complete price month: Oct 2026
+Price coverage (monthly, last trading day):
+  - AMT: 2017-01-31 to 2026-10-30 (118 months)
+  - AMZN: 2017-01-31 to 2026-10-30 (118 months)
+  - BA: 2017-01-31 to 2026-10-30 (118 months)
+  - BAC: 2017-01-31 to 2026-10-30 (118 months)
+  - CAT: 2017-01-31 to 2026-10-30 (118 months)
+  - COP: 2017-01-31 to 2026-10-30 (118 months)
+  - GOOGL: 2017-01-31 to 2026-10-30 (118 months)
+  - GS: 2017-01-31 to 2026-10-30 (118 months)
+  - HON: 2017-01-31 to 2026-10-30 (118 months)
+  - INTC: 2017-01-31 to 2026-10-30 (118 months)
+  - JPM: 2017-01-31 to 2026-10-30 (118 months)
+  - KO: 2017-01-31 to 2026-10-30 (118 months)
+  - MCD: 2017-01-31 to 2026-10-30 (118 months)
+  - META: 2017-01-31 to 2026-10-30 (118 months)
+  - MRK: 2017-01-31 to 2026-10-30 (118 months)
+  - NEM: 2017-01-31 to 2026-10-30 (118 months)
+  - PEP: 2017-01-31 to 2026-10-30 (118 months)
+  - PFE: 2017-01-31 to 2026-10-30 (118 months)
+  - SPY: 2017-01-31 to 2026-10-30 (118 months)
+  - TXN: 2017-01-31 to 2026-10-30 (118 months)
+  - UNH: 2017-01-31 to 2026-10-30 (118 months)
+Return windows computed: 200 / 200
+Partial windows (end month past latest price; hollow marker on graph):
+  - AMT FY2025: 2026-02-27 to 2026-10-30
+  - AMZN FY2025: 2026-02-27 to 2026-10-30
+  - BA FY2025: 2026-01-30 to 2026-10-30
+  - BAC FY2025: 2026-02-27 to 2026-10-30
+  - CAT FY2025: 2026-02-27 to 2026-10-30
+  - COP FY2025: 2026-02-27 to 2026-10-30
+  - GOOGL FY2025: 2026-02-27 to 2026-10-30
+  - GS FY2025: 2026-02-27 to 2026-10-30
+  - HON FY2025: 2026-02-27 to 2026-10-30
+  - INTC FY2025: 2026-01-30 to 2026-10-30
+  - JPM FY2025: 2026-02-27 to 2026-10-30
+  - KO FY2025: 2026-02-27 to 2026-10-30
+  - MCD FY2025: 2026-02-27 to 2026-10-30
+  - META FY2025: 2026-01-30 to 2026-10-30
+  - MRK FY2025: 2026-02-27 to 2026-10-30
+  - NEM FY2025: 2026-02-27 to 2026-10-30
+  - PEP FY2025: 2026-02-27 to 2026-10-30
+  - PFE FY2025: 2026-02-27 to 2026-10-30
+  - TXN FY2025: 2026-02-27 to 2026-10-30
+  - UNH FY2025: 2026-03-31 to 2026-10-30
+Return gaps: none
+
+FIGURES (T6)
+Figures:
+  - outputs/figures/INTC_yearly_returns.png
+  - outputs/figures/PFE_yearly_returns.png
+  - outputs/figures/JPM_yearly_returns.png
+  - outputs/figures/MCD_yearly_returns.png
+  - outputs/figures/CAT_yearly_returns.png
+  - outputs/figures/TXN_yearly_returns.png
+  - outputs/figures/MRK_yearly_returns.png
+  - outputs/figures/UNH_yearly_returns.png
+  - outputs/figures/GS_yearly_returns.png
+  - outputs/figures/BAC_yearly_returns.png
+  - outputs/figures/AMZN_yearly_returns.png
+  - outputs/figures/BA_yearly_returns.png
+  - outputs/figures/HON_yearly_returns.png
+  - outputs/figures/GOOGL_yearly_returns.png
+  - outputs/figures/META_yearly_returns.png
+  - outputs/figures/KO_yearly_returns.png
+  - outputs/figures/PEP_yearly_returns.png
+  - outputs/figures/COP_yearly_returns.png
+  - outputs/figures/NEM_yearly_returns.png
+  - outputs/figures/AMT_yearly_returns.png
+  - outputs/figures/pooled_by_bin.png
+  - outputs/figures/all_firms_heatmap.png
+  - outputs/figures/all_firms_combined.png
+Points per firm: {'AMT': 8, 'AMZN': 8, 'BA': 8, 'BAC': 8, 'CAT': 8, 'COP': 8, 'GOOGL': 8, 'GS': 8, 'HON': 8, 'INTC': 8, 'JPM': 8, 'KO': 8, 'MCD': 8, 'META': 8, 'MRK': 8, 'NEM': 8, 'PEP': 8, 'PFE': 8, 'TXN': 8, 'UNH': 8}
+Per-firm y axis: return minus the S&P 500 over the same window (pp)
+
+POOLED: NEXT-YEAR RETURN MINUS S&P 500 BY BIN (T6)
+Firm-years: 140 (FY2018-FY2024; full 12-month windows only)
+Bins used (firm-relative): B1 -4.6 pp (n=28), B2 -7.0 pp (n=28), B3 +4.9 pp (n=28), B4 +9.2 pp (n=28), B5 +2.1 pp (n=28)
+  B5 - B1 = +6.7 pp, 95% CI -11.6 to +25.0, p = 0.46 (Welch; filings treated as independent)
+Raw-similarity bins, for comparison: B1 -1.2 pp (n=28), B2 -2.5 pp (n=28), B3 -1.2 pp (n=28), B4 +5.4 pp (n=28), B5 +4.2 pp (n=28)
+  B5 - B1 = +5.4 pp, 95% CI -13.8 to +24.5, p = 0.58 (Welch; filings treated as independent)
+
+ALL FIRMS COMBINED: EQUAL-WEIGHTED BIN BASKETS (T6)
+Filing years: 2019-2025; cumulative return ahead of the S&P 500 over the same windows:
+  B1 -23%, B2 -35%, B3 +27%, B4 +50%, B5 -4%
+
+Reminder: 200 scored filings from 20 hand-picked firms illustrate the
+pipeline; they are not evidence for or against the Lazy Prices effect.

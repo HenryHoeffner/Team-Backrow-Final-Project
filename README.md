@@ -23,6 +23,8 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 
 `make app` starts the Streamlit dashboard after `make all` has run. It has four tabs: **Overview** (question and headline result), **Methodology** (steps, key choices, threats to validity, coverage report), **Results** (bin averages with 95% CIs and the B5 − B1 test, basket returns over time) and **Explore a firm** (each filing's bin and return, the sentence diff where one exists, and a CSV download). A switch ranks bins by firm-relative change (the default) or raw similarity. The app computes every number with the pipeline's own functions (`src/pilot/dashboard.py` calls `t6_plot`), and `tests/test_dashboard.py` checks that its headline B5 − B1 equals the one the plot step saved in `data/reports/plot.json`.
 
+**Hosted version.** `data/` is git-ignored, so the website reads a small committed snapshot instead: `make snapshot` (also the last step of `make all`) copies the firm-year table, `coverage.txt` and the plot step's saved statistics into `app_data/` (about 60 KB). After rerunning the pipeline, commit `app_data/` to update the site; `make test` fails if the snapshot no longer matches `data/`. The host installs the pinned packages in `requirements.txt`.
+
 `make test` runs the unit tests (`tests/test_t*_*.py`, named after the step they test) at any point. Shared code: `cli.py` (the `python -m pilot <step>` entry point), `config.py` (paths and `config.yaml` loading) and `style.py` (palette, fonts and the header, badge and key used by every graphic).
 
 ## Goal
