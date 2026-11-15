@@ -1,0 +1,10 @@
+# Packages for the hosted dashboard (Streamlit Community Cloud installs these for app.py).
+# Pinned to the versions it was tested with, so a package upgrade can't break the site.
+# The full pipeline uses pyproject.toml instead (make setup).
+streamlit==1.67.0
+altair==6.3.0
+pandas==3.1.1
+numpy==2.5.4
+scipy==1.18.1
+matplotlib==3.11.2
+PyYAML==6.0.3

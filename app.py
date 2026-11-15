@@ -17,7 +17,9 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from pilot.config import load_config  # noqa: E402
-from pilot.dashboard import BASES, BIN_WORDS, baskets, firm_years, pooled  # noqa: E402
+from pilot.dashboard import (  # noqa: E402
+    BASES, BIN_WORDS, SNAPSHOT_TABLE, baskets, coverage_text, diff_files, load, pooled, snapshot_dir,
+)
 from pilot.style import BIN_COLORS  # noqa: E402
 
 st.set_page_config(page_title="Lazy Prices, revisited", layout="wide")
@@ -38,18 +40,19 @@ def signed(v: float, digits: int = 1) -> str:
 # --------------------------------------------------------------------------- data
 
 @st.cache_data
-def load(mtimes: tuple) -> pd.DataFrame:
-    """mtimes is only the cache key: rerunning the pipeline reloads the data."""
-    return firm_years(load_config())
+def load_data(mtimes: tuple) -> tuple[pd.DataFrame, str]:
+    """mtimes is only the cache key: rerunning the pipeline or a new snapshot reloads the data."""
+    return load(load_config())
 
 
 cfg = load_config()
-needed = [cfg.paths.similarity, cfg.paths.returns]
-missing = [str(p.relative_to(ROOT)) for p in needed if not p.exists()]
-if missing:
-    st.error(f"Missing pipeline output: {', '.join(missing)}. Run `make all` first, then `make app`.")
+# On a computer that ran the pipeline the app reads data/; the hosted site reads app_data/.
+sources = [cfg.paths.similarity, cfg.paths.returns, snapshot_dir(cfg) / SNAPSHOT_TABLE]
+try:
+    df, source = load_data(tuple(p.stat().st_mtime if p.exists() else 0 for p in sources))
+except FileNotFoundError:
+    st.error("No results found. Run `make all` first, then `make app`.")
     st.stop()
-df = load(tuple(p.stat().st_mtime for p in needed))
 df["bin_label"] = "B" + df["bin_relative"].astype(str)
 latest_price = df["window_end"].max()
 
@@ -57,7 +60,8 @@ latest_price = df["window_end"].max()
 
 st.title("Lazy Prices, revisited")
 st.caption("Team Backrow · FIN 331 final project · "
-           f"prices through {latest_price:%b %Y} · [GitHub repo]({REPO_URL})")
+           f"prices through {latest_price:%b %Y} · [GitHub repo]({REPO_URL})"
+           + (" · data: committed snapshot (app_data/)" if source == "snapshot" else ""))
 
 basis = st.radio("Rank bins by", list(BASES), format_func=BASES.get, horizontal=True,
                  help="The project's main measure compares each firm with its own earlier years. "
@@ -133,10 +137,10 @@ with tab_method:
             "- **Spin-offs in free price data.** Yahoo Finance can mis-adjust spin-offs (e.g. HON 2026).\n"
             "- **Market-adjusted only.** No beta or factor adjustment yet.\n"
             "- **Open windows.** The latest filings' 12 months aren't over; they're left out of all averages.")
-    coverage = cfg.paths.coverage
-    if coverage.exists():
+    coverage = coverage_text(cfg)
+    if coverage:
         with st.expander("Coverage report (outputs/coverage.txt)"):
-            st.code(coverage.read_text(), language=None)
+            st.code(coverage, language=None)
 
 # --------------------------------------------------------------------------- results
 
@@ -259,7 +263,7 @@ with tab_explore:
         "From": st.column_config.DateColumn(format="MMM YYYY"),
         "To": st.column_config.DateColumn(format="MMM YYYY")})
 
-    diffs = sorted(cfg.paths.diffs.glob(f"{ticker}_*.html")) if cfg.paths.diffs.exists() else []
+    diffs = diff_files(cfg, ticker)
     with st.expander("What changed in the 10-K? (sentences added and removed)"):
         if diffs:
             pick = st.selectbox("Year", diffs, format_func=lambda p: p.stem.replace("_", " FY"))

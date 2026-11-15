@@ -4,7 +4,7 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 export PYTHONPATH := src
 PILOT := $(PYTHON) -m pilot
 
-.PHONY: setup download clean score returns plot coverage diffs all test app reset
+.PHONY: setup download clean score returns plot coverage diffs snapshot all test app reset
 
 setup:            ## create .venv and install dependencies
 	python3 -m venv .venv
@@ -33,7 +33,10 @@ coverage:         ## T7: outputs/coverage.txt
 diffs:            ## T8 (stretch): sentence diffs for the three lowest-similarity filings
 	$(PILOT) diff --lowest 3
 
-all: download clean score returns plot coverage
+snapshot:         ## copy the results the website needs into app_data/ (commit it to update the site)
+	$(PYTHON) -m pilot.dashboard
+
+all: download clean score returns plot coverage snapshot
 
 test:
 	$(PYTHON) -m pytest -q

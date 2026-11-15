@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 
 from pilot.config import PROJECT_ROOT, load_config
-from pilot.dashboard import baskets, firm_years, pooled
+from pilot.dashboard import SNAPSHOT_DIR, baskets, firm_years, load, pooled, read_snapshot, write_snapshot
 from pilot.t6_plot import q5_minus_q1
 
 
@@ -74,3 +74,37 @@ def test_app_runs_and_matches_pipeline_report():
     at.radio[0].set_value("bin_raw").run()
     at.selectbox[0].set_value("PFE").run()
     assert not at.exception, at.exception
+
+
+def test_snapshot_round_trips_and_is_used_without_pipeline_data(tmp_path):
+    _write_pipeline_files(tmp_path)
+    cfg = load_config(root=tmp_path)
+    write_snapshot(cfg)
+    pd.testing.assert_frame_equal(read_snapshot(cfg), firm_years(cfg), check_dtype=False)
+    assert load(cfg)[1] == "pipeline"
+    shutil.rmtree(tmp_path / "data")  # what the hosted site sees
+    df, source = load(cfg)
+    assert source == "snapshot" and len(df) == 3
+
+
+@pytest.mark.skipif(not (PROJECT_ROOT / "data" / "returns.parquet").exists()
+                    or not (PROJECT_ROOT / SNAPSHOT_DIR).exists(), reason="needs pipeline output and app_data/")
+def test_committed_snapshot_matches_pipeline():
+    """Fails when app_data/ is stale: run `make snapshot` and commit it."""
+    cfg = load_config()
+    pd.testing.assert_frame_equal(read_snapshot(cfg), firm_years(cfg), check_dtype=False)
+
+
+@pytest.mark.skipif(not (PROJECT_ROOT / SNAPSHOT_DIR).exists(), reason="needs app_data/")
+def test_app_runs_from_snapshot_alone(tmp_path, monkeypatch):
+    """The hosted site: config.yaml and app_data/ only, no data/ folder."""
+    from streamlit.testing.v1 import AppTest
+
+    shutil.copy(PROJECT_ROOT / "config.yaml", tmp_path / "config.yaml")
+    shutil.copytree(PROJECT_ROOT / SNAPSHOT_DIR, tmp_path / SNAPSHOT_DIR)
+    monkeypatch.setenv("PILOT_ROOT", str(tmp_path))
+    at = AppTest.from_file(str(PROJECT_ROOT / "app.py"), default_timeout=60).run()
+    assert not at.exception, at.exception
+    saved = json.loads((tmp_path / SNAPSHOT_DIR / "plot.json").read_text())
+    diff = saved["pooled"]["bin"]["spread_q5_minus_q1"]["diff"]
+    assert next(m.value for m in at.metric if m.label == "B5 − B1") == f"{diff:+.1f} pp".replace("-", "−")
