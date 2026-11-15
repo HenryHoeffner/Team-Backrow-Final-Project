@@ -17,6 +17,11 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 | 6 | `make plot` | `t6_plot.py` | similarity + returns | `outputs/figures/*.png` (one per firm, `pooled_by_bin.png`, `all_firms_heatmap.png`, `all_firms_combined.png`), `data/pooled_by_bin.csv`, `data/bin_baskets.csv` |
 | 7 | `make coverage` | `t7_coverage.py` | step reports in `data/reports/` | `outputs/coverage.txt` |
 | 8 | `make diffs` (optional) | `t8_diff.py` | section text, similarity table | `outputs/diffs/*.html` |
+| – | `make app` | `app.py`, `dashboard.py` | similarity + returns, `outputs/coverage.txt`, `outputs/diffs/` | nothing (serves the dashboard at http://localhost:8501) |
+
+### Dashboard
+
+`make app` starts the Streamlit dashboard after `make all` has run. It has four tabs: **Overview** (question and headline result), **Methodology** (steps, key choices, threats to validity, coverage report), **Results** (bin averages with 95% CIs and the B5 − B1 test, basket returns over time) and **Explore a firm** (each filing's bin and return, the sentence diff where one exists, and a CSV download). A switch ranks bins by firm-relative change (the default) or raw similarity. The app computes every number with the pipeline's own functions (`src/pilot/dashboard.py` calls `t6_plot`), and `tests/test_dashboard.py` checks that its headline B5 − B1 equals the one the plot step saved in `data/reports/plot.json`.
 
 `make test` runs the unit tests (`tests/test_t*_*.py`, named after the step they test) at any point. Shared code: `cli.py` (the `python -m pilot <step>` entry point), `config.py` (paths and `config.yaml` loading) and `style.py` (palette, fonts and the header, badge and key used by every graphic).
 
@@ -206,7 +211,9 @@ src/pilot/
   t6_plot.py             step 6: one PNG per firm
   t7_coverage.py         step 7: coverage report
   t8_diff.py             step 8 (optional): sentence diff viewer
-tests/                   test_t<N>_*.py tests step N; test_cli.py tests the CLI
+  dashboard.py           data for the dashboard, built with the step 6 statistics
+app.py                   Streamlit dashboard (`make app`)
+tests/                   test_t<N>_*.py tests step N; test_cli.py the CLI; test_dashboard.py the app
 data/                    raw filings, clean text, sections, similarity, returns (git-ignored)
 outputs/                 figures, coverage report, diffs (git-ignored)
 ```

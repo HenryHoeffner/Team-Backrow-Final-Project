@@ -4,7 +4,7 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 export PYTHONPATH := src
 PILOT := $(PYTHON) -m pilot
 
-.PHONY: setup download clean score returns plot coverage diffs all test reset
+.PHONY: setup download clean score returns plot coverage diffs all test app reset
 
 setup:            ## create .venv and install dependencies
 	python3 -m venv .venv
@@ -37,6 +37,9 @@ all: download clean score returns plot coverage
 
 test:
 	$(PYTHON) -m pytest -q
+
+app:              ## dashboard at http://localhost:8501 (run `make all` first)
+	$(PYTHON) -m streamlit run app.py
 
 reset:            ## delete generated data and outputs (downloads included)
 	rm -rf data outputs
