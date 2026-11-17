@@ -68,7 +68,8 @@ def load_prices(cfg: Config, start: date, refresh: bool = False) -> tuple[pd.Dat
         need_from = pd.Timestamp(start) + pd.offsets.MonthEnd(0)
         first = cached.groupby("ticker")["date"].min()
         if set(tickers) <= set(first.index) and (first[tickers] <= need_from).all():
-            monthly, source = cached, f"cached {p.prices.relative_to(p.root)}"
+            origin = p.prices_source.read_text().strip() if p.prices_source.exists() else "origin not recorded"
+            monthly, source = cached, f"cached {p.prices.relative_to(p.root)}, {origin}"
         else:
             log.info("price cache starts %s, need %s; downloading again",
                      first.max().date(), need_from.date())
@@ -78,6 +79,7 @@ def load_prices(cfg: Config, start: date, refresh: bool = False) -> tuple[pd.Dat
             monthly = drop_incomplete_month(monthly, date.today())
             monthly.to_csv(p.prices, index=False)
             source = f"yfinance (downloaded {date.today().isoformat()})"
+            p.prices_source.write_text(source + "\n")  # so a later cached run still reports the pull date
         except Exception as e:  # network, rate limit, API change
             ext = p.external / "prices_monthly.csv"
             if not ext.exists():

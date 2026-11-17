@@ -1,0 +1,1 @@
+yfinance (downloaded 2026-11-11)

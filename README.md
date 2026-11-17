@@ -3,11 +3,11 @@
 **Dashboard:** https://team-backrow-final-project-ghs5gtuwudvjks7fkjquxn.streamlit.app/  
 **Dashboard code:** [`app.py`](app.py) in this repo (Streamlit; reads the committed results in [`app_data/`](app_data/)). Run it locally with `make app`.
 
-**Status:** built. T0–T8 are implemented and every check passes. Run `make setup` once, set `SEC_USER_NAME` / `SEC_USER_EMAIL`, then `make all` (about 15 minutes the first time, about 10 GB of filings). Prices are cached in `data/prices_monthly.csv`; use `python -m pilot returns --refresh` to pull new ones. `make diffs` writes the T8 sentence diffs for the three lowest-similarity filings.
+**Status:** built. T0–T8 are implemented and every check passes. Run `make setup` once, set `SEC_USER_NAME` / `SEC_USER_EMAIL`, then `make all` (about 15 minutes the first time, about 10 GB of filings). To rerun steps 4–7 without downloading from SEC, run `make setup` and `make from-scores` instead: it starts from the small intermediate files committed in `data/` (see [`data/README.md`](data/README.md)). Prices are cached in `data/prices_monthly.csv`; use `python -m pilot returns --refresh` to pull new ones. `make diffs` writes the T8 sentence diffs for the three lowest-similarity filings.
 
 ## How to run (in order)
 
-Each step reads the files the step before it wrote, so run them top to bottom. `make all` runs steps 1–7 in this order for you. Code lives in `src/pilot/`, and the file prefix (`t1_`, `t2_`, …) is the run order.
+Each step reads the files the step before it wrote, so run them top to bottom. `make all` runs steps 1–7 in this order for you. `make from-scores` runs steps 4–7 from the committed `data/similarity.parquet`, `data/prices_monthly.csv` and step 1–3 reports, with no SEC download. Code lives in `src/pilot/`, and the file prefix (`t1_`, `t2_`, …) is the run order.
 
 | Step | Command | Code | Reads | Writes |
 | --- | --- | --- | --- | --- |
@@ -15,7 +15,7 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 | 1 | `make download` | `t1_download.py` | `config.yaml`, SEC EDGAR | `data/raw/`, `data/filings_manifest.csv` |
 | 2 | `make clean` | `t2_clean.py`, `t2_sections.py` | filings manifest, raw filings | `data/clean/*.txt` (whole 10-K), `data/sections/*.txt` (Item 1A and Item 7) |
 | 3 | `make score` (part 1) | `t3_score.py` | section text | `data/similarity.parquet` |
-| 4 | `make score` (part 2) | `t4_bins.py` | similarity table | adds `rel_change`, `bin_relative`, `bin_raw` and `bin` to `data/similarity.parquet` |
+| 4 | `make score` (part 2), or `make bins` alone | `t4_bins.py` | similarity table | adds `rel_change`, `bin_relative`, `bin_raw` and `bin` to `data/similarity.parquet` |
 | 5 | `make returns` | `t5_returns.py` | similarity table, prices (Yahoo or cache) | `data/prices_monthly.csv`, `data/returns.parquet` |
 | 6 | `make plot` | `t6_plot.py` | similarity + returns | `outputs/figures/*.png` (one per firm, `pooled_by_bin.png`, `all_firms_heatmap.png`, `all_firms_combined.png`), `data/pooled_by_bin.csv`, `data/bin_baskets.csv` |
 | 7 | `make coverage` | `t7_coverage.py` | step reports in `data/reports/` | `outputs/coverage.txt` |
@@ -26,7 +26,7 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 
 `make app` starts the Streamlit dashboard after `make all` has run. It has four tabs: **Overview** (question and headline result), **Methodology** (steps, key choices, threats to validity, coverage report), **Results** (bin averages with 95% CIs and the B5 − B1 test, basket returns over time) and **Explore a firm** (each filing's bin and return, the sentence diff where one exists, and a CSV download). A switch ranks bins by firm-relative change (the default) or raw similarity. The app computes every number with the pipeline's own functions (`src/pilot/dashboard.py` calls `t6_plot`), and `tests/test_dashboard.py` checks that its headline B5 − B1 equals the one the plot step saved in `data/reports/plot.json`.
 
-**Hosted version.** `data/` is git-ignored, so the website reads a small committed snapshot instead: `make snapshot` (also the last step of `make all`) copies the firm-year table, `coverage.txt` and the plot step's saved statistics into `app_data/` (about 60 KB). After rerunning the pipeline, commit `app_data/` to update the site; `make test` fails if the snapshot no longer matches `data/`. The host installs the pinned packages in `requirements.txt`.
+**Hosted version.** Most of `data/` is git-ignored (only the small inputs to steps 4–7 are committed), so the website reads a small committed snapshot instead: `make snapshot` (also the last step of `make all`) copies the firm-year table, `coverage.txt` and the plot step's saved statistics into `app_data/` (about 60 KB). After rerunning the pipeline, commit `app_data/` to update the site; `make test` fails if the snapshot no longer matches `data/`. The host installs the pinned packages in `requirements.txt`.
 
 `make test` runs the unit tests (`tests/test_t*_*.py`, named after the step they test) at any point. Shared code: `cli.py` (the `python -m pilot <step>` entry point), `config.py` (paths and `config.yaml` loading) and `style.py` (palette, fonts and the header, badge and key used by every graphic).
 
@@ -219,7 +219,8 @@ src/pilot/
   dashboard.py           data for the dashboard, built with the step 6 statistics
 app.py                   Streamlit dashboard (`make app`)
 tests/                   test_t<N>_*.py tests step N; test_cli.py the CLI; test_dashboard.py the app
-data/                    raw filings, clean text, sections, similarity, returns (git-ignored)
+data/                    raw filings, clean text, sections, returns (git-ignored); similarity,
+                         prices and step 1-3 reports are committed (data/README.md)
 outputs/                 figures, coverage report, diffs (git-ignored)
 ```
 

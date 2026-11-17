@@ -1,0 +1,103 @@
+{
+  "all_form_10k": true,
+  "amendments_dropped": [
+    {
+      "accession": "0000012927-17-000012",
+      "filing_date": "2017-02-10",
+      "form": "10-K/A",
+      "report_date": "2016-12-31",
+      "ticker": "BA"
+    },
+    {
+      "accession": "0001193125-16-520367",
+      "filing_date": "2016-03-29",
+      "form": "10-K/A",
+      "report_date": "2015-12-31",
+      "ticker": "GOOGL"
+    },
+    {
+      "accession": "0001193125-19-028757",
+      "filing_date": "2019-02-06",
+      "form": "10-K/A",
+      "report_date": "2018-12-31",
+      "ticker": "GOOGL"
+    },
+    {
+      "accession": "0001193125-16-488753",
+      "filing_date": "2016-03-02",
+      "form": "10-K/A",
+      "report_date": "2015-12-31",
+      "ticker": "GS"
+    },
+    {
+      "accession": "0000886982-24-000012",
+      "filing_date": "2024-02-28",
+      "form": "10-K/A",
+      "report_date": "2023-12-31",
+      "ticker": "GS"
+    },
+    {
+      "accession": "0001326801-16-000063",
+      "filing_date": "2016-04-27",
+      "form": "10-K/A",
+      "report_date": "2015-12-31",
+      "ticker": "META"
+    },
+    {
+      "accession": "0001193125-24-093194",
+      "filing_date": "2024-04-11",
+      "form": "10-K/A",
+      "report_date": "2023-12-31",
+      "ticker": "MRK"
+    },
+    {
+      "accession": "0001164727-22-000028",
+      "filing_date": "2022-07-28",
+      "form": "10-K/A",
+      "report_date": "2021-12-31",
+      "ticker": "NEM"
+    }
+  ],
+  "effective_fiscal_years": [
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "expected_rows": 220,
+  "gaps": [],
+  "missing_firm_years": [],
+  "name_mismatches": [],
+  "notes": [],
+  "per_firm": {
+    "AMT": 11,
+    "AMZN": 11,
+    "BA": 11,
+    "BAC": 11,
+    "CAT": 11,
+    "COP": 11,
+    "GOOGL": 11,
+    "GS": 11,
+    "HON": 11,
+    "INTC": 11,
+    "JPM": 11,
+    "KO": 11,
+    "MCD": 11,
+    "META": 11,
+    "MRK": 11,
+    "NEM": 11,
+    "PEP": 11,
+    "PFE": 11,
+    "TXN": 11,
+    "UNH": 11
+  },
+  "rows": 220,
+  "transition_reports_flagged": []
+}

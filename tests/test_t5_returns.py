@@ -58,3 +58,25 @@ def test_month_end_prices_and_incomplete_month():
     assert m["adj_close"].tolist() == [2.0, 3.0, 4.0]
     kept = drop_incomplete_month(m, date(2026, 11, 6))
     assert kept["adj_close"].tolist() == [2.0, 3.0]
+
+
+def test_cached_prices_keep_their_pull_date(tmp_path):
+    """A rerun from the committed price cache still reports where and when prices were pulled."""
+    import shutil
+
+    from pilot.config import PROJECT_ROOT, load_config
+    from pilot.t5_returns import load_prices
+
+    shutil.copy(PROJECT_ROOT / "config.yaml", tmp_path / "config.yaml")
+    cfg = load_config(root=tmp_path)
+    cfg.paths.data.mkdir()
+    tickers = cfg.tickers + [cfg.benchmark_ticker]
+    px = _monthly("2017-01", 6)
+    pd.DataFrame([{"date": d, "ticker": t, "adj_close": v} for t in tickers for d, v in px.items()]
+                 ).to_csv(cfg.paths.prices, index=False)
+
+    _, source = load_prices(cfg, date(2017, 3, 1))
+    assert source == "cached data/prices_monthly.csv, origin not recorded"
+    cfg.paths.prices_source.write_text("yfinance (downloaded 2026-11-11)\n")
+    _, source = load_prices(cfg, date(2017, 3, 1))
+    assert source == "cached data/prices_monthly.csv, yfinance (downloaded 2026-11-11)"

@@ -62,6 +62,11 @@ class Paths:
         return self.data / "prices_monthly.csv"
 
     @property
+    def prices_source(self) -> Path:
+        """One line: where and when data/prices_monthly.csv was pulled."""
+        return self.data / "prices_monthly.source.txt"
+
+    @property
     def returns(self) -> Path:
         return self.data / "returns.parquet"
 
