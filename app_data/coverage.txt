@@ -1,5 +1,5 @@
 Lazy Prices pilot - coverage report
-Generated 2026-11-13 from data/reports/*.json
+Generated 2026-11-17 from data/reports/*.json
 
 FILINGS (T1)
 10-K filings found: 220 / 220 (fiscal years 2015-2025)
@@ -49,7 +49,7 @@ Lowest-similarity filings:
 Scoring gaps: none
 
 RETURNS (T5)
-Price source: yfinance (downloaded 2026-11-11)
+Price source: cached data/prices_monthly.csv, yfinance (downloaded 2026-11-11)
 Latest complete price month: Oct 2026
 Price coverage (monthly, last trading day):
   - AMT: 2017-01-31 to 2026-10-30 (118 months)

@@ -1,4 +1,15 @@
-data/
+# data/ is ignored except the small files that let T4-T7 rerun without SEC downloads
+# (`make from-scores`); see data/README.md. Raw filings, clean text and sections stay ignored.
+data/*
+!data/README.md
+!data/similarity.parquet
+!data/prices_monthly.csv
+!data/prices_monthly.source.txt
+!data/reports/
+data/reports/*
+!data/reports/download.json
+!data/reports/clean.json
+!data/reports/score.json
 outputs/
 .venv/
 __pycache__/

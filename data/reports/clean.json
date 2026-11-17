@@ -1,0 +1,4463 @@
+{
+  "files": 220,
+  "gaps": [],
+  "manifest_rows": 220,
+  "markup_leftovers": [],
+  "section_outliers": [
+    {
+      "fy": 2016,
+      "n_words": 47250,
+      "ratio_to_median": 3.045,
+      "section": "mdna",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2017,
+      "n_words": 48213,
+      "ratio_to_median": 3.108,
+      "section": "mdna",
+      "ticker": "PFE"
+    }
+  ],
+  "section_word_counts": [
+    {
+      "fy": 2015,
+      "n_words": 5896,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2015,
+      "n_words": 14540,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2016,
+      "n_words": 5949,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2016,
+      "n_words": 14119,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2017,
+      "n_words": 6005,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2017,
+      "n_words": 15115,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2018,
+      "n_words": 6074,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2018,
+      "n_words": 16383,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2019,
+      "n_words": 6375,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2019,
+      "n_words": 16380,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2020,
+      "n_words": 7256,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2020,
+      "n_words": 17005,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2021,
+      "n_words": 9047,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2021,
+      "n_words": 17406,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2022,
+      "n_words": 9420,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2022,
+      "n_words": 15562,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2023,
+      "n_words": 9506,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2023,
+      "n_words": 16343,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2024,
+      "n_words": 9441,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2024,
+      "n_words": 17729,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2025,
+      "n_words": 11004,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2025,
+      "n_words": 14995,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2015,
+      "n_words": 6553,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2015,
+      "n_words": 8490,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2016,
+      "n_words": 6637,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2016,
+      "n_words": 7155,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2017,
+      "n_words": 7014,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2017,
+      "n_words": 7714,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2018,
+      "n_words": 6646,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2018,
+      "n_words": 7119,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2019,
+      "n_words": 7353,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2019,
+      "n_words": 6701,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2020,
+      "n_words": 7387,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2020,
+      "n_words": 7117,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2021,
+      "n_words": 7772,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2021,
+      "n_words": 6638,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2022,
+      "n_words": 8185,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2022,
+      "n_words": 6547,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2023,
+      "n_words": 8665,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2023,
+      "n_words": 6354,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2024,
+      "n_words": 8707,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2024,
+      "n_words": 6441,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2025,
+      "n_words": 8883,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2025,
+      "n_words": 6314,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2015,
+      "n_words": 5377,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2015,
+      "n_words": 11764,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2016,
+      "n_words": 5348,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2016,
+      "n_words": 11945,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2017,
+      "n_words": 5358,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2017,
+      "n_words": 10543,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2018,
+      "n_words": 5549,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2018,
+      "n_words": 11375,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2019,
+      "n_words": 6555,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2019,
+      "n_words": 12285,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2020,
+      "n_words": 8328,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2020,
+      "n_words": 16458,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2021,
+      "n_words": 8806,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2021,
+      "n_words": 15223,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2022,
+      "n_words": 7124,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2022,
+      "n_words": 12887,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2023,
+      "n_words": 7195,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2023,
+      "n_words": 11299,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2024,
+      "n_words": 8589,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2024,
+      "n_words": 11721,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2025,
+      "n_words": 8416,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2025,
+      "n_words": 11680,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BA"
+    },
+    {
+      "fy": 2015,
+      "n_words": 13325,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2015,
+      "n_words": 59258,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2016,
+      "n_words": 12583,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2016,
+      "n_words": 49863,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2017,
+      "n_words": 13043,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2017,
+      "n_words": 43910,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2018,
+      "n_words": 14618,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2018,
+      "n_words": 39493,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2019,
+      "n_words": 16317,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2019,
+      "n_words": 35465,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2020,
+      "n_words": 17003,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2020,
+      "n_words": 40829,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2021,
+      "n_words": 18815,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2021,
+      "n_words": 35479,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2022,
+      "n_words": 16864,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2022,
+      "n_words": 35326,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2023,
+      "n_words": 16944,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2023,
+      "n_words": 35399,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2024,
+      "n_words": 17035,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2024,
+      "n_words": 33796,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2025,
+      "n_words": 16931,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2025,
+      "n_words": 34082,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2015,
+      "n_words": 7821,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2015,
+      "n_words": 20559,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2016,
+      "n_words": 7430,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2016,
+      "n_words": 20987,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2017,
+      "n_words": 7500,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2017,
+      "n_words": 20740,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2018,
+      "n_words": 7396,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2018,
+      "n_words": 18268,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2019,
+      "n_words": 7564,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2019,
+      "n_words": 16933,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2020,
+      "n_words": 8065,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2020,
+      "n_words": 13773,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2021,
+      "n_words": 8493,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2021,
+      "n_words": 13435,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2022,
+      "n_words": 8490,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2022,
+      "n_words": 12570,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2023,
+      "n_words": 7966,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2023,
+      "n_words": 12027,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2024,
+      "n_words": 7926,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2024,
+      "n_words": 12305,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2025,
+      "n_words": 7925,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2025,
+      "n_words": 12469,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2015,
+      "n_words": 2847,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2015,
+      "n_words": 17695,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2016,
+      "n_words": 3191,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2016,
+      "n_words": 18479,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2017,
+      "n_words": 3316,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2017,
+      "n_words": 19600,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2018,
+      "n_words": 4895,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2018,
+      "n_words": 21158,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2019,
+      "n_words": 4794,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2019,
+      "n_words": 18278,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2020,
+      "n_words": 6692,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2020,
+      "n_words": 19507,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2021,
+      "n_words": 6615,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2021,
+      "n_words": 17755,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2022,
+      "n_words": 6182,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2022,
+      "n_words": 17063,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2023,
+      "n_words": 6160,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2023,
+      "n_words": 16319,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2024,
+      "n_words": 6959,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2024,
+      "n_words": 16300,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2025,
+      "n_words": 6219,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2025,
+      "n_words": 15289,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "COP"
+    },
+    {
+      "fy": 2015,
+      "n_words": 9446,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2015,
+      "n_words": 9722,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2016,
+      "n_words": 9720,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2016,
+      "n_words": 8468,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2017,
+      "n_words": 10476,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2017,
+      "n_words": 8817,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2018,
+      "n_words": 10764,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2018,
+      "n_words": 8160,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2019,
+      "n_words": 10446,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2019,
+      "n_words": 7931,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2020,
+      "n_words": 11574,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2020,
+      "n_words": 9774,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2021,
+      "n_words": 11759,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2021,
+      "n_words": 7591,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2022,
+      "n_words": 10904,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2022,
+      "n_words": 7875,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2023,
+      "n_words": 11380,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2023,
+      "n_words": 8222,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2024,
+      "n_words": 12471,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2024,
+      "n_words": 7937,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2025,
+      "n_words": 12656,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2025,
+      "n_words": 7190,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2015,
+      "n_words": 13361,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2015,
+      "n_words": 36988,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2016,
+      "n_words": 13831,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2016,
+      "n_words": 36689,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2017,
+      "n_words": 15259,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2017,
+      "n_words": 35957,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2018,
+      "n_words": 16567,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2018,
+      "n_words": 36297,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2019,
+      "n_words": 17234,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2019,
+      "n_words": 34471,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2020,
+      "n_words": 19557,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2020,
+      "n_words": 36452,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2021,
+      "n_words": 20098,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2021,
+      "n_words": 35940,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2022,
+      "n_words": 21298,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2022,
+      "n_words": 36283,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2023,
+      "n_words": 21301,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2023,
+      "n_words": 37508,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2024,
+      "n_words": 21700,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2024,
+      "n_words": 37699,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2025,
+      "n_words": 21341,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2025,
+      "n_words": 39862,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "GS"
+    },
+    {
+      "fy": 2015,
+      "n_words": 3068,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2015,
+      "n_words": 7459,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2016,
+      "n_words": 3329,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2016,
+      "n_words": 8256,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2017,
+      "n_words": 4156,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2017,
+      "n_words": 8283,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2018,
+      "n_words": 4200,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2018,
+      "n_words": 7854,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2019,
+      "n_words": 4786,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2019,
+      "n_words": 6673,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2020,
+      "n_words": 6047,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2020,
+      "n_words": 3438,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2021,
+      "n_words": 6770,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2021,
+      "n_words": 2496,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2022,
+      "n_words": 6159,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2022,
+      "n_words": 2576,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2023,
+      "n_words": 6793,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2023,
+      "n_words": 1955,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2024,
+      "n_words": 7582,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2024,
+      "n_words": 2237,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2025,
+      "n_words": 8630,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2025,
+      "n_words": 3633,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "HON"
+    },
+    {
+      "fy": 2015,
+      "n_words": 5810,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2015,
+      "n_words": 11040,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2016,
+      "n_words": 6374,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2016,
+      "n_words": 6582,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2017,
+      "n_words": 7422,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2017,
+      "n_words": 6231,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2018,
+      "n_words": 9361,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2018,
+      "n_words": 7743,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2019,
+      "n_words": 10209,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2019,
+      "n_words": 9808,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2020,
+      "n_words": 12529,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2020,
+      "n_words": 10749,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2021,
+      "n_words": 13533,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2021,
+      "n_words": 11805,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2022,
+      "n_words": 14990,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2022,
+      "n_words": 12575,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2023,
+      "n_words": 14964,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2023,
+      "n_words": 11940,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2024,
+      "n_words": 15214,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2024,
+      "n_words": 9445,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2025,
+      "n_words": 14416,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2025,
+      "n_words": 7467,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2015,
+      "n_words": 10205,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2015,
+      "n_words": 51693,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2016,
+      "n_words": 12137,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2016,
+      "n_words": 49292,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2017,
+      "n_words": 13823,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2017,
+      "n_words": 49478,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2018,
+      "n_words": 16767,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2018,
+      "n_words": 50666,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2019,
+      "n_words": 16423,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2019,
+      "n_words": 43144,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2020,
+      "n_words": 18842,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2020,
+      "n_words": 53788,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2021,
+      "n_words": 18446,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2021,
+      "n_words": 47076,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2022,
+      "n_words": 17848,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2022,
+      "n_words": 47112,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2023,
+      "n_words": 18988,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2023,
+      "n_words": 51161,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2024,
+      "n_words": 19065,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2024,
+      "n_words": 48214,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2025,
+      "n_words": 15628,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2025,
+      "n_words": 47386,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2015,
+      "n_words": 9443,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2015,
+      "n_words": 25783,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2016,
+      "n_words": 9713,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2016,
+      "n_words": 26272,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2017,
+      "n_words": 9320,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2017,
+      "n_words": 26297,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2018,
+      "n_words": 10392,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2018,
+      "n_words": 25484,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2019,
+      "n_words": 11258,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2019,
+      "n_words": 22603,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2020,
+      "n_words": 12663,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2020,
+      "n_words": 20262,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2021,
+      "n_words": 12857,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2021,
+      "n_words": 18212,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2022,
+      "n_words": 12873,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2022,
+      "n_words": 17529,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2023,
+      "n_words": 13157,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2023,
+      "n_words": 15882,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2024,
+      "n_words": 13377,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2024,
+      "n_words": 16298,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2025,
+      "n_words": 13592,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2025,
+      "n_words": 15736,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "KO"
+    },
+    {
+      "fy": 2015,
+      "n_words": 4935,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2015,
+      "n_words": 11391,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2016,
+      "n_words": 5201,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2016,
+      "n_words": 10190,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2017,
+      "n_words": 5369,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2017,
+      "n_words": 10644,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2018,
+      "n_words": 5378,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2018,
+      "n_words": 10288,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2019,
+      "n_words": 5666,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2019,
+      "n_words": 9011,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2020,
+      "n_words": 5910,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2020,
+      "n_words": 8005,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2021,
+      "n_words": 6277,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2021,
+      "n_words": 7386,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2022,
+      "n_words": 6063,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2022,
+      "n_words": 7813,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2023,
+      "n_words": 6387,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2023,
+      "n_words": 7924,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2024,
+      "n_words": 6566,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2024,
+      "n_words": 8019,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2025,
+      "n_words": 6815,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2025,
+      "n_words": 7169,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2015,
+      "n_words": 15382,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2015,
+      "n_words": 8155,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2016,
+      "n_words": 16514,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2016,
+      "n_words": 8698,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2017,
+      "n_words": 17093,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2017,
+      "n_words": 8681,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2018,
+      "n_words": 18122,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2018,
+      "n_words": 8269,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2019,
+      "n_words": 21742,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2019,
+      "n_words": 8333,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2020,
+      "n_words": 25176,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2020,
+      "n_words": 9584,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2021,
+      "n_words": 26338,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2021,
+      "n_words": 9454,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2022,
+      "n_words": 26080,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2022,
+      "n_words": 10534,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2023,
+      "n_words": 28025,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2023,
+      "n_words": 9440,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2024,
+      "n_words": 29015,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2024,
+      "n_words": 8426,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2025,
+      "n_words": 30056,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2025,
+      "n_words": 8310,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "META"
+    },
+    {
+      "fy": 2015,
+      "n_words": 6867,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2015,
+      "n_words": 28168,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2016,
+      "n_words": 7019,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2016,
+      "n_words": 24236,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2017,
+      "n_words": 8026,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2017,
+      "n_words": 22624,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2018,
+      "n_words": 7888,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2018,
+      "n_words": 22615,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2019,
+      "n_words": 9408,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2019,
+      "n_words": 19887,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2020,
+      "n_words": 10524,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2020,
+      "n_words": 19833,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2021,
+      "n_words": 10527,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2021,
+      "n_words": 19782,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2022,
+      "n_words": 10765,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2022,
+      "n_words": 18722,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2023,
+      "n_words": 10224,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2023,
+      "n_words": 18161,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2024,
+      "n_words": 10970,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2024,
+      "n_words": 18764,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2025,
+      "n_words": 11417,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2025,
+      "n_words": 19754,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2015,
+      "n_words": 12857,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2015,
+      "n_words": 18962,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2016,
+      "n_words": 11777,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2016,
+      "n_words": 20821,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2017,
+      "n_words": 11490,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2017,
+      "n_words": 20432,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2018,
+      "n_words": 16963,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2018,
+      "n_words": 19473,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2019,
+      "n_words": 17396,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2019,
+      "n_words": 19790,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2020,
+      "n_words": 18610,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2020,
+      "n_words": 24756,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2021,
+      "n_words": 19758,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2021,
+      "n_words": 23568,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2022,
+      "n_words": 21180,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2022,
+      "n_words": 21974,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2023,
+      "n_words": 29811,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2023,
+      "n_words": 22968,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2024,
+      "n_words": 32154,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2024,
+      "n_words": 19971,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2025,
+      "n_words": 32579,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2025,
+      "n_words": 18863,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2015,
+      "n_words": 9958,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2015,
+      "n_words": 28568,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2016,
+      "n_words": 11630,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2016,
+      "n_words": 30756,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2017,
+      "n_words": 12934,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2017,
+      "n_words": 31370,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2018,
+      "n_words": 13634,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2018,
+      "n_words": 30508,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2019,
+      "n_words": 14668,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2019,
+      "n_words": 30490,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2020,
+      "n_words": 7057,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2020,
+      "n_words": 31414,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2021,
+      "n_words": 8078,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2021,
+      "n_words": 30057,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2022,
+      "n_words": 8063,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2022,
+      "n_words": 31912,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2023,
+      "n_words": 8786,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2023,
+      "n_words": 31913,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2024,
+      "n_words": 9420,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2024,
+      "n_words": 31352,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2025,
+      "n_words": 9671,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2025,
+      "n_words": 29293,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2015,
+      "n_words": 12299,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2015,
+      "n_words": 43111,
+      "section": "mdna",
+      "source": "EX-13",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2016,
+      "n_words": 10397,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2016,
+      "n_words": 47250,
+      "section": "mdna",
+      "source": "EX-13",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2017,
+      "n_words": 11709,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2017,
+      "n_words": 48213,
+      "section": "mdna",
+      "source": "EX-13",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2018,
+      "n_words": 13750,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2018,
+      "n_words": 45670,
+      "section": "mdna",
+      "source": "EX-13",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2019,
+      "n_words": 14249,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2019,
+      "n_words": 38815,
+      "section": "mdna",
+      "source": "EX-13",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2020,
+      "n_words": 9585,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2020,
+      "n_words": 15456,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2021,
+      "n_words": 10733,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2021,
+      "n_words": 15515,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2022,
+      "n_words": 11354,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2022,
+      "n_words": 14239,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2023,
+      "n_words": 12198,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2023,
+      "n_words": 13961,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2024,
+      "n_words": 11607,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2024,
+      "n_words": 14514,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2025,
+      "n_words": 12831,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2025,
+      "n_words": 14873,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2015,
+      "n_words": 3636,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2015,
+      "n_words": 4146,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2016,
+      "n_words": 3488,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2016,
+      "n_words": 3976,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2017,
+      "n_words": 3648,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2017,
+      "n_words": 3869,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2018,
+      "n_words": 3702,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2018,
+      "n_words": 3495,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2019,
+      "n_words": 3622,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2019,
+      "n_words": 3126,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2020,
+      "n_words": 3860,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2020,
+      "n_words": 2991,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2021,
+      "n_words": 3830,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2021,
+      "n_words": 2477,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2022,
+      "n_words": 3844,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2022,
+      "n_words": 2554,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2023,
+      "n_words": 3983,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2023,
+      "n_words": 2300,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2024,
+      "n_words": 3961,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2024,
+      "n_words": 2086,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2025,
+      "n_words": 4050,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2025,
+      "n_words": 2633,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2015,
+      "n_words": 9019,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2015,
+      "n_words": 7676,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2016,
+      "n_words": 8959,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2016,
+      "n_words": 6583,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2017,
+      "n_words": 8914,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2017,
+      "n_words": 5979,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2018,
+      "n_words": 9020,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2018,
+      "n_words": 5844,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2019,
+      "n_words": 9072,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2019,
+      "n_words": 4850,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2020,
+      "n_words": 9790,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2020,
+      "n_words": 5915,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2021,
+      "n_words": 10038,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2021,
+      "n_words": 5556,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2022,
+      "n_words": 9729,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2022,
+      "n_words": 4750,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2023,
+      "n_words": 9816,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2023,
+      "n_words": 4955,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2024,
+      "n_words": 9729,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2024,
+      "n_words": 5609,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2025,
+      "n_words": 9895,
+      "section": "risk_factors",
+      "source": "10-K",
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2025,
+      "n_words": 6213,
+      "section": "mdna",
+      "source": "10-K",
+      "ticker": "UNH"
+    }
+  ],
+  "sections": [
+    "risk_factors",
+    "mdna"
+  ],
+  "sections_from_exhibit": [
+    {
+      "fy": 2015,
+      "section": "mdna",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2016,
+      "section": "mdna",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2017,
+      "section": "mdna",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2018,
+      "section": "mdna",
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2019,
+      "section": "mdna",
+      "ticker": "PFE"
+    }
+  ],
+  "size_outliers": [],
+  "spot_check": [
+    "data/clean/0000731766_2022.txt",
+    "data/clean/0000773840_2025.txt",
+    "data/clean/0000078003_2022.txt"
+  ],
+  "word_counts": [
+    {
+      "fy": 2015,
+      "n_words": 59789,
+      "ratio_to_median": 0.896,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2016,
+      "n_words": 59226,
+      "ratio_to_median": 0.887,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2017,
+      "n_words": 61624,
+      "ratio_to_median": 0.923,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2018,
+      "n_words": 64174,
+      "ratio_to_median": 0.962,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2019,
+      "n_words": 64428,
+      "ratio_to_median": 0.965,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2020,
+      "n_words": 66737,
+      "ratio_to_median": 1.0,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2021,
+      "n_words": 71263,
+      "ratio_to_median": 1.068,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2022,
+      "n_words": 67749,
+      "ratio_to_median": 1.015,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2023,
+      "n_words": 70183,
+      "ratio_to_median": 1.052,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2024,
+      "n_words": 72628,
+      "ratio_to_median": 1.088,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2025,
+      "n_words": 68778,
+      "ratio_to_median": 1.031,
+      "ticker": "AMT"
+    },
+    {
+      "fy": 2015,
+      "n_words": 34652,
+      "ratio_to_median": 1.002,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2016,
+      "n_words": 34594,
+      "ratio_to_median": 1.0,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2017,
+      "n_words": 36292,
+      "ratio_to_median": 1.049,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2018,
+      "n_words": 33731,
+      "ratio_to_median": 0.975,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2019,
+      "n_words": 34264,
+      "ratio_to_median": 0.99,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2020,
+      "n_words": 32631,
+      "ratio_to_median": 0.943,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2021,
+      "n_words": 32546,
+      "ratio_to_median": 0.941,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2022,
+      "n_words": 34556,
+      "ratio_to_median": 0.999,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2023,
+      "n_words": 36740,
+      "ratio_to_median": 1.062,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2024,
+      "n_words": 36362,
+      "ratio_to_median": 1.051,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2025,
+      "n_words": 36735,
+      "ratio_to_median": 1.062,
+      "ticker": "AMZN"
+    },
+    {
+      "fy": 2015,
+      "n_words": 45810,
+      "ratio_to_median": 0.923,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2016,
+      "n_words": 45670,
+      "ratio_to_median": 0.92,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2017,
+      "n_words": 43399,
+      "ratio_to_median": 0.874,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2018,
+      "n_words": 45072,
+      "ratio_to_median": 0.908,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2019,
+      "n_words": 49652,
+      "ratio_to_median": 1.0,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2020,
+      "n_words": 59903,
+      "ratio_to_median": 1.206,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2021,
+      "n_words": 56514,
+      "ratio_to_median": 1.138,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2022,
+      "n_words": 49959,
+      "ratio_to_median": 1.006,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2023,
+      "n_words": 49064,
+      "ratio_to_median": 0.988,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2024,
+      "n_words": 53690,
+      "ratio_to_median": 1.081,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2025,
+      "n_words": 53998,
+      "ratio_to_median": 1.088,
+      "ticker": "BA"
+    },
+    {
+      "fy": 2015,
+      "n_words": 137195,
+      "ratio_to_median": 1.326,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2016,
+      "n_words": 120964,
+      "ratio_to_median": 1.169,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2017,
+      "n_words": 111039,
+      "ratio_to_median": 1.073,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2018,
+      "n_words": 103399,
+      "ratio_to_median": 0.999,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2019,
+      "n_words": 99379,
+      "ratio_to_median": 0.96,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2020,
+      "n_words": 108605,
+      "ratio_to_median": 1.05,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2021,
+      "n_words": 105585,
+      "ratio_to_median": 1.02,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2022,
+      "n_words": 102377,
+      "ratio_to_median": 0.989,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2023,
+      "n_words": 103472,
+      "ratio_to_median": 1.0,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2024,
+      "n_words": 100957,
+      "ratio_to_median": 0.976,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2025,
+      "n_words": 101234,
+      "ratio_to_median": 0.978,
+      "ticker": "BAC"
+    },
+    {
+      "fy": 2015,
+      "n_words": 61366,
+      "ratio_to_median": 1.127,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2016,
+      "n_words": 64072,
+      "ratio_to_median": 1.176,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2017,
+      "n_words": 63208,
+      "ratio_to_median": 1.161,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2018,
+      "n_words": 61388,
+      "ratio_to_median": 1.127,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2019,
+      "n_words": 57861,
+      "ratio_to_median": 1.062,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2020,
+      "n_words": 54465,
+      "ratio_to_median": 1.0,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2021,
+      "n_words": 54206,
+      "ratio_to_median": 0.995,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2022,
+      "n_words": 52549,
+      "ratio_to_median": 0.965,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2023,
+      "n_words": 51705,
+      "ratio_to_median": 0.949,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2024,
+      "n_words": 51966,
+      "ratio_to_median": 0.954,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2025,
+      "n_words": 52048,
+      "ratio_to_median": 0.956,
+      "ticker": "CAT"
+    },
+    {
+      "fy": 2015,
+      "n_words": 62515,
+      "ratio_to_median": 0.974,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2016,
+      "n_words": 64158,
+      "ratio_to_median": 1.0,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2017,
+      "n_words": 65177,
+      "ratio_to_median": 1.016,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2018,
+      "n_words": 71413,
+      "ratio_to_median": 1.113,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2019,
+      "n_words": 75539,
+      "ratio_to_median": 1.177,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2020,
+      "n_words": 77343,
+      "ratio_to_median": 1.206,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2021,
+      "n_words": 73540,
+      "ratio_to_median": 1.146,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2022,
+      "n_words": 64096,
+      "ratio_to_median": 0.999,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2023,
+      "n_words": 64086,
+      "ratio_to_median": 0.999,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2024,
+      "n_words": 63986,
+      "ratio_to_median": 0.997,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2025,
+      "n_words": 59027,
+      "ratio_to_median": 0.92,
+      "ticker": "COP"
+    },
+    {
+      "fy": 2015,
+      "n_words": 47652,
+      "ratio_to_median": 1.081,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2016,
+      "n_words": 41726,
+      "ratio_to_median": 0.946,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2017,
+      "n_words": 42589,
+      "ratio_to_median": 0.966,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2018,
+      "n_words": 42813,
+      "ratio_to_median": 0.971,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2019,
+      "n_words": 42315,
+      "ratio_to_median": 0.96,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2020,
+      "n_words": 45813,
+      "ratio_to_median": 1.039,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2021,
+      "n_words": 44088,
+      "ratio_to_median": 1.0,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2022,
+      "n_words": 41985,
+      "ratio_to_median": 0.952,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2023,
+      "n_words": 45030,
+      "ratio_to_median": 1.021,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2024,
+      "n_words": 46272,
+      "ratio_to_median": 1.05,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2025,
+      "n_words": 44418,
+      "ratio_to_median": 1.007,
+      "ticker": "GOOGL"
+    },
+    {
+      "fy": 2015,
+      "n_words": 119856,
+      "ratio_to_median": 0.899,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2016,
+      "n_words": 121656,
+      "ratio_to_median": 0.912,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2017,
+      "n_words": 121637,
+      "ratio_to_median": 0.912,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2018,
+      "n_words": 123095,
+      "ratio_to_median": 0.923,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2019,
+      "n_words": 123883,
+      "ratio_to_median": 0.929,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2020,
+      "n_words": 133387,
+      "ratio_to_median": 1.0,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2021,
+      "n_words": 136296,
+      "ratio_to_median": 1.022,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2022,
+      "n_words": 139047,
+      "ratio_to_median": 1.042,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2023,
+      "n_words": 143436,
+      "ratio_to_median": 1.075,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2024,
+      "n_words": 142548,
+      "ratio_to_median": 1.069,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2025,
+      "n_words": 141049,
+      "ratio_to_median": 1.057,
+      "ticker": "GS"
+    },
+    {
+      "fy": 2015,
+      "n_words": 30493,
+      "ratio_to_median": 0.669,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2016,
+      "n_words": 34536,
+      "ratio_to_median": 0.757,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2017,
+      "n_words": 37196,
+      "ratio_to_median": 0.816,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2018,
+      "n_words": 39404,
+      "ratio_to_median": 0.864,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2019,
+      "n_words": 39271,
+      "ratio_to_median": 0.861,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2020,
+      "n_words": 45603,
+      "ratio_to_median": 1.0,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2021,
+      "n_words": 45990,
+      "ratio_to_median": 1.008,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2022,
+      "n_words": 47807,
+      "ratio_to_median": 1.048,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2023,
+      "n_words": 50463,
+      "ratio_to_median": 1.107,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2024,
+      "n_words": 51292,
+      "ratio_to_median": 1.125,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2025,
+      "n_words": 55149,
+      "ratio_to_median": 1.209,
+      "ticker": "HON"
+    },
+    {
+      "fy": 2015,
+      "n_words": 55883,
+      "ratio_to_median": 0.952,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2016,
+      "n_words": 47031,
+      "ratio_to_median": 0.801,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2017,
+      "n_words": 45385,
+      "ratio_to_median": 0.773,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2018,
+      "n_words": 52461,
+      "ratio_to_median": 0.894,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2019,
+      "n_words": 52991,
+      "ratio_to_median": 0.903,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2020,
+      "n_words": 58700,
+      "ratio_to_median": 1.0,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2021,
+      "n_words": 60376,
+      "ratio_to_median": 1.029,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2022,
+      "n_words": 63126,
+      "ratio_to_median": 1.075,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2023,
+      "n_words": 63668,
+      "ratio_to_median": 1.085,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2024,
+      "n_words": 61397,
+      "ratio_to_median": 1.046,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2025,
+      "n_words": 68381,
+      "ratio_to_median": 1.165,
+      "ticker": "INTC"
+    },
+    {
+      "fy": 2015,
+      "n_words": 144262,
+      "ratio_to_median": 1.017,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2016,
+      "n_words": 141792,
+      "ratio_to_median": 1.0,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2017,
+      "n_words": 141785,
+      "ratio_to_median": 1.0,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2018,
+      "n_words": 145298,
+      "ratio_to_median": 1.025,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2019,
+      "n_words": 136583,
+      "ratio_to_median": 0.963,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2020,
+      "n_words": 152415,
+      "ratio_to_median": 1.075,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2021,
+      "n_words": 139708,
+      "ratio_to_median": 0.985,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2022,
+      "n_words": 138729,
+      "ratio_to_median": 0.978,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2023,
+      "n_words": 150472,
+      "ratio_to_median": 1.061,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2024,
+      "n_words": 146594,
+      "ratio_to_median": 1.034,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2025,
+      "n_words": 141491,
+      "ratio_to_median": 0.998,
+      "ticker": "JPM"
+    },
+    {
+      "fy": 2015,
+      "n_words": 94460,
+      "ratio_to_median": 1.069,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2016,
+      "n_words": 95203,
+      "ratio_to_median": 1.078,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2017,
+      "n_words": 94263,
+      "ratio_to_median": 1.067,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2018,
+      "n_words": 95805,
+      "ratio_to_median": 1.085,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2019,
+      "n_words": 91084,
+      "ratio_to_median": 1.031,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2020,
+      "n_words": 88333,
+      "ratio_to_median": 1.0,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2021,
+      "n_words": 83242,
+      "ratio_to_median": 0.942,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2022,
+      "n_words": 82290,
+      "ratio_to_median": 0.932,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2023,
+      "n_words": 81418,
+      "ratio_to_median": 0.922,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2024,
+      "n_words": 81613,
+      "ratio_to_median": 0.924,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2025,
+      "n_words": 82139,
+      "ratio_to_median": 0.93,
+      "ticker": "KO"
+    },
+    {
+      "fy": 2015,
+      "n_words": 32447,
+      "ratio_to_median": 0.946,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2016,
+      "n_words": 32042,
+      "ratio_to_median": 0.934,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2017,
+      "n_words": 32763,
+      "ratio_to_median": 0.955,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2018,
+      "n_words": 32436,
+      "ratio_to_median": 0.946,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2019,
+      "n_words": 32094,
+      "ratio_to_median": 0.936,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2020,
+      "n_words": 34395,
+      "ratio_to_median": 1.003,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2021,
+      "n_words": 34299,
+      "ratio_to_median": 1.0,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2022,
+      "n_words": 34359,
+      "ratio_to_median": 1.002,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2023,
+      "n_words": 35059,
+      "ratio_to_median": 1.022,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2024,
+      "n_words": 36275,
+      "ratio_to_median": 1.058,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2025,
+      "n_words": 35217,
+      "ratio_to_median": 1.027,
+      "ticker": "MCD"
+    },
+    {
+      "fy": 2015,
+      "n_words": 40433,
+      "ratio_to_median": 0.686,
+      "ticker": "META"
+    },
+    {
+      "fy": 2016,
+      "n_words": 43884,
+      "ratio_to_median": 0.745,
+      "ticker": "META"
+    },
+    {
+      "fy": 2017,
+      "n_words": 42949,
+      "ratio_to_median": 0.729,
+      "ticker": "META"
+    },
+    {
+      "fy": 2018,
+      "n_words": 44201,
+      "ratio_to_median": 0.75,
+      "ticker": "META"
+    },
+    {
+      "fy": 2019,
+      "n_words": 51180,
+      "ratio_to_median": 0.869,
+      "ticker": "META"
+    },
+    {
+      "fy": 2020,
+      "n_words": 58898,
+      "ratio_to_median": 1.0,
+      "ticker": "META"
+    },
+    {
+      "fy": 2021,
+      "n_words": 60242,
+      "ratio_to_median": 1.023,
+      "ticker": "META"
+    },
+    {
+      "fy": 2022,
+      "n_words": 65600,
+      "ratio_to_median": 1.114,
+      "ticker": "META"
+    },
+    {
+      "fy": 2023,
+      "n_words": 69248,
+      "ratio_to_median": 1.176,
+      "ticker": "META"
+    },
+    {
+      "fy": 2024,
+      "n_words": 71325,
+      "ratio_to_median": 1.211,
+      "ticker": "META"
+    },
+    {
+      "fy": 2025,
+      "n_words": 73519,
+      "ratio_to_median": 1.248,
+      "ticker": "META"
+    },
+    {
+      "fy": 2015,
+      "n_words": 81902,
+      "ratio_to_median": 1.05,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2016,
+      "n_words": 76473,
+      "ratio_to_median": 0.98,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2017,
+      "n_words": 75994,
+      "ratio_to_median": 0.974,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2018,
+      "n_words": 77371,
+      "ratio_to_median": 0.992,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2019,
+      "n_words": 71641,
+      "ratio_to_median": 0.918,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2020,
+      "n_words": 77162,
+      "ratio_to_median": 0.989,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2021,
+      "n_words": 80510,
+      "ratio_to_median": 1.032,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2022,
+      "n_words": 78371,
+      "ratio_to_median": 1.004,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2023,
+      "n_words": 78023,
+      "ratio_to_median": 1.0,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2024,
+      "n_words": 79626,
+      "ratio_to_median": 1.021,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2025,
+      "n_words": 82819,
+      "ratio_to_median": 1.061,
+      "ticker": "MRK"
+    },
+    {
+      "fy": 2015,
+      "n_words": 82068,
+      "ratio_to_median": 0.821,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2016,
+      "n_words": 84188,
+      "ratio_to_median": 0.842,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2017,
+      "n_words": 82871,
+      "ratio_to_median": 0.829,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2018,
+      "n_words": 87404,
+      "ratio_to_median": 0.874,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2019,
+      "n_words": 93982,
+      "ratio_to_median": 0.94,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2020,
+      "n_words": 99980,
+      "ratio_to_median": 1.0,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2021,
+      "n_words": 102409,
+      "ratio_to_median": 1.024,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2022,
+      "n_words": 101710,
+      "ratio_to_median": 1.017,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2023,
+      "n_words": 120804,
+      "ratio_to_median": 1.208,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2024,
+      "n_words": 122887,
+      "ratio_to_median": 1.229,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2025,
+      "n_words": 115973,
+      "ratio_to_median": 1.16,
+      "ticker": "NEM"
+    },
+    {
+      "fy": 2015,
+      "n_words": 55959,
+      "ratio_to_median": 1.0,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2016,
+      "n_words": 58604,
+      "ratio_to_median": 1.047,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2017,
+      "n_words": 61061,
+      "ratio_to_median": 1.091,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2018,
+      "n_words": 59952,
+      "ratio_to_median": 1.071,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2019,
+      "n_words": 60124,
+      "ratio_to_median": 1.074,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2020,
+      "n_words": 52434,
+      "ratio_to_median": 0.937,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2021,
+      "n_words": 52360,
+      "ratio_to_median": 0.936,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2022,
+      "n_words": 53874,
+      "ratio_to_median": 0.963,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2023,
+      "n_words": 55442,
+      "ratio_to_median": 0.991,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2024,
+      "n_words": 56285,
+      "ratio_to_median": 1.006,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2025,
+      "n_words": 54297,
+      "ratio_to_median": 0.97,
+      "ticker": "PEP"
+    },
+    {
+      "fy": 2015,
+      "n_words": 31674,
+      "ratio_to_median": 0.385,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2016,
+      "n_words": 30223,
+      "ratio_to_median": 0.367,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2017,
+      "n_words": 31769,
+      "ratio_to_median": 0.386,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2018,
+      "n_words": 34800,
+      "ratio_to_median": 0.423,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2019,
+      "n_words": 37083,
+      "ratio_to_median": 0.45,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2020,
+      "n_words": 82328,
+      "ratio_to_median": 1.0,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2021,
+      "n_words": 82543,
+      "ratio_to_median": 1.003,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2022,
+      "n_words": 83118,
+      "ratio_to_median": 1.01,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2023,
+      "n_words": 88295,
+      "ratio_to_median": 1.072,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2024,
+      "n_words": 85868,
+      "ratio_to_median": 1.043,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2025,
+      "n_words": 85535,
+      "ratio_to_median": 1.039,
+      "ticker": "PFE"
+    },
+    {
+      "fy": 2015,
+      "n_words": 26180,
+      "ratio_to_median": 1.086,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2016,
+      "n_words": 26006,
+      "ratio_to_median": 1.079,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2017,
+      "n_words": 25842,
+      "ratio_to_median": 1.072,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2018,
+      "n_words": 25379,
+      "ratio_to_median": 1.053,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2019,
+      "n_words": 24144,
+      "ratio_to_median": 1.002,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2020,
+      "n_words": 24098,
+      "ratio_to_median": 1.0,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2021,
+      "n_words": 23137,
+      "ratio_to_median": 0.96,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2022,
+      "n_words": 23634,
+      "ratio_to_median": 0.981,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2023,
+      "n_words": 23755,
+      "ratio_to_median": 0.986,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2024,
+      "n_words": 23053,
+      "ratio_to_median": 0.957,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2025,
+      "n_words": 23804,
+      "ratio_to_median": 0.988,
+      "ticker": "TXN"
+    },
+    {
+      "fy": 2015,
+      "n_words": 46986,
+      "ratio_to_median": 1.173,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2016,
+      "n_words": 44546,
+      "ratio_to_median": 1.112,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2017,
+      "n_words": 40263,
+      "ratio_to_median": 1.005,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2018,
+      "n_words": 39145,
+      "ratio_to_median": 0.977,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2019,
+      "n_words": 39064,
+      "ratio_to_median": 0.975,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2020,
+      "n_words": 40260,
+      "ratio_to_median": 1.005,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2021,
+      "n_words": 40072,
+      "ratio_to_median": 1.0,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2022,
+      "n_words": 37595,
+      "ratio_to_median": 0.938,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2023,
+      "n_words": 38964,
+      "ratio_to_median": 0.972,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2024,
+      "n_words": 39285,
+      "ratio_to_median": 0.98,
+      "ticker": "UNH"
+    },
+    {
+      "fy": 2025,
+      "n_words": 41375,
+      "ratio_to_median": 1.033,
+      "ticker": "UNH"
+    }
+  ]
+}

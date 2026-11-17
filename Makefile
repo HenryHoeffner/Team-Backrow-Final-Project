@@ -4,7 +4,7 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 export PYTHONPATH := src
 PILOT := $(PYTHON) -m pilot
 
-.PHONY: setup download clean score returns plot coverage diffs snapshot all test app reset
+.PHONY: setup download clean score bins returns plot coverage diffs snapshot all from-scores test app reset
 
 setup:            ## create .venv and install dependencies
 	python3 -m venv .venv
@@ -19,6 +19,9 @@ clean:            ## T2: extract the 10-K document and write data/clean/*.txt
 
 score:            ## T3 + T4: similarity vs prior year, then within-year bins
 	$(PILOT) score
+	$(PILOT) bins
+
+bins:             ## T4 only: within-year bins on the existing data/similarity.parquet
 	$(PILOT) bins
 
 returns:          ## T5: 12-month firm and SPY returns after each filing
@@ -37,6 +40,8 @@ snapshot:         ## copy the results the website needs into app_data/ (commit i
 	$(PYTHON) -m pilot.dashboard
 
 all: download clean score returns plot coverage snapshot
+
+from-scores: bins returns plot coverage snapshot  ## T4-T7 from the committed data/ files, no SEC download
 
 test:
 	$(PYTHON) -m pytest -q

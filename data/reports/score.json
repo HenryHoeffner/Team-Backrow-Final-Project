@@ -1,0 +1,30 @@
+{
+  "expected_rows": 200,
+  "gaps": [],
+  "in_range": true,
+  "lowest": [
+    {
+      "cosine_sim": 0.9774915563927338,
+      "fy": 2020,
+      "jaccard_sim": 0.5958810068649886,
+      "ticker": "HON"
+    },
+    {
+      "cosine_sim": 0.9850810232435617,
+      "fy": 2016,
+      "jaccard_sim": 0.7328519855595668,
+      "ticker": "INTC"
+    },
+    {
+      "cosine_sim": 0.9885376624234032,
+      "fy": 2020,
+      "jaccard_sim": 0.620439780109945,
+      "ticker": "PFE"
+    }
+  ],
+  "rows": 200,
+  "sections": [
+    "risk_factors",
+    "mdna"
+  ]
+}
