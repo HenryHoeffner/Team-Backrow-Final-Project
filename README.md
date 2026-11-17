@@ -257,21 +257,43 @@ This project differs by using raw filings from EDGAR (so word order and sections
 
 **T8 (stretch): diff viewer.** For a chosen firm and year, write an HTML file listing sentences added and removed between the two cleaned 10-Ks, using `difflib`. Save to `outputs/diffs/{TICKER}_{FY}.html`. Use it to review the three lowest-similarity rows from T3.
 
-## Known limitations
+## Threats to validity
 
-- **Small sample.** 200 scored filings (160 binned) from 20 firms. The graphs illustrate the method and prove the pipeline; they are not evidence about the effect.
-- **Eight points per graph.** One annual return per binned filing; FY2016–FY2017 only build each firm's history.
-- **Format breaks persist in the firm-relative score.** PFE's FY2020 move of its MD&A into the 10-K makes FY2020–FY2022 look large next to its calm pre-2020 baseline, so PFE is B1 in 4 of 8 years. A shorter rolling baseline would adapt faster but is noisier with this little history.
-- **Format breaks in the new firms.** HON redesigned its 10-K for FY2020: MD&A moved ahead of Risk Factors, section names became running page headers, and MD&A shrank from about 8,000 to about 2,500 words, so HON FY2020 scores as a very large change. PEP condensed Item 1A from about 14,600 to about 7,000 words in FY2020. These are real changes in the filings but are formatting decisions, not news.
-- **Excess return is market-adjusted only.** No beta or factor adjustment; that is the calendar-time portfolio test in the later phase.
-- **Last window may be partial.** FY2025 filings are entered around March 2026, so their 12-month window runs past the latest prices.
-- **Hand-picked firms.** Large, stable companies chosen for clean data.
-- **10-K only.** The original paper also used 10-Qs.
-- **Free data.** Survivorship bias and missing delisting returns matter less for 20 large, still-listed firms.
-- **Text coverage.** Only Item 1A and Item 7 are scored. Business, legal proceedings, financial-statement notes and everything in the proxy statement are not in the signal.
-- **Format breaks.** PFE moved its MD&A from the EX-13 "Financial Review" (about 45,000 words, including a glossary) into Item 7 (about 15,000 words) in FY2020, so PFE FY2020 vs FY2019 partly measures that move. The coverage report lists these years.
+The first three are the threats named in the proposal (`PROPOSAL.md`, §4), with the same checks. The rest come from building the pilot and from our self-audit (`audits/01_self_audit.md`). Every specification we have run is in `specs_tried.md`.
+
+### Threats from the proposal
+
+- **The benchmark assumes every firm has a beta of 1.** All 20 firms are in the S&P 500, and excess return subtracts the index's return, so low-beta firms such as Coca-Cola look weak in strong years without anything going wrong. If steady, low-beta firms tend to land in B5 and volatile firms in B1, the spread partly measures beta. *Check (planned):* estimate each firm's beta from the 36 months before each filing and rerun the bin comparison on beta-adjusted returns.
+- **The 2020 Regulation S-K amendments.** The SEC's 2020 rules made most firms rewrite their Item 1A risk factors. Ranking within each year cancels the shared part of that shock, but the 2020 rewrite then sits in every firm's baseline (`prior_median_change`) from FY2021 on.
+- **Small denominators in relative change.** `rel_change` divides this year's change by the firm's usual change. For a firm whose 10-K barely changes, both are close to zero, so a few edited sentences can produce a large ratio and put the firm in B1. *Check:* compare against bins on raw similarity, which has no denominator (done: B5 − B1 is +5.4 pp on raw bins vs +6.7 pp firm-relative over the same years, `specs_tried.md`); setting a minimum on the usual change is planned.
+
+### Sample and selection
+
+- **Survivorship.** The 20 firms were chosen in 2026, and each had to file an original 10-K for every year FY2015–FY2025. So the sample has no firms that failed, were acquired or were delisted, which are the cases where large 10-K rewrites (restructuring, distress) are most likely to come before bad returns. That probably makes B1 look better than it would in a full sample and shrinks the spread. Free Yahoo prices also have no delisting returns. *Planned fix:* a point-in-time universe (e.g. index members as of each filing date) that keeps firms which later delist.
+- **Small, hand-picked sample.** 200 scored filings (160 binned) from 20 large, stable firms chosen for clean data. The graphs illustrate the method and prove the pipeline; they are not evidence about the effect, and they say nothing about the typical company. Each firm graph has eight points; FY2016–FY2017 only build each firm's history.
+
+### Look-ahead and timing
+
+- **Return window start.** The window starts at the end of the filing month. For 10 of 160 filings the 10-K was filed on the month's last trading day, so if it was filed after the close, the start price is from before the filing was public. *Planned fix:* start at the next month-end in that case and check the SEC acceptance time.
+- **Ranking within the fiscal year.** Firms are ranked against every firm in the same fiscal year, and filing dates in a year are up to about five weeks apart, so an early filer's bin depends on filings that came later. The paper sets cutoffs from an earlier distribution of scores (sources disagree on whether that is the prior month or the prior year; confirm against the paper before the full project). *Planned fix:* cutoffs from the previous year's scores.
+
+### The signal
+
+- **Format breaks count as change.** PFE moved its MD&A from the EX-13 "Financial Review" (about 45,000 words, including a glossary) into Item 7 (about 15,000 words) in FY2020, and that move stays in its firm-relative baseline, so FY2020–FY2022 look large next to its calm pre-2020 years. HON redesigned its 10-K for FY2020 (MD&A moved ahead of Risk Factors and shrank from about 8,000 to about 2,500 words), and PEP condensed Item 1A from about 14,600 to about 7,000 words the same year. These are real changes in the filings but formatting decisions, not news. The coverage report lists these years. *Planned check:* rerun without PFE FY2020 and HON FY2020.
+- **Text coverage.** Only Item 1A and Item 7 of the 10-K are scored. Business, legal proceedings, financial-statement notes, the proxy statement and 10-Qs (which the paper also used) are not in the signal.
 - **Heading rules are per layout.** Section boundaries were checked against these 20 firms' layouts. A new firm may need a new heading pattern in `t2_sections.py`; a missing section shows up as a gap, not a silent fallback.
-- **Quintile cutoffs.** The paper sets them from an earlier distribution of scores; sources I read disagree on whether that is the prior month or the prior year. The pilot ranks firms within each year. Confirm against the paper's PDF before the full project.
+
+### Returns
+
+- **Spin-offs in the price data.** Yahoo records spin-offs as non-standard "splits", and the pipeline doesn't check them. Windows that may be affected include HON (Solstice, 2025), PFE (Viatris, 2020) and MRK (Organon, 2021). *Planned check:* flag every non-standard split and rerun without the affected windows.
+- **Last window may be partial.** FY2025 filings come out around March 2026, so their 12-month window runs past the latest prices. Partial windows are shown hatched and left out of every statistic.
+
+### Statistics
+
+- **Firm-years are not independent.** The pooled Welch test treats every firm-year as a separate observation, but firms in the same year share the market's return and each firm appears up to seven times, so the confidence intervals are too narrow. *Planned fix:* test the yearly B5 − B1 basket differences, or cluster by year.
+- **Outliers drive the means.** A few large returns (NEM +192, META +150, INTC +123 pp) move the bin means; on medians B5 − B1 is about +2 pp, not +6.7.
+- **The basket chart is not an investable strategy.** It compounds 12-month holds as if they ran back to back, but they overlap or leave gaps, so it is illustrative only.
+- **Specification search.** We tried several alternatives (`specs_tried.md`). Some, such as Item 1A alone, show larger spreads than the headline. The headline stays as set in `config.yaml`; none of the specifications is significant at 5%.
 
 ## References
 
