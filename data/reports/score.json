@@ -1,5 +1,5 @@
 {
-  "expected_rows": 200,
+  "expected_rows": 190,
   "gaps": [],
   "in_range": true,
   "lowest": [
@@ -22,7 +22,7 @@
       "ticker": "PFE"
     }
   ],
-  "rows": 200,
+  "rows": 190,
   "sections": [
     "risk_factors",
     "mdna"

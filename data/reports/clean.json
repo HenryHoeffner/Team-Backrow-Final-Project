@@ -1,7 +1,7 @@
 {
-  "files": 220,
+  "files": 209,
   "gaps": [],
-  "manifest_rows": 220,
+  "manifest_rows": 209,
   "markup_leftovers": [],
   "section_outliers": [
     {
@@ -20,160 +20,6 @@
     }
   ],
   "section_word_counts": [
-    {
-      "fy": 2015,
-      "n_words": 5896,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2015,
-      "n_words": 14540,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2016,
-      "n_words": 5949,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2016,
-      "n_words": 14119,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2017,
-      "n_words": 6005,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2017,
-      "n_words": 15115,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2018,
-      "n_words": 6074,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2018,
-      "n_words": 16383,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2019,
-      "n_words": 6375,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2019,
-      "n_words": 16380,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2020,
-      "n_words": 7256,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2020,
-      "n_words": 17005,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2021,
-      "n_words": 9047,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2021,
-      "n_words": 17406,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2022,
-      "n_words": 9420,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2022,
-      "n_words": 15562,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2023,
-      "n_words": 9506,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2023,
-      "n_words": 16343,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2024,
-      "n_words": 9441,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2024,
-      "n_words": 17729,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2025,
-      "n_words": 11004,
-      "section": "risk_factors",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2025,
-      "n_words": 14995,
-      "section": "mdna",
-      "source": "10-K",
-      "ticker": "AMT"
-    },
     {
       "fy": 2015,
       "n_words": 6553,
@@ -3134,77 +2980,11 @@
   ],
   "size_outliers": [],
   "spot_check": [
-    "data/clean/0000731766_2022.txt",
-    "data/clean/0000773840_2025.txt",
-    "data/clean/0000078003_2022.txt"
+    "data/clean/0000050863_2025.txt",
+    "data/clean/0000097476_2022.txt",
+    "data/clean/0000019617_2023.txt"
   ],
   "word_counts": [
-    {
-      "fy": 2015,
-      "n_words": 59789,
-      "ratio_to_median": 0.896,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2016,
-      "n_words": 59226,
-      "ratio_to_median": 0.887,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2017,
-      "n_words": 61624,
-      "ratio_to_median": 0.923,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2018,
-      "n_words": 64174,
-      "ratio_to_median": 0.962,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2019,
-      "n_words": 64428,
-      "ratio_to_median": 0.965,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2020,
-      "n_words": 66737,
-      "ratio_to_median": 1.0,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2021,
-      "n_words": 71263,
-      "ratio_to_median": 1.068,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2022,
-      "n_words": 67749,
-      "ratio_to_median": 1.015,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2023,
-      "n_words": 70183,
-      "ratio_to_median": 1.052,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2024,
-      "n_words": 72628,
-      "ratio_to_median": 1.088,
-      "ticker": "AMT"
-    },
-    {
-      "fy": 2025,
-      "n_words": 68778,
-      "ratio_to_median": 1.031,
-      "ticker": "AMT"
-    },
     {
       "fy": 2015,
       "n_words": 34652,

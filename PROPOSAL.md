@@ -18,7 +18,7 @@ The unit of observation is a firm-fiscal-year: one original 10-K, compared with 
 
 | Raw input | Source | How you get it | Where it lives in the repo |
 | :---- | :---- | :---- | :---- |
-| ticker | Hand-entered by the team | Typed into the config (20 firms) | config.yaml, firms: (ticker:) |
+| ticker | Hand-entered by the team | Typed into the config (19 firms) | config.yaml, firms: (ticker:) |
 | name | Hand-entered by the team | Typed into the config | config.yaml (name:) |
 | sector | Hand-entered by the team | Typed into the config | config.yaml (sector:) |
 | fy | SEC 10-K filing header (period of report) | Parsed from each downloaded 10-K in step 1 (make download) | data/filings\_manifest.csv, code in src/pilot/t1\_download.py |

@@ -94,7 +94,7 @@ with tab_intro:
             "If Lazy Prices holds, B5 beats B1.")
     st.warning(f"**Bottom line so far:** B5 beat B1 by {signed(spread['diff'])} pp a year, the direction "
                f"the paper predicts, but the 95% range runs from {signed(spread['ci_low'])} to "
-               f"{signed(spread['ci_high'])} pp (p = {spread['p']:.2f}). With 20 firms this could easily "
+               f"{signed(spread['ci_high'])} pp (p = {spread['p']:.2f}). With 19 firms this could easily "
                "be chance.")
 
 # --------------------------------------------------------------------------- methodology

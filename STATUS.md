@@ -25,7 +25,7 @@ Three things broke:
 
 ## Current status (Nov 17, 2026)
 
-- **Built:** the full pipeline (T1–T8) on 20 firms over FY2015–2025, plus the Streamlit dashboard and 43 passing tests.
+- **Built:** the full pipeline (T1–T8) on 19 firms over FY2015–2025, plus the Streamlit dashboard and 43 passing tests.
 - **Headline:** least-changed (B5) minus most-changed (B1) is +6.7 pp of 12-month excess return, p = 0.46. That's in the predicted direction but not significant.
 - **Audits:** self-audit in `audits/01_self_audit.md`. Instructor audit received Nov 14; fixes are in progress. See `audits/03_audit_response.md`.
 - **Next:** fix the instructor audit findings (A1: required files; A2: point-in-time universe instead of today's survivors; A3: year-level B5 − B1 test; A4: commit the small intermediate files so T4–T7 rerun without SEC downloads), then the v1 full sample.

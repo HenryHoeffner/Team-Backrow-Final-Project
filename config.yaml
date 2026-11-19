@@ -19,7 +19,6 @@ firms:
   - {ticker: PEP,  cik: "0000077476", name: "PepsiCo Inc",                 sector: "Consumer Staples"}
   - {ticker: COP,  cik: "0001163165", name: "ConocoPhillips",              sector: "Energy"}
   - {ticker: NEM,  cik: "0001164727", name: "Newmont Corp",                sector: "Materials", aliases: ["Newmont Goldcorp Corp", "Newmont Mining Corp"]}
-  - {ticker: AMT,  cik: "0001053507", name: "American Tower Corp",         sector: "Real Estate"}
 fiscal_years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
 sections: [risk_factors, mdna]   # Item 1A Risk Factors, Item 7 MD&A; scored together
 bin_measure: cosine

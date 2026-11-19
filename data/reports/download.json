@@ -71,13 +71,12 @@
     2024,
     2025
   ],
-  "expected_rows": 220,
+  "expected_rows": 209,
   "gaps": [],
   "missing_firm_years": [],
   "name_mismatches": [],
   "notes": [],
   "per_firm": {
-    "AMT": 11,
     "AMZN": 11,
     "BA": 11,
     "BAC": 11,
@@ -98,6 +97,6 @@
     "TXN": 11,
     "UNH": 11
   },
-  "rows": 220,
+  "rows": 209,
   "transition_reports_flagged": []
 }
