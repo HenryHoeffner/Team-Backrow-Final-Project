@@ -292,7 +292,7 @@ The first three are the threats named in the proposal (`PROPOSAL.md`, §4), with
 
 ### Statistics
 
-- **Firm-years are not independent.** The pooled Welch test treats every firm-year as a separate observation, but firms in the same year share the market's return and each firm appears up to seven times, so a pooled test makes the confidence intervals too narrow. *Fixed:* B5 − B1 is now tested on the 7 yearly basket differences (`basket_spread_test` in `t6_plot.py`, reported in `plot.json`): +6.7 pp, 95% CI −29 to +43, p = 0.66, against p = 0.46 for the pooled Welch test. With only 7 years the test has little power.
+- **Firm-years are not independent.** The pooled Welch test treats every firm-year as a separate observation, but firms in the same year share the market's return and each firm appears in several years, so a pooled test makes the confidence intervals too narrow. *Fixed:* B5 − B1 is now tested on the yearly basket differences (`basket_spread_test` in `t6_plot.py`, reported in `plot.json`). On CRSP data, with five full filing years (2019–2023): +10.8 pp, 95% CI −45 to +66, p = 0.62, against p = 0.35 for the pooled Welch test. With only five years the test has little power.
 - **Outliers drive the means.** A few large returns (NEM +192, META +150, INTC +123 pp) move the bin means; on medians B5 − B1 is about +2 pp, not +6.7.
 - **The basket chart is not an investable strategy.** It compounds 12-month holds as if they ran back to back, but they overlap or leave gaps, so it is illustrative only.
 - **Specification search.** We tried several alternatives (`specs_tried.md`). Some, such as Item 1A alone, show larger spreads than the headline. The headline stays as set in `config.yaml`; none of the specifications is significant at 5%.

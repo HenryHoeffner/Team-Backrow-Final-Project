@@ -194,7 +194,8 @@ with tab_results:
                "firm appears in many years. By year: "
                + ", ".join(f"{y['year']} {signed(y['diff'])}" for y in spread["yearly"])
                + " pp. The per-bin bands treat filings as independent and are descriptive only. "
-               "20 hand-picked firms: this illustrates the method; it is not a test of the Lazy Prices effect.")
+               f"{df['ticker'].nunique()} hand-picked firms: this illustrates the method; it is not a test of the "
+               "Lazy Prices effect.")
 
     st.subheader("Did the most-changed firms lag the least-changed?")
     st.caption("Each year the firms are split into five equal-weighted baskets by bin and held for "

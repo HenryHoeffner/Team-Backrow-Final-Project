@@ -49,7 +49,7 @@ Lowest-similarity filings:
 Scoring gaps: none
 
 RETURNS (T5)
-Price source: CRSP monthly (ret_adj, Shumway delisting rule); benchmark = CRSP sprtrn (S&P 500 price return) plus CRSP market dividend yield vwretd-vwretx (approximate total return)
+Price source: cached data/prices_monthly.csv, CRSP monthly (ret_adj, Shumway delisting rule); benchmark = CRSP sprtrn (S&P 500 price return) plus CRSP market dividend yield vwretd-vwretx (approximate total return)
 Latest complete price month: Dec 2024
 Price coverage (monthly, last trading day):
   - AMZN: 2000-01-31 to 2024-12-31 (300 months)
@@ -163,9 +163,13 @@ Per-firm y axis: return minus the S&P 500 over the same window (pp)
 POOLED: NEXT-YEAR RETURN MINUS S&P 500 BY BIN (T6)
 Firm-years: 95 (FY2018-FY2022; full 12-month windows only)
 Bins used (firm-relative): B1 -8.0 pp (n=15), B2 -3.9 pp (n=20), B3 -3.6 pp (n=20), B4 +4.1 pp (n=20), B5 +2.8 pp (n=20)
-  B5 - B1 = +10.8 pp, 95% CI -12.2 to +33.8, p = 0.35 (Welch; filings treated as independent)
+  B5 - B1 = +10.8 pp, 95% CI -44.7 to +66.2, p = 0.62 (t-test on 5 yearly B5 - B1 basket differences)
+    by year: 2019 +5.5, 2020 +16.9, 2021 -27.2, 2022 -24.5, 2023 +83.1
+    descriptive only: pooled Welch 95% CI -12.2 to +33.8, p = 0.35 (filings treated as independent)
 Raw-similarity bins, for comparison: B1 -2.9 pp (n=15), B2 -6.0 pp (n=20), B3 +2.3 pp (n=20), B4 -6.0 pp (n=20), B5 +5.3 pp (n=20)
-  B5 - B1 = +8.1 pp, 95% CI -14.4 to +30.6, p = 0.47 (Welch; filings treated as independent)
+  B5 - B1 = +8.1 pp, 95% CI -28.3 to +44.5, p = 0.57 (t-test on 5 yearly B5 - B1 basket differences)
+    by year: 2019 -6.6, 2020 +17.4, 2021 -10.6, 2022 -15.1, 2023 +55.5
+    descriptive only: pooled Welch 95% CI -14.4 to +30.6, p = 0.47 (filings treated as independent)
 
 ALL FIRMS COMBINED: EQUAL-WEIGHTED BIN BASKETS (T6)
 Filing years: 2019-2023; cumulative return ahead of the S&P 500 over the same windows:
