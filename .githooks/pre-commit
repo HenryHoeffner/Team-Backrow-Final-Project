@@ -1,0 +1,6 @@
+#!/bin/sh
+# Blocks a commit that would put licensed CRSP data into this public repo.
+# Turned on by `make hooks` (also run by `make setup`). See README_DATA.md.
+cd "$(git rev-parse --show-toplevel)" || exit 1
+if [ -x .venv/bin/python ]; then PY=.venv/bin/python; else PY=python3; fi
+PYTHONPATH=src "$PY" -m pilot.licensing

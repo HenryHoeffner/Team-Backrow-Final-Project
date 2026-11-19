@@ -4,12 +4,19 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 export PYTHONPATH := src
 PILOT := $(PYTHON) -m pilot
 
-.PHONY: setup download clean score bins returns plot coverage diffs snapshot all from-scores test app reset
+.PHONY: setup hooks check-data download clean score bins returns plot coverage diffs snapshot all from-scores test app reset
 
 setup:            ## create .venv and install dependencies
 	python3 -m venv .venv
 	.venv/bin/pip install -q --upgrade pip
 	.venv/bin/pip install -q -e ".[dev]"
+	git config core.hooksPath .githooks
+
+hooks:            ## turn on the pre-commit check that blocks committing CRSP data
+	git config core.hooksPath .githooks
+
+check-data:       ## list any tracked file that looks like licensed CRSP data
+	$(PYTHON) -m pilot.licensing
 
 download:         ## T1: fetch 10-Ks from EDGAR, write data/filings_manifest.csv
 	$(PILOT) download
@@ -41,7 +48,7 @@ snapshot:         ## copy the results the website needs into app_data/ (commit i
 
 all: download clean score returns plot coverage snapshot
 
-from-scores: bins returns plot coverage snapshot  ## T4-T7 from the committed data/ files, no SEC download
+from-scores: bins returns plot coverage snapshot  ## T4-T7 from the committed data/ files and your CRSP files, no SEC download
 
 test:
 	$(PYTHON) -m pytest -q

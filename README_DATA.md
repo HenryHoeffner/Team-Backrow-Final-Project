@@ -49,3 +49,12 @@ The -30% figure comes from Shumway's NYSE/AMEX evidence. Shumway and Warther (19
 ## Licensing
 
 CRSP data is licensed to Lehigh users. Do not post the raw files in a public repository or in anything people can download. Aggregated results are fine.
+
+This repo is public, so anything committed is published. The two CRSP files stay in `data/` on each teammate's laptop, and so do the files the pipeline builds from them: `data/prices_monthly.csv` (a monthly return index per firm), `data/prices_monthly.source.txt` and `data/returns.parquet`. All of these are git-ignored. Results computed from CRSP, such as `app_data/`, the coverage report and the figures, are committed.
+
+To keep it that way:
+
+- **Pre-commit hook.** Run `make hooks` once per laptop (`make setup` also does it). After that, `git commit` refuses to commit any of the files above, any data file with "crsp" or "wrds" in its name, or any table with CRSP columns (`permno`, `ret_adj`, `dlret`, `vwretd`, ...) or price/return-series columns (`adj_close`, `prc`, `ret`).
+- **Check.** `make check-data` runs the same check, and `make test` includes it (`tests/test_licensing.py`).
+
+The check can't recognize CRSP numbers saved under other column names. Any new code that reads CRSP must write its output to git-ignored files.
