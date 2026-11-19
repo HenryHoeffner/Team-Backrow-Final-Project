@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_config_loads():
     cfg = load_config(ROOT / "config.yaml", root=ROOT)
-    assert cfg.tickers[:5] == ["INTC", "PFE", "JPM", "MCD", "CAT"] and len(cfg.tickers) == 20
+    assert cfg.tickers[:5] == ["INTC", "PFE", "JPM", "MCD", "CAT"] and len(cfg.tickers) == 19
     assert cfg.firm_by_cik("1326801").aliases == ("Facebook Inc",)
     assert cfg.fiscal_years == list(range(2015, 2026))
     assert cfg.sections == ["risk_factors", "mdna"]

@@ -4,7 +4,7 @@
 
 *This memo wasn't committed by the Oct 23 deadline. It was written on Nov 17, 2026 from the repo's earliest commits (Nov 6–7) to show where the project started.*
 
-**What we picked and why.** We're replicating *Lazy Prices* (Cohen, Malloy & Nguyen, 2020): firms that heavily rewrite their 10-K tend to underperform afterward. We picked it because every input is free and checkable. The 10-Ks come from SEC EDGAR and prices from Yahoo Finance. The signal (text similarity to last year's 10-K) is simple enough to rebuild from raw filings and verify by hand.
+**What we picked and why.** We're replicating *Lazy Prices* (Cohen, Malloy & Nguyen, 2020): firms that heavily rewrite their 10-K tend to underperform afterward. We picked it because every input is free and checkable. The 10-Ks come from SEC EDGAR and prices from CRSP (WRDS). The signal (text similarity to last year's 10-K) is simple enough to rebuild from raw filings and verify by hand.
 
 **What the proof of concept got, and what broke.** Our first version ran end to end on 5 firms (INTC, PFE, JPM, MCD, CAT) over FY2020–2025:
 
@@ -25,7 +25,7 @@ Three things broke:
 
 ## Current status (Nov 17, 2026)
 
-- **Built:** the full pipeline (T1–T8) on 20 firms over FY2015–2025, plus the Streamlit dashboard and 43 passing tests.
+- **Built:** the full pipeline (T1–T8) on 19 firms over FY2015–2025, plus the Streamlit dashboard and 43 passing tests.
 - **Headline:** least-changed (B5) minus most-changed (B1) is +6.7 pp of 12-month excess return, p = 0.46. That's in the predicted direction but not significant.
 - **Audits:** self-audit in `audits/01_self_audit.md`. Instructor audit received Nov 14; fixes are in progress. See `audits/03_audit_response.md`.
 - **Next:** fix the instructor audit findings (A1: required files; A2: point-in-time universe instead of today's survivors; A3: year-level B5 − B1 test; A4: commit the small intermediate files so T4–T7 rerun without SEC downloads), then the v1 full sample.

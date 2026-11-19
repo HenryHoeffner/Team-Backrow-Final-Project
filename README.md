@@ -16,7 +16,7 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 | 2 | `make clean` | `t2_clean.py`, `t2_sections.py` | filings manifest, raw filings | `data/clean/*.txt` (whole 10-K), `data/sections/*.txt` (Item 1A and Item 7) |
 | 3 | `make score` (part 1) | `t3_score.py` | section text | `data/similarity.parquet` |
 | 4 | `make score` (part 2), or `make bins` alone | `t4_bins.py` | similarity table | adds `rel_change`, `bin_relative`, `bin_raw` and `bin` to `data/similarity.parquet` |
-| 5 | `make returns` | `t5_returns.py` | similarity table, prices (Yahoo or cache) | `data/prices_monthly.csv`, `data/returns.parquet` |
+| 5 | `make returns` | `t5_returns.py` | similarity table, CRSP files (or the cached prices) | `data/prices_monthly.csv`, `data/returns.parquet` |
 | 6 | `make plot` | `t6_plot.py` | similarity + returns | `outputs/figures/*.png` (one per firm, `pooled_by_bin.png`, `all_firms_heatmap.png`, `all_firms_combined.png`), `data/pooled_by_bin.csv`, `data/bin_baskets.csv` |
 | 7 | `make coverage` | `t7_coverage.py` | step reports in `data/reports/` | `outputs/coverage.txt` |
 | 8 | `make diffs` (optional) | `t8_diff.py` | section text, similarity table | `outputs/diffs/*.html` |
@@ -32,7 +32,7 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 
 ## Goal
 
-Produce one graph for each of 20 firms, plus three graphs that pool all of them. Each graph shows how the firm's stock returned in the year after each 10-K filing, and colors each year by **how much the firm's 10-K changed compared with the year before**. The graph is a visual check of the Lazy Prices idea (Cohen, Malloy & Nguyen, *Journal of Finance*, 2020): companies that rewrite their annual report heavily tend to earn lower returns afterward than companies that barely change it.
+Produce one graph for each of 19 firms, plus three graphs that pool all of them. Each graph shows how the firm's stock returned in the year after each 10-K filing, and colors each year by **how much the firm's 10-K changed compared with the year before**. The graph is a visual check of the Lazy Prices idea (Cohen, Malloy & Nguyen, *Journal of Finance*, 2020): companies that rewrite their annual report heavily tend to earn lower returns afterward than companies that barely change it.
 
 The pilot exists to prove the pipeline end to end: download filings, clean them, score the change, rank, attach returns, plot. It cannot show whether the effect is real. Twenty hand-picked large firms are far too few for that.
 
@@ -101,7 +101,7 @@ A firm's `aliases` in `config.yaml` lists former names, since older filing heade
 
 - **Filings:** original 10-Ks for fiscal years 2015–2025 (FY2015 is only the comparison base). Drop 10-K/A amendments. Flag 10-KT transition reports and exclude them from pairing.
 - **Signal:** cosine similarity between a 10-K and the same firm's previous 10-K, on **Item 1A (Risk Factors) and Item 7 (MD&A) only**, scored together. Each section's own cosine is saved as well (`cosine_risk_factors`, `cosine_mdna`). Jaccard similarity is computed too, as a robustness column, but the graph uses cosine.
-- **Returns:** free monthly adjusted prices (try `yfinance`) for the 20 tickers and SPY.
+- **Returns:** CRSP monthly stock returns (`ret_adj`, with the Shumway delisting rule) for the 19 tickers, and the S&P 500 from CRSP `crsp_monthly_market.csv`. Both CRSP files go in `data/` and are git-ignored.
 - **Why these firms:** self-contained 10-Ks and December year ends. IBM was dropped because its 10-K puts the MD&A and financials in a separate exhibit. Not a random sample, so results say nothing about the typical company.
 
 ```yaml
@@ -138,7 +138,7 @@ Keep `fiscal_years` configurable. Extending the window backward later should be 
 
 **Return window.** Let `m0` be the last trading day of the month in which the 10-K was filed (the filing date comes from the header). Start price is the adjusted close at `m0`. End price is the adjusted close 12 month-ends later. Return = end / start - 1, in percent. This starts the clock after the filing is public, so there is no lookahead. If the end month is later than the latest available price, use the latest available month and set `partial = True`.
 
-**S&P 500 comparison.** The same window applied to SPY adjusted close, one value per firm-filing so it lines up with the firm's window.
+**S&P 500 comparison.** The same window applied to a CRSP S&P 500 total-return series, one value per firm-filing so it lines up with the firm's window. The series is `sprtrn` (S&P 500 price return) plus the CRSP market dividend yield `vwretd - vwretx`, which approximates the index's total return.
 
 **Excess return.** `excess_return_pct = firm_return_pct − spy_return_pct`, in percentage points: market-adjusted, with no beta adjustment. The graphs and the pooled comparison use it, because the Lazy Prices claim is about returns relative to the market, not raw returns.
 
@@ -163,7 +163,7 @@ Do the tasks in order. After each task, run its check. Do not start the next tas
 **T4. Bin.** Add `change`, `prior_median_change`, `rel_change`, `bin_relative`, `bin_raw` and `bin` to the table using the definitions above. Print each firm's B1 count under both bases.
 *Check:* each binned fiscal year's bins are exactly `ceil(5 * rank / n)` for its `n` firms (four firms per bin with 20), so B1–B5 are all used.
 
-**T5. Returns.** Download monthly adjusted prices for the 20 tickers and SPY. If the download fails, accept a CSV at `data/external/prices_monthly.csv` with columns `date, ticker, adj_close` and say so. Compute the return window for every scored filing. Write `data/returns.parquet` with `ticker, fy, filing_date, window_start, window_end, firm_return_pct, spy_return_pct, excess_return_pct, partial`.
+**T5. Returns.** Build monthly total-return indexes for the 19 tickers and the S&P 500 benchmark from the CRSP files in `data/` (compounded `ret_adj`; benchmark `sprtrn + (vwretd - vwretx)`), and write them to `data/prices_monthly.csv` with columns `date, ticker, adj_close`. If the CRSP files are absent, use that cached CSV and say so. Compute the return window for every scored filing. Write `data/returns.parquet` with `ticker, fy, filing_date, window_start, window_end, firm_return_pct, spy_return_pct, excess_return_pct, partial`.
 *Check:* the window start is on or after the filing date in every row; the partial flag is true only where the end month is past the latest price.
 
 **T6. Plot.** Draw the graphs exactly as specified above with `matplotlib`. Save one PNG per firm plus `pooled_by_bin.png`, `all_firms_heatmap.png` and `all_firms_combined.png` in `outputs/figures/`, and print the pooled bin means and B5 − B1.
@@ -172,7 +172,7 @@ Do the tasks in order. After each task, run its check. Do not start the next tas
 **T7. Wrap up.** Write `outputs/coverage.txt`: filings found out of 220, scores out of 200, sections taken from exhibits, price coverage, partial windows, and any ties. Make `make all` run T1 to T6 from scratch.
 *Check:* `make all` completes on a clean clone and `make test` passes.
 
-**Definition of done:** 23 PNGs (20 firms, pooled, heatmap, combined) match the specification, every check above passes, and `outputs/coverage.txt` lists every gap.
+**Definition of done:** 22 PNGs (19 firms, pooled, heatmap, combined) match the specification, every check above passes, and `outputs/coverage.txt` lists every gap.
 
 ### Tests to write
 
@@ -194,7 +194,7 @@ Do the tasks in order. After each task, run its check. Do not start the next tas
 - **Small steps.** One task per commit, with the test for that task.
 
 ```bash
-pip install sec-edgar-downloader pandas pyarrow scikit-learn beautifulsoup4 lxml matplotlib yfinance pyyaml pytest
+pip install sec-edgar-downloader pandas pyarrow scikit-learn beautifulsoup4 lxml matplotlib pyyaml pytest
 export SEC_USER_NAME="Your Name"
 export SEC_USER_EMAIL="you@example.com"
 make all
@@ -212,7 +212,7 @@ src/pilot/
   t2_sections.py         step 2: cut out Item 1A and Item 7
   t3_score.py            step 3: similarity vs. prior-year 10-K
   t4_bins.py             step 4: rank firms into B1..B5 within each year
-  t5_returns.py          step 5: 12-month firm and SPY returns
+  t5_returns.py          step 5: 12-month firm and S&P 500 returns
   t6_plot.py             step 6: one PNG per firm
   t7_coverage.py         step 7: coverage report
   t8_diff.py             step 8 (optional): sentence diff viewer
@@ -233,7 +233,7 @@ Not part of the pilot deliverable. This is the paper's main test, kept here for 
 - Each month the long-short return is B5 minus B1. That produces one time series of monthly returns, which they regress on risk factors: the market, size, value, momentum, liquidity, and later a five-factor set.
 - The intercept of that regression is the alpha. A positive, significant alpha means the non-changers beat the changers by more than those known risk exposures explain. They report this both equal-weighted and value-weighted.
 
-With 20 firms this would be one long-short trade of four stocks a side a year and is for testing code only. Use Ken French monthly factors (market, size, value, momentum, profitability, investment; the liquidity factor is not in that library), Newey–West standard errors, and run 3- and 12-month holds.
+With 19 firms this would be one long-short trade of four stocks a side a year and is for testing code only. Use Ken French monthly factors (market, size, value, momentum, profitability, investment; the liquidity factor is not in that library), Newey–West standard errors, and run 3- and 12-month holds.
 
 ## Reference project and proposed changes
 
@@ -264,13 +264,13 @@ The first three are the threats named in the proposal (`PROPOSAL.md`, §4), with
 
 ### Threats from the proposal
 
-- **The benchmark assumes every firm has a beta of 1.** All 20 firms are in the S&P 500, and excess return subtracts the index's return, so low-beta firms such as Coca-Cola look weak in strong years without anything going wrong. If steady, low-beta firms tend to land in B5 and volatile firms in B1, the spread partly measures beta. *Check (planned):* estimate each firm's beta from the 36 months before each filing and rerun the bin comparison on beta-adjusted returns.
+- **The benchmark assumes every firm has a beta of 1.** All 19 firms are in the S&P 500, and excess return subtracts the index's return, so low-beta firms such as Coca-Cola look weak in strong years without anything going wrong. If steady, low-beta firms tend to land in B5 and volatile firms in B1, the spread partly measures beta. *Check (planned):* estimate each firm's beta from the 36 months before each filing and rerun the bin comparison on beta-adjusted returns.
 - **The 2020 Regulation S-K amendments.** The SEC's 2020 rules made most firms rewrite their Item 1A risk factors. Ranking within each year cancels the shared part of that shock, but the 2020 rewrite then sits in every firm's baseline (`prior_median_change`) from FY2021 on.
 - **Small denominators in relative change.** `rel_change` divides this year's change by the firm's usual change. For a firm whose 10-K barely changes, both are close to zero, so a few edited sentences can produce a large ratio and put the firm in B1. *Check:* compare against bins on raw similarity, which has no denominator (done: B5 − B1 is +5.4 pp on raw bins vs +6.7 pp firm-relative over the same years, `specs_tried.md`); setting a minimum on the usual change is planned.
 
 ### Sample and selection
 
-- **Survivorship.** The 20 firms were chosen in 2026, and each had to file an original 10-K for every year FY2015–FY2025. So the sample has no firms that failed, were acquired or were delisted, which are the cases where large 10-K rewrites (restructuring, distress) are most likely to come before bad returns. That probably makes B1 look better than it would in a full sample and shrinks the spread. Free Yahoo prices also have no delisting returns. *Planned fix:* a point-in-time universe (e.g. index members as of each filing date) that keeps firms which later delist.
+- **Survivorship.** The 19 firms were chosen in 2026, and each had to file an original 10-K for every year FY2015–FY2025. So the sample has no firms that failed, were acquired or were delisted, which are the cases where large 10-K rewrites (restructuring, distress) are most likely to come before bad returns. That probably makes B1 look better than it would in a full sample and shrinks the spread. CRSP returns now include delisting returns (Shumway rule), but the sample still has none to include. *Planned fix:* a point-in-time universe (e.g. index members as of each filing date) that keeps firms which later delist.
 - **Small, hand-picked sample.** 200 scored filings (160 binned) from 20 large, stable firms chosen for clean data. The graphs illustrate the method and prove the pipeline; they are not evidence about the effect, and they say nothing about the typical company. Each firm graph has eight points; FY2016–FY2017 only build each firm's history.
 
 ### Look-ahead and timing
@@ -282,11 +282,12 @@ The first three are the threats named in the proposal (`PROPOSAL.md`, §4), with
 
 - **Format breaks count as change.** PFE moved its MD&A from the EX-13 "Financial Review" (about 45,000 words, including a glossary) into Item 7 (about 15,000 words) in FY2020, and that move stays in its firm-relative baseline, so FY2020–FY2022 look large next to its calm pre-2020 years. HON redesigned its 10-K for FY2020 (MD&A moved ahead of Risk Factors and shrank from about 8,000 to about 2,500 words), and PEP condensed Item 1A from about 14,600 to about 7,000 words the same year. These are real changes in the filings but formatting decisions, not news. The coverage report lists these years. *Planned check:* rerun without PFE FY2020 and HON FY2020.
 - **Text coverage.** Only Item 1A and Item 7 of the 10-K are scored. Business, legal proceedings, financial-statement notes, the proxy statement and 10-Qs (which the paper also used) are not in the signal.
-- **Heading rules are per layout.** Section boundaries were checked against these 20 firms' layouts. A new firm may need a new heading pattern in `t2_sections.py`; a missing section shows up as a gap, not a silent fallback.
+- **Heading rules are per layout.** Section boundaries were checked against these 19 firms' layouts. A new firm may need a new heading pattern in `t2_sections.py`; a missing section shows up as a gap, not a silent fallback.
 
 ### Returns
 
-- **Spin-offs in the price data.** Yahoo records spin-offs as non-standard "splits", and the pipeline doesn't check them. Windows that may be affected include HON (Solstice, 2025), PFE (Viatris, 2020) and MRK (Organon, 2021). *Planned check:* flag every non-standard split and rerun without the affected windows.
+- **Spin-offs.** CRSP treats a spin-off as a distribution in `ret`, and the pipeline doesn't check it. Windows that may be affected include PFE (Viatris, 2020) and MRK (Organon, 2021). *Planned check:* compare those windows against CRSP distribution records.
+- **CRSP coverage.** The CRSP file ends 2024-12, so filings from 2025 on have no return window and FY2023 windows are partial. It also keeps only SHRCD 10/11 stocks priced at $1 or more, so American Tower (AMT) has no data after 2011 and is excluded from the sample (19 firms).
 - **Last window may be partial.** FY2025 filings come out around March 2026, so their 12-month window runs past the latest prices. Partial windows are shown hatched and left out of every statistic.
 
 ### Statistics

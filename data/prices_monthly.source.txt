@@ -1,1 +1,1 @@
-yfinance (downloaded 2026-11-11)
+CRSP monthly (ret_adj, Shumway delisting rule); benchmark = CRSP sprtrn (S&P 500 price return) plus CRSP market dividend yield vwretd-vwretx (approximate total return)

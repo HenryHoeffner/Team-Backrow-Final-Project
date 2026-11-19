@@ -34,7 +34,7 @@ def _bins(cfg, args):
 
 def _returns(cfg, args):
     from pilot.t5_returns import run_returns
-    run_returns(cfg, refresh=args.refresh)
+    run_returns(cfg)
 
 
 def _plot(cfg, args):
@@ -69,9 +69,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("clean", help="T2: extract and clean the 10-K document text").set_defaults(fn=_clean)
     sub.add_parser("score", help="T3: cosine and Jaccard similarity vs. prior-year 10-K").set_defaults(fn=_score)
     sub.add_parser("bins", help="T4: rank firms within each year into bins B1..B5").set_defaults(fn=_bins)
-    r = sub.add_parser("returns", help="T5: 12-month firm and SPY returns after each filing")
-    r.add_argument("--refresh", action="store_true", help="re-download prices even if cached")
-    r.set_defaults(fn=_returns)
+    sub.add_parser("returns", help="T5: 12-month firm and S&P 500 returns after each filing (CRSP)").set_defaults(fn=_returns)
     sub.add_parser("plot", help="T6: one PNG per firm in outputs/figures/").set_defaults(fn=_plot)
     sub.add_parser("coverage", help="T7: write outputs/coverage.txt").set_defaults(fn=_coverage)
     d = sub.add_parser("diff", help="T8: HTML of sentences added/removed between two 10-Ks")
@@ -79,9 +77,7 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument("--fy", type=int)
     d.add_argument("--lowest", type=int, help="do the N lowest-similarity filings instead")
     d.set_defaults(fn=_diff)
-    a = sub.add_parser("all", help="run T1..T7 in order")
-    a.add_argument("--refresh", action="store_true", help="re-download prices even if cached")
-    a.set_defaults(fn=_all)
+    sub.add_parser("all", help="run T1..T7 in order").set_defaults(fn=_all)
     return p
 
 
