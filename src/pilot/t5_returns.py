@@ -22,73 +22,90 @@ class MissingPrice(KeyError):
 
 # --------------------------------------------------------------------------- prices
 
+CRSP_SOURCE = ("CRSP monthly (ret_adj, Shumway delisting rule); benchmark = CRSP sprtrn (S&P 500 price return) "
+               "plus CRSP market dividend yield vwretd-vwretx (approximate total return)")
 
-def month_end_prices(daily: pd.DataFrame) -> pd.DataFrame:
-    """Daily adjusted closes (index = dates, columns = tickers) -> long table of the last
-    trading day's close in each month: date, ticker, adj_close."""
-    daily = daily.sort_index()
+
+def resolve_permnos(stocks: pd.DataFrame, tickers: list[str]) -> dict[str, int]:
+    """One PERMNO per ticker: the PERMNO that carried the ticker in the latest month it appears.
+    Tickers get reused (COP, JPM, META each match two PERMNOs), so the most recent holder wins;
+    the chosen PERMNO's whole history is used, so an old ticker (FB) is still followed."""
+    out = {}
+    for t in tickers:
+        rows = stocks[stocks["ticker"] == t]
+        if rows.empty:
+            raise SystemExit(f"{t} not found in the CRSP stock file")
+        last = rows[rows["date"] == rows["date"].max()]
+        out[t] = int(last.sort_values("mktcap", ascending=False)["permno"].iloc[0])
+    return out
+
+
+def _index_from_returns(rets: pd.Series, name: str) -> pd.DataFrame:
+    """Monthly returns (index = month-end dates) -> long table of a total-return index (first = 100).
+    Raises if a month is missing in the middle, since compounding would silently skip it."""
+    rets = rets.sort_index()
+    months = rets.index.to_period("M")
+    full = pd.period_range(months.min(), months.max(), freq="M")
+    if len(full) != len(months):
+        missing = [str(m) for m in full.difference(months)]
+        raise RuntimeError(f"{name}: missing months {missing[:5]}")
+    rets = rets.fillna(0.0)
+    rets.iloc[0] = 0.0  # the index starts at 100 in the first month
+    level = 100.0 * (1.0 + rets).cumprod()
+    return pd.DataFrame({"date": level.index, "ticker": name, "adj_close": level.values})
+
+
+def benchmark_total_return(market: pd.DataFrame) -> pd.Series:
+    """Approximate S&P 500 total return: its price return (sprtrn) plus the dividend return of the
+    CRSP value-weighted market (vwretd - vwretx). CRSP has no S&P 500 total return, and the market's
+    dividend yield is close to the index's, so the error is a few basis points a year."""
+    m = market.set_index("date").sort_index()
+    return m["sprtrn"] + (m["vwretd"] - m["vwretx"])
+
+
+def build_prices_from_crsp(cfg: Config) -> pd.DataFrame:
+    """Month-end total-return index for every firm and the benchmark, from the CRSP files.
+    Firms use ret_adj (dividends and delisting returns); the benchmark is benchmark_total_return()."""
+    p = cfg.paths
+    for f in (p.crsp_stocks, p.crsp_market):
+        if not f.exists():
+            raise FileNotFoundError(f)
+    stocks = pd.read_parquet(p.crsp_stocks, columns=["permno", "date", "ticker", "mktcap", "ret_adj"])
+    stocks["date"] = pd.to_datetime(stocks["date"])
+    permnos = resolve_permnos(stocks, cfg.tickers)
+    log.info("CRSP PERMNOs: %s", permnos)
     out = []
-    for t in daily.columns:
-        s = daily[t].dropna()
-        last = s.groupby(s.index.to_period("M")).tail(1)
-        out.append(pd.DataFrame({"date": last.index, "ticker": t, "adj_close": last.values}))
+    for t, pn in permnos.items():
+        s = stocks[stocks["permno"] == pn].set_index("date")["ret_adj"]
+        out.append(_index_from_returns(s, t))
+        if s.index.max() < stocks["date"].max():
+            log.warning("%s (PERMNO %s) has CRSP data only through %s; later windows will be gaps. "
+                        "The stock file keeps only SHRCD 10/11, so a firm that became a REIT drops out.",
+                        t, pn, s.index.max().date())
+    out.append(_index_from_returns(benchmark_total_return(pd.read_csv(p.crsp_market, parse_dates=["date"])),
+                                   cfg.benchmark_ticker))
     return pd.concat(out, ignore_index=True)
 
 
-def drop_incomplete_month(monthly: pd.DataFrame, today: date) -> pd.DataFrame:
-    """The current calendar month has not closed yet, so its 'month-end' is not one."""
-    cur = pd.Period(today, "M")
-    return monthly[pd.to_datetime(monthly["date"]).dt.to_period("M") < cur].reset_index(drop=True)
-
-
-def download_prices(tickers: list[str], start: date, end: date) -> pd.DataFrame:
-    import yfinance as yf
-
-    df = yf.download(tickers, start=start.isoformat(), end=end.isoformat(), interval="1d",
-                     auto_adjust=True, progress=False, threads=False, group_by="column")
-    if df is None or df.empty:
-        raise RuntimeError("yfinance returned no data")
-    close = df["Close"] if isinstance(df.columns, pd.MultiIndex) else df[["Close"]].rename(
-        columns={"Close": tickers[0]})
-    missing = [t for t in tickers if t not in close.columns or close[t].dropna().empty]
-    if missing:
-        raise RuntimeError(f"yfinance returned no prices for {missing}")
-    close.index = pd.to_datetime(close.index).tz_localize(None)
-    return month_end_prices(close[tickers])
-
-
-def load_prices(cfg: Config, start: date, refresh: bool = False) -> tuple[pd.DataFrame, str]:
+def load_prices(cfg: Config) -> tuple[pd.DataFrame, str]:
+    """Build prices from the CRSP files when they are present (and refresh the committed cache);
+    otherwise use the cached data/prices_monthly.csv so `make from-scores` works on a clone."""
     p = cfg.paths
     tickers = cfg.tickers + [cfg.benchmark_ticker]
-    monthly = None
-    if p.prices.exists() and not refresh:
+    if p.crsp_stocks.exists() and p.crsp_market.exists():
+        monthly = build_prices_from_crsp(cfg)
+        monthly.to_csv(p.prices, index=False)
+        p.prices_source.write_text(CRSP_SOURCE + "\n")
+        return monthly, CRSP_SOURCE
+    if p.prices.exists():
         cached = pd.read_csv(p.prices, parse_dates=["date"])
-        # The cache must reach back to the month before the earliest window and hold every
-        # ticker; otherwise (for example after fiscal_years is extended) download again.
-        need_from = pd.Timestamp(start) + pd.offsets.MonthEnd(0)
-        first = cached.groupby("ticker")["date"].min()
-        if set(tickers) <= set(first.index) and (first[tickers] <= need_from).all():
-            origin = p.prices_source.read_text().strip() if p.prices_source.exists() else "origin not recorded"
-            monthly, source = cached, f"cached {p.prices.relative_to(p.root)}, {origin}"
-        else:
-            log.info("price cache starts %s, need %s; downloading again",
-                     first.max().date(), need_from.date())
-    if monthly is None:
-        try:
-            monthly = download_prices(tickers, start, date.today())
-            monthly = drop_incomplete_month(monthly, date.today())
-            monthly.to_csv(p.prices, index=False)
-            source = f"yfinance (downloaded {date.today().isoformat()})"
-            p.prices_source.write_text(source + "\n")  # so a later cached run still reports the pull date
-        except Exception as e:  # network, rate limit, API change
-            ext = p.external / "prices_monthly.csv"
-            if not ext.exists():
-                raise SystemExit(f"price download failed ({e}) and no fallback CSV at {ext} "
-                                 "(columns: date, ticker, adj_close)") from e
-            log.warning("yfinance failed (%s); using %s", e, ext)
-            monthly = pd.read_csv(ext, parse_dates=["date"])
-            source = f"fallback CSV {ext.relative_to(p.root)} (yfinance failed: {e})"
-    return monthly, source
+        origin = p.prices_source.read_text().strip() if p.prices_source.exists() else "origin not recorded"
+        if not origin.startswith("CRSP"):
+            raise SystemExit(f"cached {p.prices.name} is not from CRSP ({origin}); put the CRSP files in data/")
+        if not set(tickers) <= set(cached["ticker"]):
+            raise SystemExit("cached prices are missing tickers; put the CRSP files in data/ to rebuild")
+        return cached, f"cached {p.prices.relative_to(p.root)}, {origin}"
+    raise SystemExit(f"no CRSP files ({p.crsp_stocks.name}, {p.crsp_market.name}) and no cached prices in data/")
 
 
 # --------------------------------------------------------------------------- window
@@ -129,14 +146,13 @@ def compute_window(filing_date: date, prices: pd.Series, months: int = 12) -> di
 # --------------------------------------------------------------------------- main step
 
 
-def run_returns(cfg: Config, refresh: bool = False) -> pd.DataFrame:
+def run_returns(cfg: Config) -> pd.DataFrame:
     from pilot.cli import CheckFailed
 
     p = cfg.paths
     sim = pd.read_parquet(p.similarity)
     sim["filing_date"] = pd.to_datetime(sim["filing_date"]).dt.date
-    start = (pd.Timestamp(min(sim["filing_date"])) - pd.offsets.MonthBegin(2)).date()
-    monthly, source = load_prices(cfg, start, refresh=refresh)
+    monthly, source = load_prices(cfg)
     wide = monthly.pivot(index="date", columns="ticker", values="adj_close").sort_index()
     bench = cfg.benchmark_ticker
 

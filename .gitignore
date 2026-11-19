@@ -2,6 +2,7 @@
 # (`make from-scores`); see data/README.md. Raw filings, clean text and sections stay ignored.
 data/*
 !data/README.md
+!data/sp500_proxy.py
 !data/similarity.parquet
 !data/prices_monthly.csv
 !data/prices_monthly.source.txt

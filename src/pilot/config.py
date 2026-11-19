@@ -62,8 +62,18 @@ class Paths:
         return self.data / "prices_monthly.csv"
 
     @property
+    def crsp_stocks(self) -> Path:
+        """CRSP monthly stock file (git-ignored; each teammate supplies their own copy)."""
+        return self.data / "crsp_monthly_nyse_amex_nasdaq_2000plus.parquet"
+
+    @property
+    def crsp_market(self) -> Path:
+        """CRSP monthly index returns (git-ignored); `sprtrn` is the S&P 500 return."""
+        return self.data / "crsp_monthly_market.csv"
+
+    @property
     def prices_source(self) -> Path:
-        """One line: where and when data/prices_monthly.csv was pulled."""
+        """One line: where data/prices_monthly.csv came from."""
         return self.data / "prices_monthly.source.txt"
 
     @property

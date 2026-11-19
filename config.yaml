@@ -26,4 +26,4 @@ bin_measure: cosine
 bin_basis: firm_relative     # firm_relative: change vs the firm's own earlier years; raw: plain similarity
 relative_min_history: 2      # earlier scored years a firm needs before it gets a firm-relative bin
 return_window_months: 12
-benchmark_ticker: SPY
+benchmark_ticker: SPY   # label only: the benchmark is CRSP sprtrn (S&P 500 price return), not the SPY fund
