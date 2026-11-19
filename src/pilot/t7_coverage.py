@@ -90,9 +90,14 @@ def run_coverage(cfg: Config) -> str:
         *[line for col, res in (pl.get("pooled") or {}).items() for line in [
             f"{'Bins used (firm-relative)' if col == 'bin' else 'Raw-similarity bins, for comparison'}: "
             + ", ".join(f"B{x['bin']} {x['mean']:+.1f} pp (n={x['n']})" for x in res["by_bin"]),
-            f"  B5 - B1 = {res['spread_q5_minus_q1']['diff']:+.1f} pp, 95% CI "
-            f"{res['spread_q5_minus_q1']['ci_low']:+.1f} to {res['spread_q5_minus_q1']['ci_high']:+.1f}, "
-            f"p = {res['spread_q5_minus_q1']['p']:.2f} (Welch; filings treated as independent)",
+            f"  B5 - B1 = {res['basket_spread_test']['diff']:+.1f} pp, 95% CI "
+            f"{res['basket_spread_test']['ci_low']:+.1f} to {res['basket_spread_test']['ci_high']:+.1f}, "
+            f"p = {res['basket_spread_test']['p']:.2f} (t-test on {res['basket_spread_test']['n_years']} "
+            "yearly B5 - B1 basket differences)",
+            "    by year: " + ", ".join(f"{y['year']} {y['diff']:+.1f}" for y in res["basket_spread_test"]["yearly"]),
+            f"    descriptive only: pooled Welch 95% CI {res['welch_descriptive']['ci_low']:+.1f} to "
+            f"{res['welch_descriptive']['ci_high']:+.1f}, p = {res['welch_descriptive']['p']:.2f} "
+            "(filings treated as independent)",
         ]],
         "",
         "ALL FIRMS COMBINED: EQUAL-WEIGHTED BIN BASKETS (T6)",

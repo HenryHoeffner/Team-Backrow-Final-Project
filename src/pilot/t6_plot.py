@@ -40,7 +40,7 @@ log = logging.getLogger("pilot.t6_plot")
 FIGSIZE = (8, 4.5)
 BIN_WORDS = {1: "most\nchanged", 2: "", 3: "typical", 4: "", 5: "least\nchanged"}
 
-__all__ = ["BIN_COLORS", "bin_color", "plot_firm", "bin_summary", "q5_minus_q1", "plot_pooled",
+__all__ = ["BIN_COLORS", "bin_color", "plot_firm", "bin_summary", "basket_spread_test", "q5_minus_q1", "plot_pooled",
            "plot_heatmap", "bin_baskets", "plot_combined", "run_plot"]
 
 
@@ -125,9 +125,52 @@ def bin_summary(df: pd.DataFrame, bin_col: str, value: str = "excess_return_pct"
     return pd.DataFrame(rows)
 
 
+def _year(df: pd.DataFrame) -> pd.Series:
+    """Filing year, the same grouping bin_baskets uses; falls back to fy when there is no date."""
+    if "filing_date" in df:
+        return pd.to_datetime(df["filing_date"]).dt.year
+    return df["fy"]
+
+
+def basket_spread_test(df: pd.DataFrame, bin_col: str, value: str = "excess_return_pct") -> dict:
+    """The main B5 - B1 test. Each filing year becomes one observation: the equal-weighted
+    B5 basket's average `value` minus the B1 basket's. The test is a one-sample t-test on the
+    mean of those yearly differences (n - 1 degrees of freedom).
+
+    Firms filing in the same year share the market's return, and each firm appears in many
+    years, so firm-years are not independent; one number per year is (approximately). This is
+    the calendar-time idea Cohen, Malloy & Nguyen use, at yearly frequency. Partial windows are
+    dropped when a `partial` column is present. Years missing B1 or B5 are skipped."""
+    d = df[df[bin_col].isin([1, 5])].dropna(subset=[value]).copy()
+    if "partial" in d:
+        d = d[~d["partial"].astype(bool)]
+    d["year"] = _year(d).astype(int)
+    g = d.groupby(["year", bin_col])[value].agg(["mean", "size"]).unstack(bin_col)
+    years = []
+    for y, r in g.iterrows():
+        if r.get(("size", 5), 0) > 0 and r.get(("size", 1), 0) > 0:
+            years.append({"year": int(y), "b5": float(r[("mean", 5)]), "b1": float(r[("mean", 1)]),
+                          "diff": float(r[("mean", 5)] - r[("mean", 1)]),
+                          "n5": int(r[("size", 5)]), "n1": int(r[("size", 1)])})
+    v = np.array([y["diff"] for y in years], float)
+    n = len(v)
+    out = {"method": "t-test on yearly B5 - B1 basket differences (one observation per filing year)",
+           "diff": math.nan, "se": math.nan, "ci_low": math.nan, "ci_high": math.nan, "p": math.nan,
+           "n_years": n, "yearly": years}
+    if n < 2:
+        return out
+    diff, se = float(v.mean()), float(v.std(ddof=1) / math.sqrt(n))
+    if se == 0:  # every year identical: no sampling spread to test against
+        return {**out, "diff": diff, "se": 0.0, "ci_low": diff, "ci_high": diff, "p": 0.0 if diff else 1.0}
+    half = float(stats.t.ppf(0.975, n - 1) * se)
+    p = float(2 * stats.t.sf(abs(diff) / se, n - 1))
+    return {**out, "diff": diff, "se": se, "ci_low": diff - half, "ci_high": diff + half, "p": p}
+
+
 def q5_minus_q1(df: pd.DataFrame, bin_col: str, value: str = "excess_return_pct") -> dict:
-    """Least-changed minus most-changed mean, with a Welch 95% CI and p-value.
-    The Lazy Prices prediction is that this is positive."""
+    """Least-changed minus most-changed mean over pooled firm-years, with a Welch 95% CI and
+    p-value. Descriptive only: it treats every firm-year as independent, so its CI is too
+    narrow. The test reported as the result is basket_spread_test."""
     a = df.loc[df[bin_col] == 5, value].dropna().to_numpy(float)
     b = df.loc[df[bin_col] == 1, value].dropna().to_numpy(float)
     if len(a) < 2 or len(b) < 2:
@@ -156,9 +199,10 @@ def _spread_offsets(n: int, width: float = 0.27) -> np.ndarray:
 
 
 def plot_pooled(df: pd.DataFrame, out_path, bin_col: str = "bin", note: str = "", n_firms: int | None = None):
-    """df: one row per firm-year with excess_return_pct and `bin_col`. Returns (summary, spread)."""
+    """df: one row per firm-year with excess_return_pct and `bin_col`. Returns (summary, spread),
+    where spread is the yearly basket test (basket_spread_test) shown in the headline."""
     apply_theme()
-    summ, spread = bin_summary(df, bin_col), q5_minus_q1(df, bin_col)
+    summ, spread = bin_summary(df, bin_col), basket_spread_test(df, bin_col)
     fig = plt.figure(figsize=FIGSIZE, dpi=DPI)
     ax = fig.add_axes([0.085, 0.32, 0.88, 0.45])
     style_axes(ax)
@@ -196,7 +240,8 @@ def plot_pooled(df: pd.DataFrame, out_path, bin_col: str = "bin", note: str = ""
               "black bar = bin average  ·  band = 95% CI")
     if not math.isnan(spread["diff"]):
         headline = f"B5 − B1: {_signed(spread['diff'])} pp, p = {spread['p']:.2f}"
-        note = (f"B5 − B1 95% CI {_signed(spread['ci_low'])} to {_signed(spread['ci_high'])} pp.  " + note).strip()
+        note = (f"B5 − B1 test: one basket difference per filing year ({spread['n_years']} years), 95% CI "
+                f"{_signed(spread['ci_low'])} to {_signed(spread['ci_high'])} pp.\n" + note).strip()
     header(fig, "Do bigger rewrites lead to a weaker year?",
            f"All {firms} firms, FY{years[0]}–FY{years[-1]} 10-Ks: return minus the S&P 500 in the 12 months "
            "after each filing, by change bin", headline=headline, detail=detail)
@@ -390,10 +435,12 @@ def run_plot(cfg: Config) -> list:
 
     pool = df[~df["partial"] & df["bin"].notna()].copy()
     years = sorted(pool["fy"].unique())
-    pooled_note = (f"{len(cfg.firms)} hand-picked firms; 95% CIs treat filings as independent, so they look more "
-                   "precise than they are. Illustrates the method, not a test of the Lazy Prices effect.")
+    pooled_note = (f"Bin bands treat filings as independent (descriptive only). {len(cfg.firms)} hand-picked "
+                   "firms: illustrates the method, not a test of the Lazy Prices effect.")
     summ, spread = plot_pooled(pool, p.figures / "pooled_by_bin.png", "bin", pooled_note, len(cfg.firms))
-    raw_summ, raw_spread = bin_summary(pool, "bin_raw"), q5_minus_q1(pool, "bin_raw")
+    raw_summ, raw_spread = bin_summary(pool, "bin_raw"), basket_spread_test(pool, "bin_raw")
+    welch, raw_welch = q5_minus_q1(pool, "bin"), q5_minus_q1(pool, "bin_raw")
+    welch_note = "pooled Welch test on firm-years; treats them as independent, so the CI is too narrow"
     paths.append(p.figures / "pooled_by_bin.png")
 
     paths.append(plot_heatmap(df, firms, p.figures / "all_firms_heatmap.png"))
@@ -410,8 +457,13 @@ def run_plot(cfg: Config) -> list:
     write_report(cfg, "plot", {
         "figures": [str(x.relative_to(p.root)) for x in paths], "points": points,
         "pooled_n": len(pool), "pooled_years": [int(y) for y in years],
-        "pooled": {"bin": {"spread_q5_minus_q1": spread, "by_bin": summ.round(3).to_dict("records")},
-                   "bin_raw": {"spread_q5_minus_q1": raw_spread, "by_bin": raw_summ.round(3).to_dict("records")}},
+        # basket_spread_test is the reported B5 - B1 test; welch_descriptive is kept for comparison.
+        "pooled": {"bin": {"basket_spread_test": spread,
+                           "welch_descriptive": {**welch, "method": welch_note},
+                           "by_bin": summ.round(3).to_dict("records")},
+                   "bin_raw": {"basket_spread_test": raw_spread,
+                               "welch_descriptive": {**raw_welch, "method": welch_note},
+                               "by_bin": raw_summ.round(3).to_dict("records")}},
         "baskets_final_relative": {int(b): round(float(v), 4) for b, v in final.items()},
         "baskets_years": [int(baskets["year"].min()), int(baskets["year"].max())],
     })
@@ -420,8 +472,13 @@ def run_plot(cfg: Config) -> list:
           f"points per firm: {points}")
     print(f"\n[T6] pooled return vs S&P 500 by bin (n = {len(pool)}):")
     print(summ.round(2).to_string(index=False))
+    print(f"B5 - B1 yearly basket differences: "
+          + ", ".join(f"{y['year']} {y['diff']:+.1f}" for y in spread["yearly"]))
     print(f"B5 - B1 = {spread['diff']:+.1f} pp, 95% CI {spread['ci_low']:+.1f} to {spread['ci_high']:+.1f}, "
-          f"p = {spread['p']:.2f}  (raw-similarity bins: {raw_spread['diff']:+.1f} pp, p = {raw_spread['p']:.2f})")
+          f"p = {spread['p']:.2f}, t-test on {spread['n_years']} yearly basket differences  "
+          f"(raw-similarity bins: {raw_spread['diff']:+.1f} pp, p = {raw_spread['p']:.2f})")
+    print(f"  descriptive only, pooled Welch on firm-years: 95% CI {welch['ci_low']:+.1f} to "
+          f"{welch['ci_high']:+.1f}, p = {welch['p']:.2f} (treats firm-years as independent)")
     print(f"[T6] baskets, cumulative vs S&P 500 by {int(baskets['year'].max())}: "
           + ", ".join(f"B{b} {(v - 1) * 100:+.0f}%" for b, v in final.items()))
     if len(paths) != n_expected:

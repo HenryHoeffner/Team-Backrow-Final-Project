@@ -4,8 +4,8 @@ import pandas as pd
 import pytest
 
 from pilot.style import BIN_COLORS, bin_color, zero_is_sp500
-from pilot.t6_plot import (bin_baskets, bin_summary, plot_combined, plot_firm, plot_heatmap, plot_pooled,
-                           q5_minus_q1)
+from pilot.t6_plot import (basket_spread_test, bin_baskets, bin_summary, plot_combined, plot_firm, plot_heatmap,
+                           plot_pooled, q5_minus_q1)
 
 
 def test_bin_color_mapping():
@@ -59,6 +59,47 @@ def test_q5_minus_q1_sign():
     assert q5_minus_q1(_pool(), "bin_a")["diff"] == pytest.approx(40.0)
     assert q5_minus_q1(_pool(), "bin_b")["diff"] == pytest.approx(-40.0)
     assert q5_minus_q1(_pool(), "bin_a")["p"] < 0.001
+
+
+def _yearly_pool():
+    """Three filing years, two firms per extreme bin each year. Yearly B5 - B1 = 10, 20, 30."""
+    rows = []
+    for i, gap in enumerate((10.0, 20.0, 30.0)):
+        date = pd.Timestamp(f"{2020 + i}-02-15")
+        rows += [{"ticker": t, "bin": b, "filing_date": date, "partial": False, "excess_return_pct": v}
+                 for t, b, v in [("A", 1, -1.0), ("B", 1, 1.0), ("C", 5, gap - 5), ("D", 5, gap + 5),
+                                 ("E", 3, 99.0)]]
+    # A still-open window must be left out, even with a huge value.
+    rows.append({"ticker": "C", "bin": 5, "filing_date": pd.Timestamp("2023-02-15"), "partial": True,
+                 "excess_return_pct": 500.0})
+    return pd.DataFrame(rows)
+
+
+def test_basket_spread_test_uses_one_number_per_year():
+    t = basket_spread_test(_yearly_pool(), "bin")
+    assert [y["year"] for y in t["yearly"]] == [2020, 2021, 2022]
+    assert [y["diff"] for y in t["yearly"]] == pytest.approx([10.0, 20.0, 30.0])
+    assert t["n_years"] == 3 and t["diff"] == pytest.approx(20.0)
+    # sd of (10, 20, 30) = 10, se = 10 / sqrt(3); t(0.975, 2) = 4.302653
+    assert t["se"] == pytest.approx(10 / math.sqrt(3))
+    assert t["ci_high"] - 20.0 == pytest.approx(4.302653 * 10 / math.sqrt(3), rel=1e-5)
+    # t = 20 / (10 / sqrt 3) = 3.464 on 2 df -> two-sided p = 0.0742
+    assert t["p"] == pytest.approx(0.0742, abs=1e-3)
+
+
+def test_basket_spread_test_is_wider_than_pooled_welch():
+    # Same average gap, but the honest test has 3 observations instead of 6 + 6.
+    df = _yearly_pool()
+    full = df[~df["partial"]]
+    t, w = basket_spread_test(full, "bin"), q5_minus_q1(full, "bin")
+    assert t["diff"] == pytest.approx(w["diff"])
+    assert t["ci_high"] - t["ci_low"] > w["ci_high"] - w["ci_low"]
+
+
+def test_basket_spread_test_needs_two_years():
+    one = _yearly_pool().query("filing_date.dt.year == 2020")
+    t = basket_spread_test(one, "bin")
+    assert t["n_years"] == 1 and math.isnan(t["p"])
 
 
 def test_plot_pooled_writes_png(tmp_path):

@@ -2,7 +2,8 @@
 
 Reads data/similarity.parquet and data/returns.parquet (written by `make all`) and reuses the
 pipeline's own functions (t4 binning, t6 statistics), so each row differs from the headline
-only in the one choice it names. Prints a Markdown table.
+only in the one choice it names. Prints a Markdown table. The test is the t-test on yearly B5 - B1 basket
+differences; the pooled Welch p-value is kept as a descriptive column.
 
     PYTHONPATH=src .venv/bin/python scripts/specs_tried.py
 """
@@ -11,7 +12,7 @@ from __future__ import annotations
 import pandas as pd
 
 from pilot.t4_bins import assign_bins, firm_relative_change
-from pilot.t6_plot import q5_minus_q1
+from pilot.t6_plot import basket_spread_test, q5_minus_q1
 
 SIM = pd.read_parquet("data/similarity.parquet")
 RET = pd.read_parquet("data/returns.parquet")
@@ -43,12 +44,13 @@ SPECS = [
     ("Item 7 (MD&A) only, firm-relative", "cosine_mdna", "firm_relative", 2),
 ]
 
-print("| Specification | Years | B1 n | B5 n | B1 mean | B5 mean | B5 − B1 (pp) | 95% CI | Welch p |")
-print("|---|---|---|---|---|---|---|---|---|")
+print("| Specification | Years | B1 n | B5 n | B1 mean | B5 mean | B5 − B1 (pp) | 95% CI (yearly baskets) "
+      "| p (yearly baskets) | Welch p (descriptive) |")
+print("|---|---|---|---|---|---|---|---|---|---|")
 for label, *args in SPECS:
     df = spec(*args)
-    r = q5_minus_q1(df, "bin")
+    r, t = q5_minus_q1(df, "bin"), basket_spread_test(df, "bin")
     m = df.groupby("bin")["excess_return_pct"].mean()
     yrs = f"FY{df['fy'].min()}–FY{df['fy'].max()}"
     print(f"| {label} | {yrs} | {r['n1']} | {r['n5']} | {m[1]:+.2f} | {m[5]:+.2f} | {r['diff']:+.2f} | "
-          f"{r['ci_low']:+.1f} to {r['ci_high']:+.1f} | {r['p']:.2f} |")
+          f"{t['ci_low']:+.1f} to {t['ci_high']:+.1f} | {t['p']:.2f} | {r['p']:.2f} |")

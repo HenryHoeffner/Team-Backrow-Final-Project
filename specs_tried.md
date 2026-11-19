@@ -18,23 +18,23 @@ The raw-similarity bins (`bin_raw`) have been kept and reported next to the head
 
 ## 2. Results under each specification
 
-Pooled B5 − B1 in 12-month excess return over SPY, percentage points. Full return windows only. Welch t-test that treats every firm-year as independent, which makes the confidence intervals too narrow (self-audit #7).
+B5 − B1 in 12-month excess return over the S&P 500 (CRSP), percentage points. Full return windows only. The test is a t-test on the yearly B5 − B1 basket differences: each filing year's B5 basket average minus its B1 basket average, one number per year, because firm-years in the same year are not independent (self-audit #7). The pooled Welch p-value, which treats every firm-year as independent, is kept as a descriptive column.
 
-| Specification | Years | B1 n | B5 n | B1 mean | B5 mean | B5 − B1 (pp) | 95% CI | Welch p |
-|---|---|---|---|---|---|---|---|---|
-| **Headline:** cosine, Item 1A + 7 combined, firm-relative, `relative_min_history: 2` | FY2018–FY2024 | 28 | 28 | −4.57 | +2.15 | **+6.72** | −11.6 to +25.0 | 0.46 |
-| Raw similarity bins (`bin_basis: raw`), same years as headline | FY2018–FY2024 | 28 | 28 | −1.21 | +4.17 | +5.38 | −13.8 to +24.5 | 0.58 |
-| Raw similarity bins (`bin_basis: raw`), all scored years | FY2016–FY2024 | 36 | 36 | +0.40 | +4.23 | +3.83 | −11.3 to +18.9 | 0.61 |
-| Firm-relative, `relative_min_history: 1` | FY2017–FY2024 | 32 | 32 | −4.54 | +2.02 | +6.57 | −9.6 to +22.8 | 0.42 |
-| Firm-relative, `relative_min_history: 3` | FY2019–FY2024 | 24 | 24 | −6.03 | +2.19 | +8.22 | −12.9 to +29.3 | 0.43 |
-| Jaccard instead of cosine, firm-relative | FY2018–FY2024 | 28 | 28 | −6.80 | −3.55 | +3.25 | −8.6 to +15.1 | 0.58 |
-| Jaccard instead of cosine, raw | FY2016–FY2024 | 36 | 36 | −1.66 | +10.30 | +11.96 | −4.3 to +28.2 | 0.15 |
-| Item 1A (Risk Factors) only, firm-relative | FY2018–FY2024 | 28 | 28 | −5.17 | +11.46 | +16.63 | −6.5 to +39.8 | 0.15 |
-| Item 7 (MD&A) only, firm-relative | FY2018–FY2024 | 28 | 28 | +1.75 | −1.16 | −2.90 | −22.5 to +16.7 | 0.77 |
+| Specification | Years | B1 n | B5 n | B1 mean | B5 mean | B5 − B1 (pp) | 95% CI (yearly baskets) | p (yearly baskets) | Welch p (descriptive) |
+|---|---|---|---|---|---|---|---|---|---|
+| **Headline:** cosine, Item 1A + 7 combined, firm-relative, `relative_min_history: 2` | FY2018–FY2022 | 15 | 20 | −7.96 | +2.81 | **+10.77** | −44.7 to +66.2 | 0.62 | 0.35 |
+| Raw similarity bins (`bin_basis: raw`), same years as headline | FY2018–FY2022 | 15 | 20 | −2.86 | +5.28 | +8.14 | −28.3 to +44.5 | 0.57 | 0.47 |
+| Raw similarity bins (`bin_basis: raw`), all scored years | FY2016–FY2022 | 21 | 28 | +0.52 | +3.62 | +3.10 | −20.6 to +26.8 | 0.76 | 0.71 |
+| Firm-relative, `relative_min_history: 1` | FY2017–FY2022 | 18 | 24 | −7.85 | +0.88 | +8.73 | −33.5 to +51.0 | 0.62 | 0.37 |
+| Firm-relative, `relative_min_history: 3` | FY2019–FY2022 | 12 | 16 | −9.02 | +3.06 | +12.08 | −69.8 to +94.0 | 0.67 | 0.39 |
+| Jaccard instead of cosine, firm-relative | FY2018–FY2022 | 15 | 20 | −12.78 | −6.67 | +6.11 | −12.0 to +24.2 | 0.40 | 0.43 |
+| Jaccard instead of cosine, raw | FY2016–FY2022 | 21 | 28 | −5.64 | +10.31 | +15.96 | −6.0 to +37.9 | 0.13 | 0.05 |
+| Item 1A (Risk Factors) only, firm-relative | FY2018–FY2022 | 15 | 20 | −9.85 | +1.83 | +11.68 | −32.0 to +55.4 | 0.50 | 0.35 |
+| Item 7 (MD&A) only, firm-relative | FY2018–FY2022 | 15 | 20 | −3.15 | +4.46 | +7.61 | −45.8 to +61.0 | 0.71 | 0.50 |
 
-The headline row and the raw same-years row match `app_data/plot.json`. Firm-relative bins start in FY2018 because a firm needs two earlier scored years; raw bins exist from FY2016, which is why the all-years raw row has more firm-years.
+The headline row and the raw same-years row match `app_data/plot.json`. Firm-relative bins start in FY2018 because a firm needs two earlier scored years; raw bins exist from FY2016, which is why the all-years raw row has more firm-years. CRSP prices end in December 2024, so FY2022 filings (filed early 2023) are the last with a full 12-month window. With 19 firms, B1 holds three firms a year and the other bins four.
 
-**How to read this.** No specification is significant at 5%. Eight of nine point the predicted way (B5 > B1); only Item 7 alone does not. The two largest spreads, Item 1A only and Jaccard raw, are alternatives, not the headline. We keep the headline as fixed in `config.yaml` before these alternatives were run; picking the best-looking row after the fact would be specification search. Item 1A alone being stronger and Item 7 alone pointing the other way fits the paper, whose strongest results are in Risk Factors, but with 28 firm-years per bin it is not evidence.
+**How to read this.** No specification is significant at 5% on the yearly basket test (the smallest p is 0.13, Jaccard raw). Only the descriptive Welch test on Jaccard raw reaches p = 0.05, and that test overstates precision. All nine point the predicted way (B5 > B1). The two largest spreads, Jaccard raw and `relative_min_history: 3`, are alternatives, not the headline. We keep the headline as fixed in `config.yaml` before these alternatives were run; picking the best-looking row after the fact would be specification search. With five yearly observations per test, none of this is evidence either way.
 
 **Reproduce:** run `make all` once (it writes `data/`), then
 
@@ -42,7 +42,7 @@ The headline row and the raw same-years row match `app_data/plot.json`. Firm-rel
 PYTHONPATH=src .venv/bin/python scripts/specs_tried.py
 ```
 
-The script reuses the pipeline's own binning (`t4_bins.py`) and statistics (`t6_plot.py`). Prices are the cached `data/prices_monthly.csv` (latest full window ends 2026-10-30).
+The script reuses the pipeline's own binning (`t4_bins.py`) and statistics (`t6_plot.py`). Prices are the cached CRSP `data/prices_monthly.csv` (latest month December 2024).
 
 ## 3. Choices not varied yet
 
@@ -50,7 +50,6 @@ The script reuses the pipeline's own binning (`t4_bins.py`) and statistics (`t6_
 |---|---|---|
 | Firm universe | 20 hand-picked large firms that file through FY2025 | Point-in-time universe, keeping firms that later delist (self-audit #3) |
 | Bin cutoffs | Ranked within each fiscal year | Cutoffs from the previous year's scores, so a filing is binned when it is public (self-audit #2) |
-| Significance test | Pooled Welch t-test on firm-years | t-test on the yearly B5 − B1 basket differences, or clustering by year (self-audit #7) |
 | Mean vs median | Means | Medians and trimmed means; on medians B5 − B1 is about +2 pp (self-audit #8) |
 | Format breaks | All filings kept | Drop PFE FY2020 and HON FY2020 (self-audit #10) |
 | Return window start | End of the filing month | Next month-end when filed on the month's last trading day (self-audit #1) |

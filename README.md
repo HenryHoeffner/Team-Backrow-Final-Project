@@ -62,7 +62,7 @@ Every return in every graphic is the **excess return**: the firm's 12-month retu
 | Partial window | Hatched, lighter bar, and `thru <Mon 'YY>` under its badge |
 | Footnote | None. How change is measured and binned is explained in this README (see **Definitions**), not on each chart |
 
-**2. Pooled graph**: `pooled_by_bin.png`, 8 x 4.5 in. Every firm-year with a bin and a full 12-month window. Per bin: one dot per filing (spread sideways deterministically so they do not stack), a black bar at the mean, a shaded band for the 95% t confidence interval, and under the bin badge `n` and the share that beat the S&P 500. A line under the subtitle explains that each dot is one firm's 10-K. Headline: `B5 − B1` with its Welch p-value; its 95% CI is in the footnote. The Lazy Prices prediction is B5 − B1 > 0. Bin means for the bins used and for raw-similarity bins (comparison only) go to `data/pooled_by_bin.csv`.
+**2. Pooled graph**: `pooled_by_bin.png`, 8 x 4.5 in. Every firm-year with a bin and a full 12-month window. Per bin: one dot per filing (spread sideways deterministically so they do not stack), a black bar at the mean, a shaded band for the 95% t confidence interval, and under the bin badge `n` and the share that beat the S&P 500. A line under the subtitle explains that each dot is one firm's 10-K. Headline: `B5 − B1` with the p-value of a t-test on the yearly basket differences (each filing year's B5 average minus its B1 average, one number per year, because firm-years in the same year are not independent); its 95% CI is in the footnote. The per-bin bands treat filings as independent and are descriptive only; the pooled Welch test is kept in `plot.json` as `welch_descriptive` for comparison. The Lazy Prices prediction is B5 − B1 > 0. Bin means for the bins used and for raw-similarity bins (comparison only) go to `data/pooled_by_bin.csv`.
 
 **3. All firms heatmap**: `all_firms_heatmap.png`, 8 in wide, height grows with the number of firms. Rows are firms grouped by sector, columns are filing years; each cell is filled with its bin color and shows the excess return. The last column is each firm's average over full windows. Partial-window cells are hatched and their column is starred.
 
@@ -182,7 +182,7 @@ Do the tasks in order. After each task, run its check. Do not start the next tas
 - Return window: starts after the filing date, handles month-end rollover, sets `partial` correctly.
 - Plot color mapping: bin 1 maps to red, bin 5 to dark green.
 - Firm-relative change: uses only earlier years (changing a later year leaves earlier scores alone), is blank without enough history, and stops an always-wordier firm from owning B1.
-- Pooled stats: bin means and t CIs match hand calculations; B5 − B1 has the right sign.
+- Pooled stats: bin means and t CIs match hand calculations; B5 − B1 has the right sign; the yearly basket test uses one B5 − B1 value per filing year and matches a hand-calculated t-test.
 - Section extraction: skips the table of contents, keeps sub-headings inside an Item, handles plain-name headings, falls back to EX-13 when Item 7 is a pointer.
 
 ## Conventions and guardrails
@@ -247,7 +247,7 @@ This project differs by using raw filings from EDGAR (so word order and sections
 | 2 | Monthly returns with factor alphas and t-statistics | Raw averages cannot separate the signal from market exposure | Later phase |
 | 3 | Compare post-2014 returns with in-sample and with other published predictors | The question the reference does not ask | Full project |
 | 4 | Rank within each year before binning | Cosine scores sit very close to 1 | Yes (bin definition) |
-| 5 | Report uncertainty and word conclusions to match | Avoid claiming support without a test | Partly (pooled graph shows 95% CIs and B5 − B1 p-value; factor test is later) |
+| 5 | Report uncertainty and word conclusions to match | Avoid claiming support without a test | Partly (pooled graph shows 95% CIs and a B5 − B1 p-value from yearly basket differences; factor test is later) |
 | 4b | Rank change relative to each firm's own history | Raw similarity mostly ranks firms by writing style | Yes (`bin_basis: firm_relative`) |
 | 4c | Use returns in excess of the S&P 500 | Raw returns mix in the market | Yes (`excess_return_pct`, `plot_return: excess`) |
 | 6 | Point-in-time firm universe | Avoid survivorship bias | Full project |
@@ -292,7 +292,7 @@ The first three are the threats named in the proposal (`PROPOSAL.md`, §4), with
 
 ### Statistics
 
-- **Firm-years are not independent.** The pooled Welch test treats every firm-year as a separate observation, but firms in the same year share the market's return and each firm appears up to seven times, so the confidence intervals are too narrow. *Planned fix:* test the yearly B5 − B1 basket differences, or cluster by year.
+- **Firm-years are not independent.** The pooled Welch test treats every firm-year as a separate observation, but firms in the same year share the market's return and each firm appears in several years, so a pooled test makes the confidence intervals too narrow. *Fixed:* B5 − B1 is now tested on the yearly basket differences (`basket_spread_test` in `t6_plot.py`, reported in `plot.json`). On CRSP data, with five full filing years (2019–2023): +10.8 pp, 95% CI −45 to +66, p = 0.62, against p = 0.35 for the pooled Welch test. With only five years the test has little power.
 - **Outliers drive the means.** A few large returns (NEM +192, META +150, INTC +123 pp) move the bin means; on medians B5 − B1 is about +2 pp, not +6.7.
 - **The basket chart is not an investable strategy.** It compounds 12-month holds as if they ran back to back, but they overlap or leave gaps, so it is illustrative only.
 - **Specification search.** We tried several alternatives (`specs_tried.md`). Some, such as Item 1A alone, show larger spreads than the headline. The headline stays as set in `config.yaml`; none of the specifications is significant at 5%.
