@@ -24,7 +24,7 @@ score:            ## T3 + T4: similarity vs prior year, then within-year bins
 bins:             ## T4 only: within-year bins on the existing data/similarity.parquet
 	$(PILOT) bins
 
-returns:          ## T5: 12-month firm and SPY returns after each filing
+returns:          ## T5: 12-month firm and S&P 500 returns after each filing (CRSP)
 	$(PILOT) returns
 
 plot:             ## T6: one PNG per firm in outputs/figures/

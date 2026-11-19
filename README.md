@@ -16,7 +16,7 @@ Each step reads the files the step before it wrote, so run them top to bottom. `
 | 2 | `make clean` | `t2_clean.py`, `t2_sections.py` | filings manifest, raw filings | `data/clean/*.txt` (whole 10-K), `data/sections/*.txt` (Item 1A and Item 7) |
 | 3 | `make score` (part 1) | `t3_score.py` | section text | `data/similarity.parquet` |
 | 4 | `make score` (part 2), or `make bins` alone | `t4_bins.py` | similarity table | adds `rel_change`, `bin_relative`, `bin_raw` and `bin` to `data/similarity.parquet` |
-| 5 | `make returns` | `t5_returns.py` | similarity table, prices (Yahoo or cache) | `data/prices_monthly.csv`, `data/returns.parquet` |
+| 5 | `make returns` | `t5_returns.py` | similarity table, CRSP files (or the cached prices) | `data/prices_monthly.csv`, `data/returns.parquet` |
 | 6 | `make plot` | `t6_plot.py` | similarity + returns | `outputs/figures/*.png` (one per firm, `pooled_by_bin.png`, `all_firms_heatmap.png`, `all_firms_combined.png`), `data/pooled_by_bin.csv`, `data/bin_baskets.csv` |
 | 7 | `make coverage` | `t7_coverage.py` | step reports in `data/reports/` | `outputs/coverage.txt` |
 | 8 | `make diffs` (optional) | `t8_diff.py` | section text, similarity table | `outputs/diffs/*.html` |
@@ -101,7 +101,7 @@ A firm's `aliases` in `config.yaml` lists former names, since older filing heade
 
 - **Filings:** original 10-Ks for fiscal years 2015–2025 (FY2015 is only the comparison base). Drop 10-K/A amendments. Flag 10-KT transition reports and exclude them from pairing.
 - **Signal:** cosine similarity between a 10-K and the same firm's previous 10-K, on **Item 1A (Risk Factors) and Item 7 (MD&A) only**, scored together. Each section's own cosine is saved as well (`cosine_risk_factors`, `cosine_mdna`). Jaccard similarity is computed too, as a robustness column, but the graph uses cosine.
-- **Returns:** free monthly adjusted prices (try `yfinance`) for the 20 tickers and SPY.
+- **Returns:** CRSP monthly stock returns (`ret_adj`, with the Shumway delisting rule) for the 20 tickers, and the S&P 500 from CRSP `crsp_monthly_market.csv`. Both CRSP files go in `data/` and are git-ignored.
 - **Why these firms:** self-contained 10-Ks and December year ends. IBM was dropped because its 10-K puts the MD&A and financials in a separate exhibit. Not a random sample, so results say nothing about the typical company.
 
 ```yaml
@@ -138,7 +138,7 @@ Keep `fiscal_years` configurable. Extending the window backward later should be 
 
 **Return window.** Let `m0` be the last trading day of the month in which the 10-K was filed (the filing date comes from the header). Start price is the adjusted close at `m0`. End price is the adjusted close 12 month-ends later. Return = end / start - 1, in percent. This starts the clock after the filing is public, so there is no lookahead. If the end month is later than the latest available price, use the latest available month and set `partial = True`.
 
-**S&P 500 comparison.** The same window applied to SPY adjusted close, one value per firm-filing so it lines up with the firm's window.
+**S&P 500 comparison.** The same window applied to a CRSP S&P 500 total-return series, one value per firm-filing so it lines up with the firm's window. The series is `sprtrn` (S&P 500 price return) plus the CRSP market dividend yield `vwretd - vwretx`, which approximates the index's total return.
 
 **Excess return.** `excess_return_pct = firm_return_pct − spy_return_pct`, in percentage points: market-adjusted, with no beta adjustment. The graphs and the pooled comparison use it, because the Lazy Prices claim is about returns relative to the market, not raw returns.
 
@@ -163,7 +163,7 @@ Do the tasks in order. After each task, run its check. Do not start the next tas
 **T4. Bin.** Add `change`, `prior_median_change`, `rel_change`, `bin_relative`, `bin_raw` and `bin` to the table using the definitions above. Print each firm's B1 count under both bases.
 *Check:* each binned fiscal year's bins are exactly `ceil(5 * rank / n)` for its `n` firms (four firms per bin with 20), so B1–B5 are all used.
 
-**T5. Returns.** Download monthly adjusted prices for the 20 tickers and SPY. If the download fails, accept a CSV at `data/external/prices_monthly.csv` with columns `date, ticker, adj_close` and say so. Compute the return window for every scored filing. Write `data/returns.parquet` with `ticker, fy, filing_date, window_start, window_end, firm_return_pct, spy_return_pct, excess_return_pct, partial`.
+**T5. Returns.** Build monthly total-return indexes for the 20 tickers and the S&P 500 benchmark from the CRSP files in `data/` (compounded `ret_adj`; benchmark `sprtrn + (vwretd - vwretx)`), and write them to `data/prices_monthly.csv` with columns `date, ticker, adj_close`. If the CRSP files are absent, use that cached CSV and say so. Compute the return window for every scored filing. Write `data/returns.parquet` with `ticker, fy, filing_date, window_start, window_end, firm_return_pct, spy_return_pct, excess_return_pct, partial`.
 *Check:* the window start is on or after the filing date in every row; the partial flag is true only where the end month is past the latest price.
 
 **T6. Plot.** Draw the graphs exactly as specified above with `matplotlib`. Save one PNG per firm plus `pooled_by_bin.png`, `all_firms_heatmap.png` and `all_firms_combined.png` in `outputs/figures/`, and print the pooled bin means and B5 − B1.
@@ -194,7 +194,7 @@ Do the tasks in order. After each task, run its check. Do not start the next tas
 - **Small steps.** One task per commit, with the test for that task.
 
 ```bash
-pip install sec-edgar-downloader pandas pyarrow scikit-learn beautifulsoup4 lxml matplotlib yfinance pyyaml pytest
+pip install sec-edgar-downloader pandas pyarrow scikit-learn beautifulsoup4 lxml matplotlib pyyaml pytest
 export SEC_USER_NAME="Your Name"
 export SEC_USER_EMAIL="you@example.com"
 make all
@@ -212,7 +212,7 @@ src/pilot/
   t2_sections.py         step 2: cut out Item 1A and Item 7
   t3_score.py            step 3: similarity vs. prior-year 10-K
   t4_bins.py             step 4: rank firms into B1..B5 within each year
-  t5_returns.py          step 5: 12-month firm and SPY returns
+  t5_returns.py          step 5: 12-month firm and S&P 500 returns
   t6_plot.py             step 6: one PNG per firm
   t7_coverage.py         step 7: coverage report
   t8_diff.py             step 8 (optional): sentence diff viewer
@@ -286,7 +286,8 @@ The first three are the threats named in the proposal (`PROPOSAL.md`, §4), with
 
 ### Returns
 
-- **Spin-offs in the price data.** Yahoo records spin-offs as non-standard "splits", and the pipeline doesn't check them. Windows that may be affected include HON (Solstice, 2025), PFE (Viatris, 2020) and MRK (Organon, 2021). *Planned check:* flag every non-standard split and rerun without the affected windows.
+- **Spin-offs.** CRSP treats a spin-off as a distribution in `ret`, and the pipeline doesn't check it. Windows that may be affected include PFE (Viatris, 2020) and MRK (Organon, 2021). *Planned check:* compare those windows against CRSP distribution records.
+- **CRSP coverage.** The CRSP file ends 2024-12, so filings from 2025 on have no return window and FY2023 windows are partial. It also keeps only SHRCD 10/11 stocks priced at $1 or more, so American Tower (AMT) has no data after 2011.
 - **Last window may be partial.** FY2025 filings come out around March 2026, so their 12-month window runs past the latest prices. Partial windows are shown hatched and left out of every statistic.
 
 ### Statistics

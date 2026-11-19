@@ -108,7 +108,7 @@ with tab_method:
         ("2. Clean", "Strip markup and number-heavy tables; cut out Item 1A (Risk Factors) and Item 7 (MD&A)."),
         ("3. Score", "Cosine similarity of word counts versus the same firm's prior-year 10-K."),
         ("4. Bin", "Change relative to the firm's own earlier years, ranked B1–B5 within each year."),
-        ("5. Returns", "12 months from the month-end after filing, minus the S&P 500 (SPY)."),
+        ("5. Returns", "12 months from the month-end after filing, minus the S&P 500 (CRSP price return plus market dividend yield)."),
         ("6. Compare", "Bin averages with 95% CIs, B5 − B1 with a Welch t-test, yearly baskets."),
     ]
     cols = st.columns(3)
@@ -134,7 +134,7 @@ with tab_method:
             "nothing about the typical company.\n"
             "- **Format breaks.** PFE moved its MD&A in 2020 and HON redesigned its 10-K; layout "
             "changes score as rewrites.\n"
-            "- **Spin-offs in free price data.** Yahoo Finance can mis-adjust spin-offs (e.g. HON 2026).\n"
+            "- **Price data ends Dec 2024.** The CRSP monthly file stops there, so later filings have no return window.\n"
             "- **Market-adjusted only.** No beta or factor adjustment yet.\n"
             "- **Open windows.** The latest filings' 12 months aren't over; they're left out of all averages.")
     coverage = coverage_text(cfg)
