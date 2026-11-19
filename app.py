@@ -109,7 +109,7 @@ with tab_method:
         ("3. Score", "Cosine similarity of word counts versus the same firm's prior-year 10-K."),
         ("4. Bin", "Change relative to the firm's own earlier years, ranked B1–B5 within each year."),
         ("5. Returns", "12 months from the month-end after filing, minus the S&P 500 (CRSP price return plus market dividend yield)."),
-        ("6. Compare", "Bin averages with 95% CIs, B5 − B1 with a Welch t-test, yearly baskets."),
+        ("6. Compare", "Bin averages, yearly baskets, and B5 − B1 tested on one basket difference per year."),
     ]
     cols = st.columns(3)
     for i, (title, text) in enumerate(steps):
@@ -182,16 +182,19 @@ with tab_results:
     m1, m2, m3 = st.columns(3)
     m1.metric("B5 − B1", f"{signed(spread['diff'])} pp")
     m2.metric("95% confidence range", f"{signed(spread['ci_low'])} to {signed(spread['ci_high'])} pp")
-    m3.metric("p-value (Welch)", f"{spread['p']:.2f}")
+    m3.metric("p-value", f"{spread['p']:.2f}")
     table = summ[["bin_label", "words", "n", "mean", "ci_low", "ci_high", "beat"]].rename(columns={
         "bin_label": "Bin", "words": "", "n": "Filings", "mean": "Average (pp)", "ci_low": "95% CI low",
         "ci_high": "95% CI high", "beat": "Beat S&P 500"})
     st.dataframe(table, hide_index=True, width="stretch",
                  column_config={c: st.column_config.NumberColumn(format="%+.1f")
                                 for c in ("Average (pp)", "95% CI low", "95% CI high")})
-    st.caption("Confidence intervals treat filings as independent, so they look more precise than they "
-               "are when firms move together in the same year. 20 hand-picked firms: this illustrates "
-               "the method; it is not a test of the Lazy Prices effect.")
+    st.caption(f"B5 − B1 is tested on {spread['n_years']} numbers, one per filing year (B5 basket average "
+               "minus B1 basket average), because firms filing in the same year move together and each "
+               "firm appears in many years. By year: "
+               + ", ".join(f"{y['year']} {signed(y['diff'])}" for y in spread["yearly"])
+               + " pp. The per-bin bands treat filings as independent and are descriptive only. "
+               "20 hand-picked firms: this illustrates the method; it is not a test of the Lazy Prices effect.")
 
     st.subheader("Did the most-changed firms lag the least-changed?")
     st.caption("Each year the firms are split into five equal-weighted baskets by bin and held for "

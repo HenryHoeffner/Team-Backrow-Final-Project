@@ -8,7 +8,7 @@ import pytest
 
 from pilot.config import PROJECT_ROOT, load_config
 from pilot.dashboard import SNAPSHOT_DIR, baskets, firm_years, load, pooled, read_snapshot, write_snapshot
-from pilot.t6_plot import q5_minus_q1
+from pilot.t6_plot import basket_spread_test
 
 
 def _write_pipeline_files(root: Path):
@@ -46,7 +46,7 @@ def test_pooled_uses_full_windows_only(tmp_path):
     # The open INTC FY2019 window (B5, -1) is left out: B5 is PFE alone (+10), B1 is INTC alone (-5).
     assert summary.set_index("bin").loc[5, "n"] == 1
     assert summary.set_index("bin").loc[5, "mean"] == pytest.approx(10.0)
-    assert spread == q5_minus_q1(df[~df["partial"]], "bin_relative")
+    assert spread == basket_spread_test(df[~df["partial"]], "bin_relative")
 
 
 def test_baskets_start_level_with_the_market(tmp_path):
@@ -67,7 +67,7 @@ def test_app_runs_and_matches_pipeline_report():
     assert not at.exception, at.exception
     # The headline B5 - B1 must be the number the plot step saved, so the site traces to outputs.
     saved = json.loads((PROJECT_ROOT / "data" / "reports" / "plot.json").read_text())
-    diff = saved["pooled"]["bin"]["spread_q5_minus_q1"]["diff"]
+    diff = saved["pooled"]["bin"]["basket_spread_test"]["diff"]
     shown = next(m.value for m in at.metric if m.label == "B5 − B1")
     assert shown == f"{diff:+.1f} pp".replace("-", "−")
     # Switching the ranking and the firm must not break anything.
@@ -106,5 +106,5 @@ def test_app_runs_from_snapshot_alone(tmp_path, monkeypatch):
     at = AppTest.from_file(str(PROJECT_ROOT / "app.py"), default_timeout=60).run()
     assert not at.exception, at.exception
     saved = json.loads((tmp_path / SNAPSHOT_DIR / "plot.json").read_text())
-    diff = saved["pooled"]["bin"]["spread_q5_minus_q1"]["diff"]
+    diff = saved["pooled"]["bin"]["basket_spread_test"]["diff"]
     assert next(m.value for m in at.metric if m.label == "B5 − B1") == f"{diff:+.1f} pp".replace("-", "−")

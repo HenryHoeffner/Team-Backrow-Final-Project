@@ -17,7 +17,7 @@ from pathlib import Path
 import pandas as pd
 
 from pilot.config import Config, load_config
-from pilot.t6_plot import bin_baskets, bin_summary, q5_minus_q1
+from pilot.t6_plot import basket_spread_test, bin_baskets, bin_summary
 
 SNAPSHOT_DIR = "app_data"
 SNAPSHOT_TABLE = "firm_years.csv"
@@ -106,10 +106,10 @@ def diff_files(cfg: Config, ticker: str) -> list[Path]:
 
 
 def pooled(df: pd.DataFrame, bin_col: str) -> tuple[pd.DataFrame, dict]:
-    """Bin means with 95% CIs, and B5 - B1 with a Welch test. Full 12-month windows only,
-    the same rows as pooled_by_bin.png."""
+    """Bin means with 95% CIs, and B5 - B1 tested on the yearly basket differences. Full
+    12-month windows only, the same rows and test as pooled_by_bin.png."""
     full = df[~df["partial"]]
-    return bin_summary(full, bin_col), q5_minus_q1(full, bin_col)
+    return bin_summary(full, bin_col), basket_spread_test(full, bin_col)
 
 
 def baskets(df: pd.DataFrame, bin_col: str) -> pd.DataFrame:
