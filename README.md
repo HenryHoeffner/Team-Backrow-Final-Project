@@ -270,7 +270,7 @@ The first three are the threats named in the proposal (`PROPOSAL.md`, §4), with
 
 ### Sample and selection
 
-- **Survivorship.** The 20 firms were chosen in 2026, and each had to file an original 10-K for every year FY2015–FY2025. So the sample has no firms that failed, were acquired or were delisted, which are the cases where large 10-K rewrites (restructuring, distress) are most likely to come before bad returns. That probably makes B1 look better than it would in a full sample and shrinks the spread. Free Yahoo prices also have no delisting returns. *Planned fix:* a point-in-time universe (e.g. index members as of each filing date) that keeps firms which later delist.
+- **Survivorship.** The 20 firms were chosen in 2026, and each had to file an original 10-K for every year FY2015–FY2025. So the sample has no firms that failed, were acquired or were delisted, which are the cases where large 10-K rewrites (restructuring, distress) are most likely to come before bad returns. That probably makes B1 look better than it would in a full sample and shrinks the spread. CRSP returns now include delisting returns (Shumway rule), but the sample still has none to include. *Planned fix:* a point-in-time universe (e.g. index members as of each filing date) that keeps firms which later delist.
 - **Small, hand-picked sample.** 200 scored filings (160 binned) from 20 large, stable firms chosen for clean data. The graphs illustrate the method and prove the pipeline; they are not evidence about the effect, and they say nothing about the typical company. Each firm graph has eight points; FY2016–FY2017 only build each firm's history.
 
 ### Look-ahead and timing
