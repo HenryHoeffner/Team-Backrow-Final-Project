@@ -88,8 +88,9 @@ def build_prices_from_crsp(cfg: Config) -> pd.DataFrame:
 
 
 def load_prices(cfg: Config) -> tuple[pd.DataFrame, str]:
-    """Build prices from the CRSP files when they are present (and refresh the committed cache);
-    otherwise use the cached data/prices_monthly.csv so `make from-scores` works on a clone."""
+    """Build prices from the CRSP files when they are present (and refresh the local cache);
+    otherwise use the cached data/prices_monthly.csv. Both are git-ignored: CRSP is licensed
+    data, so each teammate needs their own copy of the CRSP files (README_DATA.md)."""
     p = cfg.paths
     tickers = cfg.tickers + [cfg.benchmark_ticker]
     if p.crsp_stocks.exists() and p.crsp_market.exists():
@@ -105,7 +106,9 @@ def load_prices(cfg: Config) -> tuple[pd.DataFrame, str]:
         if not set(tickers) <= set(cached["ticker"]):
             raise SystemExit("cached prices are missing tickers; put the CRSP files in data/ to rebuild")
         return cached, f"cached {p.prices.relative_to(p.root)}, {origin}"
-    raise SystemExit(f"no CRSP files ({p.crsp_stocks.name}, {p.crsp_market.name}) and no cached prices in data/")
+    raise SystemExit(f"no CRSP files ({p.crsp_stocks.name}, {p.crsp_market.name}) and no cached prices in "
+                     "data/. CRSP is licensed and not in the repo: get the two files from WRDS as "
+                     "described in README_DATA.md and put them in data/.")
 
 
 # --------------------------------------------------------------------------- window

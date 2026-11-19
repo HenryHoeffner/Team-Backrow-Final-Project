@@ -3,11 +3,11 @@
 **Dashboard:** https://team-backrow-final-project-ghs5gtuwudvjks7fkjquxn.streamlit.app/  
 **Dashboard code:** [`app.py`](app.py) in this repo (Streamlit; reads the committed results in [`app_data/`](app_data/)). Run it locally with `make app`.
 
-**Status:** built. T0–T8 are implemented and every check passes. Run `make setup` once, set `SEC_USER_NAME` / `SEC_USER_EMAIL`, then `make all` (about 15 minutes the first time, about 10 GB of filings). To rerun steps 4–7 without downloading from SEC, run `make setup` and `make from-scores` instead: it starts from the small intermediate files committed in `data/` (see [`data/README.md`](data/README.md)). Prices are cached in `data/prices_monthly.csv`; use `python -m pilot returns --refresh` to pull new ones. `make diffs` writes the T8 sentence diffs for the three lowest-similarity filings.
+**Status:** built. T0–T8 are implemented and every check passes. Run `make setup` once, set `SEC_USER_NAME` / `SEC_USER_EMAIL`, then `make all` (about 15 minutes the first time, about 10 GB of filings). To rerun steps 4–7 without downloading from SEC, run `make setup` and `make from-scores` instead: it starts from the small intermediate files committed in `data/` (see [`data/README.md`](data/README.md)). Both need the two CRSP files in `data/`: CRSP is licensed, so it is never committed and each teammate gets their own copy (see [`README_DATA.md`](README_DATA.md)). Run `make hooks` once so git refuses to commit CRSP data. `make diffs` writes the T8 sentence diffs for the three lowest-similarity filings.
 
 ## How to run (in order)
 
-Each step reads the files the step before it wrote, so run them top to bottom. `make all` runs steps 1–7 in this order for you. `make from-scores` runs steps 4–7 from the committed `data/similarity.parquet`, `data/prices_monthly.csv` and step 1–3 reports, with no SEC download. Code lives in `src/pilot/`, and the file prefix (`t1_`, `t2_`, …) is the run order.
+Each step reads the files the step before it wrote, so run them top to bottom. `make all` runs steps 1–7 in this order for you. `make from-scores` runs steps 4–7 from the committed `data/similarity.parquet` and step 1–3 reports plus your local CRSP files, with no SEC download. Code lives in `src/pilot/`, and the file prefix (`t1_`, `t2_`, …) is the run order.
 
 | Step | Command | Code | Reads | Writes |
 | --- | --- | --- | --- | --- |
@@ -219,8 +219,8 @@ src/pilot/
   dashboard.py           data for the dashboard, built with the step 6 statistics
 app.py                   Streamlit dashboard (`make app`)
 tests/                   test_t<N>_*.py tests step N; test_cli.py the CLI; test_dashboard.py the app
-data/                    raw filings, clean text, sections, returns (git-ignored); similarity,
-                         prices and step 1-3 reports are committed (data/README.md)
+data/                    raw filings, clean text, sections, CRSP files, prices, returns (git-ignored);
+                         similarity and step 1-3 reports are committed (data/README.md)
 outputs/                 figures, coverage report, diffs (git-ignored)
 ```
 
